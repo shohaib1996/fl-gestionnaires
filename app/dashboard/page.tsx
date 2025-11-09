@@ -131,7 +131,7 @@ export default function DashboardPage() {
         ${
           activeTab === key
             ? `${color} scale-105 shadow-md`
-            : "bg-gray-400 text-white hover:bg-[#63a053]"
+            : "bg-[#326EA6] text-white hover:bg-[#63a053]"
         }
       `}
               >
