@@ -117,9 +117,9 @@ export default function DashboardPage() {
           {/* Tabs */}
           <div className="flex flex-wrap gap-3">
             {[
-              { key: "recu", label: "Reçus", color: "bg-[#326EA6]" },
+              { key: "recu", label: "Reçus", color: "bg-[#63a053]" },
               { key: "retenu", label: "Retenus", color: "bg-[#63a053]" },
-              { key: "encours", label: "En cours", color: "bg-[#326EA6]" },
+              { key: "encours", label: "En cours", color: "bg-[#63a053]" },
             ].map(({ key, label, color }) => (
               <Button
                 key={key}
