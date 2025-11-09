@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/ModeToggle/ModeToggle";
 import { Calendar } from "@/components/ui/calendar";
 import { ChevronDown, ChevronUp, MenuIcon, Search } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion"; // <— Add this import at the top
+
 
 export default function DashboardPage() {
   const [date, setDate] = useState<Date | undefined>(new Date());
@@ -125,11 +127,11 @@ export default function DashboardPage() {
                 className={`
         min-w-[110px]
         text-white font-medium px-6 py-2 rounded-sm
-        transition-all duration-300 ease-in-out hover:bg-[#63a053] cursor-pointer
+        transition-all duration-300 ease-in-out
         ${
           activeTab === key
-            ? `${color} scale-105 shadow-md bg-[#63a053]`
-            : "bg-[#326EA6] text-white hover:bg-[#63a053] "
+            ? `${color} scale-105 shadow-md`
+            : "bg-gray-400 text-white hover:bg-[#63a053]"
         }
       `}
               >
@@ -203,37 +205,60 @@ export default function DashboardPage() {
           </div>
 
           {/* Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <div
-                key={i}
-                className="overflow-hidden rounded-md border border-gray-200 bg-white shadow-sm dark:border-neutral-700 dark:bg-neutral-800"
+          <div className="relative min-h-[400px]">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeTab} // Changes when tab changes
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+                className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"
               >
-                {/* Header */}
-                <div className="bg-[#F3F7FF] px-4 py-2 dark:bg-neutral-700">
-                  <h4 className="font-semibold text-gray-800 dark:text-gray-100">
-                    Cola naturelle
-                  </h4>
-                </div>
+                {{
+                  recu: Array.from({ length: 6 }),
+                  retenu: Array.from({ length: 6 }),
+                  encours: Array.from({ length: 6 }),
+                }[activeTab].map((_, i) => (
+                  <div
+                    key={i}
+                    className="overflow-hidden rounded-md border border-gray-200 bg-white shadow-sm dark:border-neutral-700 dark:bg-neutral-800"
+                  >
+                    {/* Header */}
+                    <div className="bg-[#F3F7FF] px-4 py-2 dark:bg-neutral-700 flex justify-between">
+                      <h4 className="font-semibold text-gray-800 dark:text-gray-100">
+                        {activeTab === "recu"
+                          ? "Cola naturelle"
+                          : activeTab === "retenu"
+                          ? "Projet Boisson"
+                          : "Projet Eau"}
+                      </h4>
+                      <span className="text-xs text-gray-500">
+                        {activeTab === "recu" ? i + 10 : i + 1}
+                      </span>
+                    </div>
 
-                {/* Body */}
-                <div className="p-4">
-                  <p className="text-xs text-gray-500 dark:text-gray-400">
-                    Reçu : jeudi 5 Déc 2025
-                  </p>
-                  <p className="text-sm mt-2 text-gray-700 dark:text-gray-300 leading-snug">
-                    Coca-Cola a été inventé à la fin du 19e siècle par John
-                    Stith Pemberton à Atlanta, en Géorgie. En 1888, Pemberton a
-                    vendu les droits de propriété à Asa Griggs. Lorem ipsum
-                    dolor sit, amet consectetur adipisicing elit. Dignissimos,
-                    iure? Lorem ipsum, dolor sit amet consectetur adi Lorem
-                    ipsum, dolor sit amet consectetur adipisicing elit. Voluptas
-                    illo unde nihil quos aut voluptate modi rerum repellendus
-                    ullam assumenda.
-                  </p>
-                </div>
-              </div>
-            ))}
+                    {/* Body */}
+                    <div className="p-4">
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                        {activeTab === "recu"
+                          ? "Reçu : jeudi 5 Déc 2025"
+                          : activeTab === "retenu"
+                          ? "Retenu : vendredi 12 Déc 2025"
+                          : "En cours : lundi 8 Déc 2025"}
+                      </p>
+                      <p className="text-sm mt-2 text-gray-700 dark:text-gray-300 leading-snug">
+                        {activeTab === "recu"
+                          ? "Coca-Cola a été inventé à la fin du 19e siècle par John Stith Pemberton à Atlanta, en Géorgie. été inventé à la fin du 19e siècle par John Stith Pemberton à Atlanta, en Géorgie été inventé à la fin du 19e siècle par John Stith Pemberton à Atlanta, en Géorgie. été inventé à la fin du 19e siècle par John Stith Pemberton à Atlanta, en Géorgie été inventé à la fin du 19e siècle par John Stith Pemberton à Atlanta, en Géorgie."
+                          : activeTab === "retenu"
+                          ? "Projet de boisson approuvé et en phase de validation finale avant lancement. Projet de boisson approuvé et en phase de validation finale avant lancement Projet de boisson approuvé et en phase de validation finale avant lancement Projet de boisson approuvé et en phase de validation finale avant lancement"
+                          : "Projet d’eau en cours de développement, coordination entre les équipes en cours. Projet de boisson approuvé et en phase de validation finale avant lancement Projet de boisson approuvé et en phase de validation finale avant lancement Projet de boisson approuvé et en phase de validation finale avant lancement"}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </motion.div>
+            </AnimatePresence>
           </div>
 
           {/* Pagination */}
