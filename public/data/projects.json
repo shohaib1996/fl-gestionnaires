@@ -1,0 +1,39 @@
+{
+  "project": {
+    "title": "Cola Naturelle",
+    "number": 319,
+    "code": "IFL-KN-AG944",
+    "category": "Aliment et boisson",
+    "phase": "Phase d'application",
+    "description": "Lorem ipsum non confidentiel projet product. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+  },
+  "images": [
+    "https://res.cloudinary.com/dsn66l0iv/image/upload/v1762753034/Rectangle_2_bctp8t.png", 
+    "https://res.cloudinary.com/dsn66l0iv/image/upload/v1762753060/Rectangle_2_1_l0zviz.png",
+    "https://res.cloudinary.com/dsn66l0iv/image/upload/v1762753100/Rectangle_2_2_nppgpj.png",
+    "https://res.cloudinary.com/dsn66l0iv/image/upload/v1762753127/Rectangle_3_klbnky.png",
+    "https://res.cloudinary.com/dsn66l0iv/image/upload/v1762753157/Rectangle_4_yfsmgd.png",
+    "https://res.cloudinary.com/dsn66l0iv/image/upload/v1762753180/Rectangle_5_czobow.png"
+    
+  ],
+  "entrepreneur": {
+    "name": "Julienne Silla",
+    "status": "Membre",
+    "legal_tutor": "John Francis",
+    "collaborators": "Non",
+    "residence_city": "Kinshasa",
+    "project_city": "Lubumbashi",
+    "residence_province": "Lubumbashi",
+    "phone": "243 657 980",
+    "email": "email@example.com",
+    "website": "www.example.com",
+    "social_links": {
+      "linkedin": "https://www.linkedin.com/",
+      "facebook": "https://www.facebook.com/",
+      "twitter": "https://www.facebook.com/"
+    }
+  },
+  "scores": {
+    "project_score": 1049
+  }
+}
