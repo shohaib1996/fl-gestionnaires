@@ -8,7 +8,7 @@ export default function LeftSidebar() {
   const [date, setDate] = useState<Date | undefined>(new Date());
 
   return (
-    <aside className="w-[260px] bg-white dark:bg-neutral-800 p-4 shadow-sm shrink-0 flex flex-col overflow-hidden mt-17 rounded-2xl">
+    <aside className="w-[260px] bg-white dark:bg-neutral-800 shadow-sm shrink-0 flex flex-col overflow-hidden mt-17 rounded-2xl">
       <div className="shrink-0">
         <Calendar
           mode="single"
@@ -19,7 +19,7 @@ export default function LeftSidebar() {
       </div>
 
       {/* Scrollable tasks area */}
-      <div className="mt-4 flex-1 overflow-auto pr-1">
+      <div className="mt-4 flex-1 overflow-auto pr-1  p-4">
         <h3 className="mb-2 text-sm font-semibold text-gray-700 dark:text-gray-200">
           Tâches
         </h3>
