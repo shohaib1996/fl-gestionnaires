@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Ellipsis, Facebook, Linkedin, Twitter, Undo2 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
+import ImageGallery from "@/components/Gallery/ImageGallery";
 
 interface ProjectData {
   project: {
@@ -140,26 +141,7 @@ const ProjectDetails = () => {
         </section>
 
         {/* Image Gallery */}
-        <section className="bg-white dark:bg-neutral-800 rounded-md shadow-sm border border-gray-200 dark:border-neutral-700 p-6 mt-6">
-          <h3 className="text-sm font-medium text-gray-700 dark:text-gray-200 mb-4">
-            Images
-          </h3>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-3">
-            {images.map((url, i) => (
-              <div
-                key={i}
-                className="relative aspect-4/3 overflow-hidden rounded-md"
-              >
-                <Image
-                  src={url}
-                  alt={`Project image ${i + 1}`}
-                  fill
-                  className="object-cover"
-                />
-              </div>
-            ))}
-          </div>
-        </section>
+        <ImageGallery images={images} />
 
         {/* Entrepreneur Info */}
         <section className=" rounded-md border border-gray-200 dark:border-neutral-700 mt-6 mb-10 bg-card">

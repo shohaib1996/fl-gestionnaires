@@ -8,7 +8,7 @@ export default function LeftSidebar() {
   const [date, setDate] = useState<Date | undefined>(new Date());
 
   return (
-    <aside className="w-[260px] bg-white dark:bg-neutral-800 shadow-sm shrink-0 flex flex-col overflow-hidden mt-17 rounded-2xl">
+    <aside className="w-[260px] bg-white dark:bg-neutral-800 shadow-sm shrink-0 flex flex-col overflow-hidden mt-17 rounded-sm">
       <div className="shrink-0">
         <Calendar
           mode="single"
@@ -36,9 +36,11 @@ export default function LeftSidebar() {
         </div>
       </div>
 
-      <Button className="mt-3 w-full bg-[#63a053] hover:bg-[#528a45] text-sm py-2">
-        + Ajouter
-      </Button>
+      <div className="flex justify-center">
+        <Button className="mt-3 w-56 mb-3 bg-[#63a053] hover:bg-[#528a45] text-sm py-2">
+          + Ajouter
+        </Button>
+      </div>
     </aside>
   );
 }

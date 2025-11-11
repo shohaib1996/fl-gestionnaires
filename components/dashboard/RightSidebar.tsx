@@ -1,6 +1,6 @@
 export default function RightSidebar() {
   return (
-    <aside className="hidden xl:flex w-[250px] bg-white dark:bg-neutral-800 p-4 shadow-sm flex-col overflow-auto mt-17 rounded-lg">
+    <aside className="hidden xl:flex w-[250px] bg-white dark:bg-neutral-800 p-4 shadow-sm flex-col overflow-auto mt-17 rounded-sm">
       <h3 className="text-sm font-semibold mb-4 text-gray-800 dark:text-gray-100">
         Aperçu des projets
       </h3>
