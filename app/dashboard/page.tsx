@@ -77,18 +77,16 @@ export default function DashboardPage() {
           >
             {Array.from({ length: 20 }).map((_, i) => (
               <Link href={`/dashboard/12345678`} key={i}>
-                <div className="relative group bg-white dark:bg-neutral-800 shadow-sm flex flex-col overflow-visible rounded-sm border-2 border-transparent hover:scale-95 transition-transform duration-300 ease-in-out transform">
-                  {/* Animated border overlay */}
-                  <span className="absolute inset-0 rounded-sm border-2 border-green-400 scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-500 ease-out pointer-events-none"></span>
-
-                  <div className="relative bg-[#63A053]/25 px-4 py-2 flex justify-between rounded-t-sm">
+                <div
+                  className="relative bg-white dark:bg-neutral-800 shadow-sm flex flex-col overflow-visible rounded-sm border-2 hover:border-green-400 hover:scale-95 transition-all duration-300 ease-in-out transform"
+                >
+                  <div className="bg-[#F3F7FF] dark:bg-blue-500/20 px-4 py-2 flex justify-between">
                     <h4 className="font-semibold text-gray-800 dark:text-gray-100 text-sm">
                       Cola naturelle
                     </h4>
                     <span className="text-xs text-gray-500">{i + 1}</span>
                   </div>
-
-                  <div className="relative p-4 text-sm leading-snug text-gray-700 dark:text-gray-300 rounded-b-sm">
+                  <div className="p-4 text-sm leading-snug text-gray-700 dark:text-gray-300">
                     <p className="text-xs text-gray-500 mb-1">
                       Reçu : jeudi 5 Déc 2025
                     </p>

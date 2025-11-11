@@ -1,0 +1,80 @@
+{
+  "project": {
+    "id": "IFL-KN-AG-9942",
+    "name": "Cola naturelle",
+    "lead": {
+      "name": "Jeanne Aki",
+      "role": "Lead"
+    },
+    "goal": "Rassembler tous les documents légaux requis et mettre l’entreprise en règle.",
+    "phases": [
+      {
+        "step": 1,
+        "title": "Diagnostic & Mise en conformité",
+        "status": "active"
+      },
+      {
+        "step": 2,
+        "title": "Structuration financière",
+        "status": "upcoming"
+      },
+      {
+        "step": 3,
+        "title": "Argumentaire & Pitch",
+        "status": "upcoming"
+      },
+      {
+        "step": 4,
+        "title": "Post-investissement",
+        "status": "upcoming"
+      },
+      {
+        "step": 5,
+        "title": "Suivi & Croissance",
+        "status": "upcoming"
+      }
+    ],
+    "documents": [
+      {
+        "date": "2025-09-03",
+        "description": "Legal Documents 2025",
+        "category": "Document légal",
+        "status": "Complété",
+        "type": "file"
+      },
+      {
+        "date": "2025-09-09",
+        "description": "Legal Documents 2025",
+        "category": "Document légal",
+        "status": "Complété",
+        "type": "video"
+      },
+      {
+        "date": "2025-09-10",
+        "description": "Legal Documents 2025",
+        "category": "Document légal",
+        "status": "Complété",
+        "type": "file"
+      },
+      {
+        "date": "2025-09-12",
+        "description": "Legal Documents 2025",
+        "category": "Document légal",
+        "status": "Complété",
+        "type": "web"
+      },
+      {
+        "date": "2025-09-23",
+        "description": "Legal Documents 2025",
+        "category": "Document légal",
+        "status": "Complété",
+        "type": "web"
+      }
+    ],
+    "preview": {
+      "image": "/images/blind-crow-menu.jpg",
+      "actions": ["download", "expand"]
+    }
+  }
+}
+ 

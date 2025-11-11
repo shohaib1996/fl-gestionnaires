@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Ellipsis, Facebook, Linkedin, Twitter, Undo2 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import ImageGallery from "@/components/Gallery/ImageGallery";
+import Link from "next/link";
 
 interface ProjectData {
   project: {
@@ -41,7 +42,7 @@ interface ProjectData {
 
 const ProjectDetails = () => {
   const [data, setData] = useState<ProjectData | null>(null);
-  const router = useRouter()
+  const router = useRouter();
   const params = useParams();
   const id = params?.id;
 
@@ -98,9 +99,13 @@ const ProjectDetails = () => {
         {/* Project Header */}
         <section className="bg-white dark:bg-neutral-800 rounded-md shadow-sm border border-gray-200 dark:border-neutral-700">
           <div className="flex items-center justify-between border-b border-gray-200 px-6 py-4 bg-[#63a053]/25">
-            <h2 className="text-xl font-semibold text-[#326EA6] dark:text-white">
-              {project.title}
-            </h2>
+            <Link href={`/dashboard/${id}/project/${id}`}>
+              <h2
+                className="text-xl font-semibold text-[#326EA6] dark:text-white relative inline-block after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-0.5 after:bg-[#326EA6] after:transition-all after:duration-300 hover:after:w-full"
+              >
+                {project.title}
+              </h2>
+            </Link>
             <span className="text-sm font-medium text-gray-600 dark:text-gray-300 flex gap-7">
               {project.code}
               <Ellipsis />
