@@ -14,18 +14,22 @@ export default function LeftSidebar() {
           mode="single"
           selected={date}
           onSelect={setDate}
-          className="w-full rounded-md"
+          className="w-full rounded-md "
         />
       </div>
 
       {/* Scrollable tasks */}
-      <div className="mt-4 flex-1 overflow-y-auto hide-scrollbar pr-1 p-4">
-        <h3 className="mb-2 text-lg font-semibold text-gray-700 dark:text-gray-200">
+      <div className="flex-1 overflow-auto px-4 pb-4 hide-scrollbar">
+        <h3 className="mb-3 text-lg font-semibold text-gray-700 dark:text-gray-200">
           Tâches
         </h3>
+
         <div className="space-y-4 text-md">
           {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i}>
+            <div
+              key={i}
+              className="pb-3 border-b border-gray-200 dark:border-neutral-700"
+            >
               <p className="text-sm text-gray-400">11 Mars 2025</p>
               <p className="text-blue-600 dark:text-blue-400 hover:underline">
                 Appel projet #{i + 1}
@@ -36,7 +40,7 @@ export default function LeftSidebar() {
         </div>
       </div>
 
-      <div className="pt-3 px-4 pb-4">
+      <div className="p-4 shrink-0">
         <Button className="w-full bg-[#63a053] hover:bg-[#528a45] text-sm py-2">
           + Ajouter
         </Button>
