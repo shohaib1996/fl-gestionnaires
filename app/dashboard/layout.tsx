@@ -107,12 +107,20 @@ export default function DashboardLayout({
       </header>
 
       {/* Main layout */}
-      <main className="flex flex-1 overflow-hidden">
-        <LeftSidebar />
-        <section className="flex-1 flex flex-col overflow-hidden px-6 py-3">
-          {children}
-        </section>
-        <RightSidebar />
+      <main className="flex w-screen h-screen bg-[#ebebeb] overflow-hidden">
+        <div className="flex-none min-w-[14vw] h-full mt-19 ml-10 max-h-[70vh]">
+          <LeftSidebar />
+        </div>
+
+        {/* Middle Section (Main Content) */}
+        <main className="flex-1 flex flex-col max-w-[70vw] max-h-[71vh] overflow-hidden px-6 pt-6">
+          <div className="flex-1 overflow-y-auto">{children}</div>
+        </main>
+
+        {/* Right Sidebar */}
+        <div className="flex-none min-w-[14vw] mt-19 mr-10 max-h-[35vh]">
+          <RightSidebar />
+        </div>
       </main>
     </div>
   );
