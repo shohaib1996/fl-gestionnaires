@@ -75,7 +75,7 @@ export default function DashboardPage() {
             <div
               className="
           grid 
-          gap-2.5
+          gap-3
           sm:grid-cols-2 
           md:grid-cols-3 
           lg:grid-cols-4
