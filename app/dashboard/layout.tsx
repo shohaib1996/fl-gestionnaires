@@ -21,7 +21,7 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="h-screen w-screen flex flex-col bg-gray-100 text-gray-800 dark:bg-neutral-900 dark:text-gray-100 overflow-hidden">
+    <div className="h-screen w-screen flex flex-col bg-background text-gray-800 dark:bgbackround dark:text-gray-100 overflow-hidden">
       {/* Header */}
       <header className="flex items-center justify-between border-b bg-white px-6 py-3 shadow-sm dark:bg-neutral-800 shrink-0">
         <div className="flex items-center gap-3">
@@ -107,7 +107,7 @@ export default function DashboardLayout({
       </header>
 
       {/* Main layout */}
-      <main className="flex w-screen h-screen bg-[#ebebeb] overflow-hidden">
+      <main className="flex w-screen h-screen bg-[#ebebeb] dark:bg-card overflow-hidden">
         <div className="flex-none min-w-[14vw] h-full mt-19 ml-10 max-h-[72vh]">
           <LeftSidebar />
         </div>

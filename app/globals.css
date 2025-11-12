@@ -112,17 +112,65 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+/* Fluid root font-size: scales from small laptops to large TVs */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Base applied to many elements via Tailwind classes that use rem */
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
-}
 
-html {
-  scroll-behavior: smooth;
+  html {
+    /* Base for 1920×1080 (your perfect design baseline) */
+    font-size: 16px;
+  }
+
+  /* 🧠 Medium and small screens — laptops and 1080p monitors */
+  @media (max-width: 1700px) {
+    html {
+      font-size: 14px;
+    }
+  }
+
+  @media (max-width: 1536px) {
+    html {
+      font-size: 11px;
+    }
+  }
+
+  /* 🧠 Large screens — QHD (2K / 2400–2559) */
+  @media (min-width: 2000px) and (max-width: 2399px) {
+    html {
+      font-size: 18px;
+    }
+  }
+
+  @media (min-width: 2400px) and (max-width: 2559px) {
+    html {
+      font-size: 20px;
+    }
+  }
+
+  /* 🧠 Ultra-wide screens — 2560px+ (2.5K to 4K) */
+  @media (min-width: 2560px) and (max-width: 3199px) {
+    html {
+      font-size: 22px;
+    }
+  }
+
+  /* 🧠 4K and above (3840px+) */
+  @media (min-width: 3200px) {
+    html {
+      font-size: 24px;
+    }
+  }
 }
 
 /* Hide scrollbar but keep scrolling */
@@ -134,5 +182,3 @@ html {
 .hide-scrollbar::-webkit-scrollbar {
   display: none; /* Chrome, Safari */
 }
-
-

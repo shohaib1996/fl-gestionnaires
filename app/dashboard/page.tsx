@@ -40,24 +40,29 @@ export default function DashboardPage() {
           Filtrer par :
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4">
-          {["Location", "Catégorie", "Date", "Name", "Identifiant FL (IFL)"].map(
-            (label, i) => (
-              <div key={i} className="flex flex-col gap-1">
-                <label className="text-sm text-gray-700 dark:text-gray-300">
-                  {label}
-                </label>
-                <Input
-                  placeholder={
-                    label === "Date" ? "Sélectionner" : "Taper ou sélectionner"
-                  }
-                  className="bg-gray-100 dark:bg-neutral-700 border-0 text-sm placeholder:text-gray-400 focus-visible:ring-1 focus-visible:ring-[#63a053]"
-                />
-              </div>
-            )
-          )}
+          {[
+            "Location",
+            "Catégorie",
+            "Date",
+            "Name",
+            "Identifiant FL (IFL)",
+          ].map((label, i) => (
+            <div key={i} className="flex flex-col gap-1">
+              <label className="text-sm text-gray-700 dark:text-gray-300">
+                {label}
+              </label>
+              <Input
+                placeholder={
+                  label === "Date" ? "Sélectionner" : "Taper ou sélectionner"
+                }
+                className="bg-gray-100 dark:bg-neutral-700 border-0 text-sm placeholder:text-gray-400 focus-visible:ring-1 focus-visible:ring-[#63a053]"
+              />
+            </div>
+          ))}
         </div>
       </div>
 
+      {/* Card Section - only this scrolls */}
       {/* Card Section - only this scrolls */}
       <section className="flex-1 overflow-auto hide-scrollbar">
         <AnimatePresence mode="wait">
@@ -69,10 +74,13 @@ export default function DashboardPage() {
             transition={{ duration: 0.3 }}
           >
             <div
-              className="grid gap-4"
-              style={{
-                gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-              }}
+              className="
+          grid 
+          gap-4 
+          sm:grid-cols-2 
+          md:grid-cols-3 
+          lg:grid-cols-4
+        "
             >
               {Array.from({ length: 20 }).map((_, i) => (
                 <Link href={`/dashboard/12345678`} key={i}>
@@ -88,8 +96,8 @@ export default function DashboardPage() {
                         Reçu : jeudi 5 Déc 2025
                       </p>
                       Coca-Cola a été inventé à la fin du 19e siècle par John
-                      Stith Pemberton à Atlanta, en Géorgie. En 1888, Pemberton a
-                      vendu les droits de propriété à Asa Griggs.
+                      Stith Pemberton à Atlanta, en Géorgie. En 1888, Pemberton
+                      a vendu les droits de propriété à Asa Griggs.
                     </div>
                   </article>
                 </Link>
