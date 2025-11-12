@@ -63,7 +63,6 @@ export default function DashboardPage() {
       </div>
 
       {/* Card Section - only this scrolls */}
-      {/* Card Section - only this scrolls */}
       <section className="flex-1 overflow-auto hide-scrollbar">
         <AnimatePresence mode="wait">
           <motion.div
@@ -76,7 +75,7 @@ export default function DashboardPage() {
             <div
               className="
           grid 
-          gap-1.5
+          gap-2
           sm:grid-cols-2 
           md:grid-cols-3 
           lg:grid-cols-4
