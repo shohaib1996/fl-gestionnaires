@@ -113,8 +113,8 @@ export default function DashboardLayout({
         </div>
 
         {/* Middle Section (Main Content) */}
-        <main className="flex-1 flex flex-col max-w-[70vw] max-h-[71vh] overflow-hidden px-6 pt-6">
-          <div className="flex-1 overflow-y-auto">{children}</div>
+        <main className="flex-1 flex flex-col max-w-[70vw] overflow-hidden px-4.5">
+          <div className="flex-1 overflow-y-auto hide-scrollbar">{children}</div>
         </main>
 
         {/* Right Sidebar */}

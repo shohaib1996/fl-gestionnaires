@@ -12,9 +12,9 @@ export default function DashboardPage() {
   );
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col max-h-[71vh]">
       {/* Tabs */}
-      <div className="flex gap-3 mb-4 shrink-0">
+      <div className="flex gap-3 py-6 shrink-0">
         {[
           { key: "recu", label: "Reçus" },
           { key: "retenu", label: "Retenus" },
@@ -23,7 +23,7 @@ export default function DashboardPage() {
           <Button
             key={key}
             onClick={() => setActiveTab(key as any)}
-            className={`min-w-[100px] text-white font-medium px-5 py-2 rounded-sm transition-all ${
+            className={` text-white font-medium h-7 rounded-none w-24 transition-all ${
               activeTab === key
                 ? "bg-[#63a053] scale-105 shadow-sm"
                 : "bg-[#326EA6] hover:bg-[#63a053]"
@@ -35,7 +35,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Filters */}
-      <div className="bg-white dark:bg-neutral-800 px-12 py-5 rounded-md shadow-sm shrink-0 mb-5">
+      <div className="bg-white dark:bg-neutral-800 px-12 py-5 rounded-none shadow-sm shrink-0 mb-3">
         <p className="text-sm font-medium text-gray-700 dark:text-gray-200 mb-4">
           Filtrer par :
         </p>
@@ -73,17 +73,11 @@ export default function DashboardPage() {
             transition={{ duration: 0.3 }}
           >
             <div
-              className="
-          grid 
-          gap-4
-          sm:grid-cols-2 
-          md:grid-cols-3 
-          lg:grid-cols-4
-        "
+              className="grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
             >
               {Array.from({ length: 20 }).map((_, i) => (
                 <Link href={`/dashboard/12345678`} key={i}>
-                  <article className="bg-white dark:bg-neutral-800 shadow-sm flex flex-col rounded-sm border border-gray-200 hover:border-green-400 hover:scale-[0.98] transition-all duration-300 min-h-60">
+                  <article className="bg-white dark:bg-neutral-800 shadow-sm flex flex-col rounded-sm border-2 border-gray-200 hover:border-[#63A053] hover:scale-[0.97] transition-all duration-300 min-h-62">
                     <div className="bg-[#F3F7FF] dark:bg-blue-500/20 px-4 py-2 flex justify-between">
                       <h4 className="font-semibold text-gray-800 dark:text-gray-100 text-xl">
                         Cola naturelle

@@ -2,7 +2,7 @@
 
 export default function RightSidebar() {
   return (
-    <aside className="flex flex-col h-full bg-white dark:bg-neutral-800 shadow-sm border border-black/10 rounded-sm p-4 overflow-auto hide-scrollbar">
+    <aside className="flex flex-col h-full bg-white dark:bg-neutral-800 shadow-sm border-0.5 border-black/10 rounded-xs p-4 overflow-auto hide-scrollbar">
       <h3 className="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-100">
         Aperçu des projets
       </h3>

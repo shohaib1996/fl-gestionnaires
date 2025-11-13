@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Ellipsis, Facebook, Linkedin, Twitter, Undo2 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
@@ -64,45 +63,46 @@ const ProjectDetails = () => {
   const { project, images, entrepreneur } = data;
 
   return (
-    <div className="h-[calc(100vh-120px)] overflow-y-auto hide-scrollbar px-4">
-      {/* Header Tabs */}
-      <header className="flex items-center gap-2 py-3">
+    // make this a column so header stays fixed and the content below scrolls
+    <div className="h-[calc(100vh-120px)] flex flex-col">
+      {/* Header Tabs - keep styles but prevent it from shrinking/scrolling */}
+      <header className="flex items-center gap-2 py-6 shrink-0">
         {/* Back Button */}
         <Button
           onClick={() => router.back()}
-          className="flex items-center justify-center bg-[#326EA6] hover:bg-[#285b8b] text-white rounded-none px-3 py-2"
+          className="flex items-center justify-center bg-[#326EA6] hover:bg-[#285b8b] text-white rounded-none px-3 h-7"
         >
           <Undo2 className="h-4 w-4" />
         </Button>
 
         {/* Partager Button */}
-        <Button className="bg-[#23405A] hover:bg-[#1d354a] text-white font-semibold rounded-none px-5 py-2">
+        <Button className="bg-[#23405A] hover:bg-[#1d354a] text-white font-semibold rounded-none text-xs h-7">
           Partager
         </Button>
 
         {/* Reçus Button */}
-        <Button className="bg-[#63a053] hover:bg-[#528a45] text-white font-semibold rounded-none px-5 py-2">
+        <Button className="bg-[#63a053] hover:bg-[#528a45] text-white font-semibold rounded-none text-xs h-7">
           Reçus
         </Button>
 
         {/* Retenus Button */}
-        <Button className="bg-[#326EA6] hover:bg-[#275984] text-white font-semibold rounded-none px-5 py-2">
+        <Button className="bg-[#326EA6] hover:bg-[#275984] text-white font-semibold rounded-none text-xs h-7">
           Retenus
         </Button>
 
         {/* En cours Button */}
-        <Button className="bg-[#326EA6] hover:bg-[#275984] text-white font-semibold rounded-none px-5 py-2">
+        <Button className="bg-[#326EA6] hover:bg-[#275984] text-white font-semibold rounded-none text-xs h-7">
           En cours
         </Button>
       </header>
-      <div className="bg-background">
+
+      {/* Make THIS container the scroller (fills remaining height) */}
+      <div className="flex-1 bg-background rounded-xs border-0.5 border-black/20 overflow-y-auto hide-scrollbar">
         {/* Project Header */}
-        <section className="bg-white dark:bg-neutral-800 rounded-md shadow-sm border border-gray-200 dark:border-neutral-700">
-          <div className="flex items-center justify-between border-b border-gray-200 px-6 py-4 bg-[#63a053]/25">
+        <section className="bg-white dark:bg-neutral-800 rounded-xs ">
+          <div className="flex items-center justify-between px-6 py-4 bg-[#63a053]/25">
             <Link href={`/dashboard/${id}/project/${id}`}>
-              <h2
-                className="text-xl font-semibold text-[#326EA6] dark:text-white relative inline-block after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-0.5 after:bg-[#326EA6] after:transition-all after:duration-300 hover:after:w-full"
-              >
+              <h2 className="text-xl font-semibold text-[#326EA6] dark:text-white relative inline-block after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-0.5 after:bg-[#326EA6] after:transition-all after:duration-300 hover:after:w-full">
                 {project.title}
               </h2>
             </Link>
@@ -115,30 +115,30 @@ const ProjectDetails = () => {
             {/* Category + Phase in grid */}
             <div className="grid grid-cols-3 gap-6">
               <div className="col-span-2">
-                <label className="block text-xs text-gray-500 mb-1">
-                  Catégorie qui décrit le mieux le projet ou produit
+                <label className="block mb-1">
+                  <span className="bg-[#F2F6F8] dark:bg-neutral-700 text-sm py-3 px-3 text-gray-500 dark:text-white">
+                    Catégorie qui décrit le mieux le projet ou produit
+                  </span>
                 </label>
-                <p className="bg-gray-100 dark:bg-neutral-700 px-3 py-2 rounded text-sm">
-                  {project.category}
-                </p>
+                <p className="px-3 py-2 rounded text-sm">{project.category}</p>
               </div>
 
-              <div>
-                <label className="block text-xs text-gray-500 mb-1">
-                  Phase actuelle du projet
+              <div className="col-start-4">
+                <label className="block mb-1">
+                  <span className="text-sm bg-[#F2F6F8] dark:bg-neutral-700 py-3 px-3 text-gray-500 dark:text-white">
+                    Phase actuelle du projet
+                  </span>
                 </label>
-                <p className="bg-gray-100 dark:bg-neutral-700 px-3 py-2 rounded text-sm">
-                  {project.phase}
-                </p>
+                <p className="px-3 py-2 rounded text-sm">{project.phase}</p>
               </div>
             </div>
 
             {/* Full-width description */}
             <div>
-              <label className="block text-xs text-gray-500 mb-1">
+              <label className="block text-xs bg-[#F2F6F8] dark:bg-neutral-700 py-3 px-3 text-gray-500 dark:text-white mb-3">
                 Description non confidentielle du projet ou produit
               </label>
-              <p className="bg-gray-100 dark:bg-neutral-700 px-3 py-3 rounded text-sm leading-relaxed">
+              <p className="bg-[#FFFFFB] dark:bg-neutral-700 px-3 py-3 rounded text-sm leading-relaxed border-b">
                 {project.description}
               </p>
             </div>
@@ -149,12 +149,11 @@ const ProjectDetails = () => {
         <ImageGallery images={images} />
 
         {/* Entrepreneur Info */}
-        <section className=" rounded-md border border-gray-200 dark:border-neutral-700 mt-6 mb-10 bg-card">
-          <div className=" bg-[#63a053]/25 p-4 mb-6 ">
-            <div className="px-6 flex justify-between items-center  ">
+        <section className=" mt-6 pb-10 bg-card">
+          <div className="bg-[#63a053]/25 p-4 mb-6">
+            <div className="px-6 flex justify-between items-center">
               <h3 className="text-lg font-semibold text-gray-800 dark:text-white">
-                Entrepreneur{" "}
-                <span className="font-normal ">{entrepreneur.name}</span>
+                Entrepreneur <span className="font-normal ">{entrepreneur.name}</span>
               </h3>
               <span className="text-sm font-semibold text-gray-700 dark:text-white">
                 {entrepreneur.status}
@@ -174,16 +173,12 @@ const ProjectDetails = () => {
             </div>
 
             <div>
-              <label className="block text-gray-500 mb-1">
-                Ville ou village de résidence
-              </label>
+              <label className="block text-gray-500 mb-1">Ville ou village de résidence</label>
               <p>{entrepreneur.residence_city}</p>
             </div>
 
             <div>
-              <label className="block text-gray-500 mb-1">
-                Ville / village où se situe le projet
-              </label>
+              <label className="block text-gray-500 mb-1">Ville / village où se situe le projet</label>
               <p>{entrepreneur.project_city}</p>
             </div>
 
@@ -210,13 +205,13 @@ const ProjectDetails = () => {
             <div>
               <label className="block text-gray-500 mb-1">Liens</label>
               <div className="flex gap-4 mt-1">
-                <a href={entrepreneur.social_links.facebook} target="_blank">
+                <a href={entrepreneur.social_links.facebook} target="_blank" rel="noreferrer">
                   <Facebook className="w-4 h-4 text-gray-600 hover:text-blue-600" />
                 </a>
-                <a href={entrepreneur.social_links.twitter} target="_blank">
+                <a href={entrepreneur.social_links.twitter} target="_blank" rel="noreferrer">
                   <Twitter className="w-4 h-4 text-gray-600 hover:text-sky-500" />
                 </a>
-                <a href={entrepreneur.social_links.linkedin} target="_blank">
+                <a href={entrepreneur.social_links.linkedin} target="_blank" rel="noreferrer">
                   <Linkedin className="w-4 h-4 text-gray-600 hover:text-blue-700" />
                 </a>
               </div>
