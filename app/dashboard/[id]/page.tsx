@@ -100,9 +100,9 @@ const ProjectDetails = () => {
       <div className="flex-1 bg-background rounded-xs border-0.5 border-black/20 overflow-y-auto hide-scrollbar">
         {/* Project Header */}
         <section className="bg-white dark:bg-neutral-800 rounded-xs ">
-          <div className="flex items-center justify-between px-6 py-4 bg-[#63a053]/25">
+          <div className="flex items-center justify-between py-4 px-11 bg-[#63a053]/25">
             <Link href={`/dashboard/${id}/project/${id}`}>
-              <h2 className="text-xl font-semibold text-[#326EA6] dark:text-white relative inline-block after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-0.5 after:bg-[#326EA6] after:transition-all after:duration-300 hover:after:w-full">
+              <h2 className="text-2xl text-[#7F7E83] font-bold dark:text-white relative inline-block after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-0.5 after:bg-[#326EA6] after:transition-all after:duration-300 hover:after:w-full">
                 {project.title}
               </h2>
             </Link>
@@ -111,7 +111,7 @@ const ProjectDetails = () => {
               <Ellipsis />
             </span>
           </div>
-          <div className="px-6 py-5 space-y-6">
+          <div className="px-11 py-5 space-y-6">
             {/* Category + Phase in grid */}
             <div className="grid grid-cols-3 gap-6">
               <div className="col-span-2">
@@ -161,7 +161,7 @@ const ProjectDetails = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-12 text-sm p-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-12 text-sm px-11">
             <div>
               <label className="block text-gray-500 mb-1">Tuteur légal</label>
               <p>{entrepreneur.legal_tutor}</p>

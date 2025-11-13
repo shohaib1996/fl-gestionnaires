@@ -10,7 +10,7 @@ export default function ImageGallery({ images }: { images: string[] }) {
   return (
     <>
       {/* Image Section */}
-      <section className="bg-white dark:bg-neutral-800 p-6">
+      <section className="bg-white dark:bg-neutral-800 px-11 py-6">
         <h3 className="text-sm font-medium text-gray-700 dark:text-gray-200 mb-4">
           Images
         </h3>
