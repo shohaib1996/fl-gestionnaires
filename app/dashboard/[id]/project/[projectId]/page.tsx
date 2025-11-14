@@ -8,9 +8,14 @@ import {
   Globe,
   FolderPlus,
   ImageDown,
-  Share2,
   ArrowLeft,
+  Ellipsis,
+  Download,
+  Printer,
+  Fullscreen,
+  X,
 } from "lucide-react";
+import CreateJalonModal from "@/components/modals/CreateJalonModal";
 
 interface ProjectData {
   project: {
@@ -26,7 +31,7 @@ interface ProjectData {
       status: string;
       type: string;
     }[];
-    preview: { image: string; actions: string[] };
+    preview: { image: string; type: string };
   };
 }
 
@@ -39,6 +44,8 @@ const iconMap: Record<string, any> = {
 
 const ProjectDetails = () => {
   const [data, setData] = useState<ProjectData | null>(null);
+  const [fullscreenOpen, setFullscreenOpen] = useState(false); // FULLSCREEN MODAL STATE
+  const [jalonModalOpen, setJalonModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -52,60 +59,140 @@ const ProjectDetails = () => {
   if (!data) return <div className="p-6 text-gray-500">Loading project...</div>;
 
   const project = data.project;
+  const handleDownload = async (url: string, filename = "file") => {
+    try {
+      const res = await fetch(url);
+      const blob = await res.blob();
+
+      const blobUrl = window.URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.download = filename;
+
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      window.URL.revokeObjectURL(blobUrl);
+    } catch (err) {
+      console.error("Download failed:", err);
+      alert("Unable to download file.");
+    }
+  };
+  const handlePrint = async (url: string, type: string) => {
+    try {
+      if (type === "image") {
+        // Create a hidden window for printing
+        const printWindow = window.open("", "_blank", "width=900,height=700");
+
+        if (!printWindow) return alert("Popup blocked. Allow popups to print.");
+
+        printWindow.document.write(`
+        <html>
+          <head>
+            <title>Print Image</title>
+            <style>
+              body { margin: 0; padding: 0; text-align: center; }
+              img { max-width: 100%; height: auto; }
+            </style>
+          </head>
+          <body>
+            <img src="${url}" />
+            <script>
+              window.onload = () => {
+                window.print();
+              };
+            </script>
+          </body>
+        </html>
+      `);
+        printWindow.document.close();
+      } else if (type === "pdf") {
+        // PDF can be printed directly
+        const printWindow = window.open(url, "_blank");
+        if (!printWindow) return alert("Popup blocked. Allow popups to print.");
+
+        printWindow.onload = () => {
+          printWindow.focus();
+          printWindow.print();
+        };
+      } else if (type === "web") {
+        const printWindow = window.open(url, "_blank");
+        if (!printWindow) return alert("Popup blocked.");
+
+        printWindow.onload = () => {
+          printWindow.print();
+        };
+      } else if (type === "video") {
+        alert("Printing videos is not supported. Try downloading instead.");
+      }
+    } catch (err) {
+      console.error("Print failed:", err);
+      alert("Unable to print file.");
+    }
+  };
 
   return (
     <div className="p-0">
-      {/* 🔹 Header Tabs */}
-      <div className="flex items-center gap-1 px-4 py-2">
-        <button className="bg-[#326EA6] hover:bg-[#275883] text-white px-3 py-1 rounded-sm flex items-center gap-1 text-sm font-medium transition">
+      {/* Header Tabs */}
+      <div className="flex items-center gap-1 py-6">
+        <button className="bg-[#326EA6] hover:bg-[#275883] text-white px-3 py-1 rounded-none flex items-center gap-1 text-sm font-medium transition">
           <ArrowLeft className="w-5 h-5" />
         </button>
-        <button className="bg-[#326EA6] hover:bg-[#275883] text-white px-4 py-1 rounded-sm text-sm font-medium transition">
+        <button className="bg-[#326EA6] hover:bg-[#275883] text-white px-4 py-1 text-sm">
           Partager
         </button>
-        <button className="bg-[#4D7BB0] hover:bg-[#3C6693] text-white px-4 py-1 rounded-sm text-sm font-medium transition">
+        <button className="bg-[#4D7BB0] text-white px-4 py-1 text-sm">
           Reçus
         </button>
-        <button className="bg-[#4D7BB0] hover:bg-[#3C6693] text-white px-4 py-1 rounded-sm text-sm font-medium transition">
+        <button className="bg-[#4D7BB0] text-white px-4 py-1 text-sm">
           Retenus
         </button>
-        <button className="bg-[#4D7BB0] hover:bg-[#3C6693] text-white px-4 py-1 rounded-sm text-sm font-medium transition">
+        <button className="bg-[#4D7BB0] text-white px-4 py-1 text-sm">
           En cours
         </button>
       </div>
 
-      {/* 🔹 Project Section */}
-      <div className=" bg-white dark:bg-neutral-800 rounded-md shadow-sm border border-gray-200 dark:border-neutral-700 m-4">
+      {/* Project Section */}
+      <div className="bg-white dark:bg-neutral-800 rounded-md shadow-sm border border-gray-200 dark:border-neutral-700 max-h-[72vh]">
         {/* Header */}
         <div className="flex items-center justify-between border-b pb-3 mb-4 bg-[#63a053]/25 p-4">
           <h1 className="text-2xl font-bold text-gray-700 dark:text-white">
             {project.name}
           </h1>
-          <span className="text-sm text-gray-600 dark:text-gray-400">
+          <span className="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-5">
             {project.id}
+            <Ellipsis />
           </span>
         </div>
 
         {/* Phases */}
-        <div className="flex flex-wrap gap-2 mb-4 px-6">
+        <div className="flex flex-wrap gap-2 mb-4 px-3">
           {project.phases.map((phase) => (
             <button
               key={phase.step}
-              className={`px-3 py-1 rounded-sm text-sm font-medium ${
+              className={`rounded-xs text-sm font-medium py-2 ${
                 phase.status === "active"
                   ? "bg-[#63A053] text-white"
-                  : "bg-[#63A053]/25 text-gray-800 dark:text-gray-200"
+                  : "bg-[#A2CF96] text-gray-800 dark:text-gray-200"
               }`}
             >
-              {phase.step}. {phase.title}
+              <span className="bg-[#A2CF96] p-2.5 border-r text-white">
+                {phase.step}.
+              </span>
+              <span className="px-2.5 text-white">{phase.title}</span>
             </button>
           ))}
-          <button className="ml-auto bg-[#63A053] text-white px-3 py-1 text-sm font-medium rounded-sm hover:bg-[#528a45] transition">
+          <button
+            onClick={() => setJalonModalOpen(true)}
+            className="ml-auto bg-[#63A053] text-white px-3 py-1 text-sm font-medium rounded-sm"
+          >
             + Jalon
           </button>
         </div>
 
-        {/* Goal & Lead */}
+        {/* Goal + Lead */}
         <div className="flex justify-between items-start mb-6 px-6">
           <div>
             <p className="text-sm text-gray-700 dark:text-gray-300">
@@ -119,7 +206,7 @@ const ProjectDetails = () => {
               alt={project.lead.name}
               width={40}
               height={40}
-              className="rounded-full object-cover"
+              className="rounded-full object-cover h-10"
             />
             <div>
               <p className="text-sm font-semibold text-gray-800 dark:text-gray-100">
@@ -130,84 +217,149 @@ const ProjectDetails = () => {
           </div>
         </div>
 
-        {/* Document Table + Preview */}
+        {/* Table + Preview */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 px-6 pb-6">
           {/* Table */}
-          <div className="lg:col-span-2 border border-gray-200 dark:border-neutral-700 rounded-md overflow-hidden">
-            <table className="w-full text-sm">
-              <thead className="bg-gray-50 dark:bg-neutral-700 text-gray-700 dark:text-gray-200">
-                <tr>
-                  <th className="text-left px-4 py-2">Date</th>
-                  <th className="text-left px-4 py-2">Description</th>
-                  <th className="text-left px-4 py-2">Catégorie</th>
-                  <th className="text-left px-4 py-2">Progression</th>
-                </tr>
-              </thead>
-              <tbody>
-                {project.documents.map((doc, i) => {
-                  const Icon = iconMap[doc.type];
-                  return (
-                    <tr
-                      key={i}
-                      className={`border-t dark:border-neutral-700 hover:bg-blue-50 dark:hover:bg-neutral-700/50 transition ${
-                        i === 1 ? "bg-blue-50 dark:bg-neutral-700/50" : ""
-                      }`}
-                    >
-                      <td className="px-4 py-2 text-gray-600 dark:text-gray-300">
-                        {new Date(doc.date).toLocaleString("en-US", {
-                          month: "short",
-                          day: "2-digit",
-                        })}
-                      </td>
-                      <td className="px-4 py-2 flex items-center gap-2 text-gray-700 dark:text-gray-200">
-                        <Icon className="w-4 h-4 text-[#326EA6]" />
-                        {doc.description}
-                      </td>
-                      <td className="px-4 py-2 text-gray-600 dark:text-gray-300">
-                        {doc.category}
-                      </td>
-                      <td className="px-4 py-2 text-gray-700 dark:text-gray-100">
-                        {doc.status}
-                      </td>
+          <div className="lg:col-span-2 flex flex-col">
+            <div className="px-3">
+              <div className="border-t max-h-[48vh] overflow-y-auto hide-scrollbar">
+                <table className="w-full text-sm">
+                  <thead className="bg-gray-50 dark:bg-neutral-700 text-gray-700 dark:text-gray-200 sticky top-0">
+                    <tr>
+                      <th className="text-left px-4 py-2">Date</th>
+                      <th className="text-left px-4 py-2">Description</th>
+                      <th className="text-left px-4 py-2">Catégorie</th>
+                      <th className="text-left px-4 py-2">Progression</th>
                     </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+                  </thead>
 
-            {/* Bottom action bar */}
-            <div className="flex items-center gap-3 p-3 border-t bg-gray-50 dark:bg-neutral-800/50">
-              <button className="bg-[#63A053] text-white p-2 rounded-sm hover:bg-[#528a45] transition">
+                  <tbody>
+                    {project.documents.map((doc, i) => {
+                      const Icon = iconMap[doc.type];
+                      return (
+                        <tr
+                          key={i}
+                          className={`border-t dark:border-neutral-700 hover:bg-blue-50 dark:hover:bg-neutral-700/50 transition ${
+                            i === 1 ? "bg-blue-50 dark:bg-neutral-700/50" : ""
+                          } h-[7vh]`}
+                        >
+                          <td className="px-4 py-2 text-gray-600 dark:text-gray-300">
+                            {new Date(doc.date).toLocaleString("en-US", {
+                              month: "short",
+                              day: "2-digit",
+                            })}
+                          </td>
+
+                          <td className="px-4 py-2 flex items-center gap-2 text-gray-700 dark:text-gray-200">
+                            <Icon className="w-4 h-4 text-[#326EA6]" />
+                            {doc.description}
+                          </td>
+
+                          <td className="px-4 py-2 text-gray-600 dark:text-gray-300">
+                            {doc.category}
+                          </td>
+
+                          <td className="px-4 py-2 text-gray-700 dark:text-gray-100">
+                            {doc.status}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Action Bar */}
+            <div className="flex items-center gap-3 mt-3">
+              <button className="bg-[#63A053] text-white px-2.5 rounded-xs text-xl">
                 +
               </button>
-              <FileText className="w-5 h-5 text-gray-500 hover:text-[#326EA6]" />
-              <ImageDown className="w-5 h-5 text-gray-500 hover:text-[#326EA6]" />
-              <Video className="w-5 h-5 text-gray-500 hover:text-[#326EA6]" />
-              <Globe className="w-5 h-5 text-gray-500 hover:text-[#326EA6]" />
-              <FolderPlus className="w-5 h-5 text-gray-500 hover:text-[#326EA6]" />
+              <FileText className="w-5 h-5 text-gray-500" />
+              <ImageDown className="w-5 h-5 text-gray-500" />
+              <Video className="w-5 h-5 text-gray-500" />
+              <Globe className="w-5 h-5 text-gray-500" />
+              <FolderPlus className="w-5 h-5 text-gray-500" />
             </div>
           </div>
 
-          {/* Preview */}
+          {/* Preview card */}
           <div className="border border-gray-200 dark:border-neutral-700 rounded-md p-3 flex flex-col items-center">
             <Image
               src={project.preview.image}
               alt="Preview"
               width={400}
               height={500}
-              className="rounded-md object-contain"
+              className="rounded-md object-contain max-h-[44vh] min-w-[35vw]"
             />
-            <div className="flex justify-center gap-4 mt-3">
-              <button className="bg-gray-100 dark:bg-neutral-700 p-2 rounded-full hover:bg-gray-200 dark:hover:bg-neutral-600 transition">
-                ⬇️
+
+            <div className="flex justify-center gap-3 mt-3">
+              <button
+                onClick={() =>
+                  handleDownload(project.preview.image, "preview-download")
+                }
+                className="bg-[#E0EFFF] dark:bg-[#275883] p-2 rounded-full hover:bg-gray-200 transition cursor-pointer"
+                title="Download"
+              >
+                <Download />
               </button>
-              <button className="bg-gray-100 dark:bg-neutral-700 p-2 rounded-full hover:bg-gray-200 dark:hover:bg-neutral-600 transition">
-                ⤢
+
+              <button
+                onClick={() => handlePrint(project.preview.image, "image")}
+                className="bg-[#E0EFFF] dark:bg-[#275883] p-2 rounded-full hover:bg-gray-200 transition cursor-pointer"
+                title="Print"
+              >
+                <Printer />
+              </button>
+
+              {/* FULLSCREEN CLICK */}
+              <button
+                onClick={() => setFullscreenOpen(true)}
+                className="bg-[#E0EFFF] dark:bg-[#275883] p-2 rounded-full hover:bg-gray-200 transition cursor-pointer"
+              >
+                <Fullscreen className="h-5 w-5" />
               </button>
             </div>
           </div>
         </div>
       </div>
+
+      {/* ===================================================== */}
+      {/* ★ FULLSCREEN MODAL PREVIEW (IMAGE / VIDEO / WEB / PDF) */}
+      {/* ===================================================== */}
+
+      {fullscreenOpen && (
+        <div
+          className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-9999  p-4"
+          onClick={() => setFullscreenOpen(false)}
+        >
+          <div
+            className="relative max-w-[90vw] max-h-[90vh] flex items-center justify-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Viewer (supports future types) */}
+
+            <Image
+              src={project.preview.image}
+              alt="Fullscreen preview"
+              width={1400}
+              height={1400}
+              className="rounded-md object-contain max-h-[90vh]"
+            />
+            {/* Close button */}
+            <button
+              onClick={() => setFullscreenOpen(false)}
+              className="absolute top-3 right-3 bg-white/20 text-white p-2 rounded-full hover:bg-white/30 transition"
+            >
+              <X className="w-6 h-6" />
+            </button>
+          </div>
+        </div>
+      )}
+      <CreateJalonModal
+        open={jalonModalOpen}
+        onClose={() => setJalonModalOpen(false)}
+      />
     </div>
   );
 };
