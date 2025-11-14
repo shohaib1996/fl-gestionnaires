@@ -193,7 +193,7 @@ export default function AddTaskDialog({
               <label className="text-sm font-medium">Heure de début</label>
               <div className="relative mt-1">
                 <Input
-                  placeholder="HH/MM"
+                  placeholder="HH:MM"
                   className="bg-gray-100 pl-10 rounded-xs"
                 />
                 <Clock className="w-4 h-4 text-gray-500 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
@@ -205,7 +205,7 @@ export default function AddTaskDialog({
               <label className="text-sm font-medium">Heure de fin</label>
               <div className="relative mt-1">
                 <Input
-                  placeholder="HH/MM"
+                  placeholder="HH:MM"
                   className="bg-gray-100 pl-10 rounded-xs"
                 />
                 <Clock className="w-4 h-4 text-gray-500 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
