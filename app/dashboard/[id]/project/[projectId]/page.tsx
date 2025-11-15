@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import {
   FileText,
-  Video,
+  PlaySquare,
   Globe,
   FolderPlus,
   ImageDown,
@@ -37,7 +37,7 @@ interface ProjectData {
 
 const iconMap: Record<string, any> = {
   file: FileText,
-  video: Video,
+  video: PlaySquare,
   web: Globe,
   folder: FolderPlus,
 };
@@ -227,6 +227,7 @@ const ProjectDetails = () => {
                   <thead className="bg-gray-50 dark:bg-neutral-700 text-gray-700 dark:text-gray-200 sticky top-0">
                     <tr>
                       <th className="text-left px-4 py-2">Date</th>
+                      <th className="text-left px-4 py-2"></th>
                       <th className="text-left px-4 py-2">Description</th>
                       <th className="text-left px-4 py-2">Catégorie</th>
                       <th className="text-left px-4 py-2">Progression</th>
@@ -250,8 +251,10 @@ const ProjectDetails = () => {
                             })}
                           </td>
 
-                          <td className="px-4 py-2 flex items-center gap-2 text-gray-700 dark:text-gray-200">
-                            <Icon className="w-4 h-4 text-[#326EA6]" />
+                          <td className="px-4 py-2 gap-2 text-gray-700 dark:text-gray-200">
+                            <Icon className="w-6 h-6 text-[#326EA6]" />
+                          </td>
+                          <td className="px-4 py-2 gap-2 text-gray-700 dark:text-gray-200">
                             {doc.description}
                           </td>
 
@@ -277,7 +280,7 @@ const ProjectDetails = () => {
               </button>
               <FileText className="w-5 h-5 text-gray-500" />
               <ImageDown className="w-5 h-5 text-gray-500" />
-              <Video className="w-5 h-5 text-gray-500" />
+              <PlaySquare className="w-5 h-5 text-gray-500" />
               <Globe className="w-5 h-5 text-gray-500" />
               <FolderPlus className="w-5 h-5 text-gray-500" />
             </div>
@@ -301,7 +304,7 @@ const ProjectDetails = () => {
                 className="bg-[#E0EFFF] dark:bg-[#275883] p-2 rounded-full hover:bg-gray-200 transition cursor-pointer"
                 title="Download"
               >
-                <Download />
+                <Download className="w-5 h-5" />
               </button>
 
               <button
@@ -309,7 +312,7 @@ const ProjectDetails = () => {
                 className="bg-[#E0EFFF] dark:bg-[#275883] p-2 rounded-full hover:bg-gray-200 transition cursor-pointer"
                 title="Print"
               >
-                <Printer />
+                <Printer className="w-5 h-5" />
               </button>
 
               {/* FULLSCREEN CLICK */}
