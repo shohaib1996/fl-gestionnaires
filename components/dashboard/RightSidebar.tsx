@@ -26,7 +26,7 @@ export default function Sidebar() {
           ].map((item, idx) => (
             <li
               key={idx}
-              className="py-4 cursor-pointer hover:bg-blue-50 transition px-2 rounded"
+              className="py-4 cursor-pointer hover:bg-blue-50 dark:hover:bg-[#326EA6] transition px-2 rounded"
             >
               <span className="font-medium text-gray-800 dark:text-gray-100">
                 {item.name}

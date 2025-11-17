@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import {
   Dialog,
   DialogContent,
@@ -24,7 +23,7 @@ interface Props {
 export default function JalonDetailsModal({ open, onClose, phase }: Props) {
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="p-0 bg-white dark:bg-neutral-900 min-w-[80vw] max-h-[90vh] overflow-auto border-none rounded-none text-gray-800 dark:text-gray-200">
+      <DialogContent className="p-0 bg-white dark:bg-neutral-900 min-w-[70vw] max-h-[90vh] overflow-auto border-none rounded-none text-gray-800 dark:text-gray-200">
         {/* HEADER */}
         <DialogHeader className="px-8 py-4 bg-[#63A053] dark:bg-[#4e8742] text-white">
           <DialogTitle className="text-lg font-semibold">
@@ -134,7 +133,7 @@ export default function JalonDetailsModal({ open, onClose, phase }: Props) {
 
           {/* FOOTER BUTTON */}
           <div className="flex justify-center pt-4">
-            <button className="px-6 py-2 bg-[#63A053] dark:bg-[#4e8742] text-white rounded hover:bg-[#528a45] dark:hover:bg-[#3b6c34]">
+            <button className="px-6 py-2 bg-[#63A053] dark:bg-[#4e8742] text-white rounded-xs hover:bg-[#528a45] dark:hover:bg-[#3b6c34]">
               Modifier
             </button>
           </div>

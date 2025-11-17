@@ -98,7 +98,7 @@ export default function LeftSidebar() {
 
       <div className="p-4 shrink-0">
         <Button
-          className="w-full bg-[#63a053] hover:bg-[#528a45] rounded-xs text-sm py-2 cursor-pointer"
+          className="w-full bg-[#63a053] hover:bg-[#528a45] rounded-xs text-sm py-2 cursor-pointer dark:text-white"
           onClick={() => setOpenAdd(true)}
         >
           + Ajouter

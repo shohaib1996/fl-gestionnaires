@@ -64,7 +64,7 @@ export default function DashboardLayout({
           {/* Dropdown Trigger */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button className="bg-[#63a053] hover:bg-[#528a45] text-white text-sm px-4 py-2 flex items-center gap-1">
+              <Button className="bg-[#63a053] hover:bg-[#528a45] rounded-xs cursor-pointer text-white text-sm px-4 py-2 flex items-center gap-1">
                 <Plus className="w-4 h-4" /> Ajouter
               </Button>
             </DropdownMenuTrigger>
@@ -76,25 +76,25 @@ export default function DashboardLayout({
             >
               <DropdownMenuItem
                 onClick={() => console.log("Add Task")}
-                className="cursor-pointer hover:bg-[#63a053]/10"
+                className="cursor-pointer focus:bg-[#326EA6] focus:text-white"
               >
                 Tâche
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => console.log("Add Project")}
-                className="cursor-pointer hover:bg-[#63a053]/10"
+                className="cursor-pointer focus:bg-[#326EA6] focus:text-white"
               >
                 Projet
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => console.log("Add Contact")}
-                className="cursor-pointer hover:bg-[#63a053]/10"
+                className="cursor-pointer focus:bg-[#326EA6] focus:text-white"
               >
                 Contact
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => console.log("Add Dossier")}
-                className="cursor-pointer hover:bg-[#63a053]/10"
+                className="cursor-pointer focus:bg-[#326EA6] focus:text-white"
               >
                 Dossier
               </DropdownMenuItem>

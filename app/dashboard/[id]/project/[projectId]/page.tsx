@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import JalonDetailsModal from "@/components/modals/JalonDetailsModal";
 import CreateJalonModal from "@/components/modals/CreateJalonModal";
+import AddDocumentModal from "@/components/modals/AddDocumentModal";
 
 interface Phase {
   step: number;
@@ -55,6 +56,7 @@ const ProjectDetails = () => {
   const [jalonModalOpen, setJalonModalOpen] = useState(false);
   const [jalonDetailsModalOpen, setJalonDetailsModalOpen] = useState(false);
   const [selectedPhase, setSelectedPhase] = useState<Phase | null>(null);
+  const [addDocumentModalOpen, setAddDocumentModalOpen] = useState(false);
 
   const handlePhaseClick = (phase: Phase) => {
     setSelectedPhase(phase);
@@ -187,7 +189,7 @@ const ProjectDetails = () => {
             <button
               key={phase.step}
               onClick={() => handlePhaseClick(phase)}
-              className={`rounded-xs text-sm font-medium py-2 ${
+              className={`rounded-xs text-sm font-medium py-2 cursor-pointer ${
                 phase.status === "active"
                   ? "bg-[#63A053] text-white"
                   : "bg-[#A2CF96] text-gray-800 dark:text-gray-200"
@@ -201,7 +203,7 @@ const ProjectDetails = () => {
           ))}
           <button
             onClick={() => setJalonModalOpen(true)}
-            className="ml-auto bg-[#63A053] text-white px-3 py-1 text-sm font-medium rounded-sm"
+            className="ml-auto bg-[#63A053] text-white px-3 py-1 text-sm font-medium rounded-xs cursor-pointer"
           >
             + Jalon
           </button>
@@ -290,7 +292,10 @@ const ProjectDetails = () => {
 
             {/* Action Bar */}
             <div className="flex items-center gap-3 mt-3">
-              <button className="bg-[#63A053] text-white px-2.5 rounded-xs text-xl">
+              <button
+                onClick={() => setAddDocumentModalOpen(true)}
+                className="bg-[#63A053] text-white px-2.5 rounded-xs text-xl cursor-pointer"
+              >
                 +
               </button>
               <FileText className="w-5 h-5 text-gray-500" />
@@ -385,6 +390,10 @@ const ProjectDetails = () => {
           phase={selectedPhase}
         />
       )}
+      <AddDocumentModal
+        open={addDocumentModalOpen}
+        onClose={() => setAddDocumentModalOpen(false)}
+      />
     </div>
   );
 };

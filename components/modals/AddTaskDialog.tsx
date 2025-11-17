@@ -105,7 +105,7 @@ export default function AddTaskDialog({
               <label className="text-sm font-medium">Date</label>
 
               <Popover>
-                <PopoverTrigger asChild>
+                <PopoverTrigger asChild className="dark:bg-gray-100/10">
                   <button
                     type="button"
                     className="w-full flex items-center justify-between bg-gray-100 py-3 px-3 rounded text-left text-sm text-gray-600 hover:shadow-sm"
@@ -149,7 +149,7 @@ export default function AddTaskDialog({
               <label className="text-sm font-medium">Date</label>
 
               <Popover>
-                <PopoverTrigger asChild>
+                <PopoverTrigger asChild className="dark:bg-gray-100/10">
                   <button
                     type="button"
                     className="w-full flex items-center justify-between bg-gray-100 py-3 px-3 rounded text-left text-sm text-gray-600 hover:shadow-sm"
@@ -218,17 +218,17 @@ export default function AddTaskDialog({
             <label className="text-sm font-medium mb-2 block">Lieu</label>
 
             <DropdownMenu>
-              <DropdownMenuTrigger asChild>
+              <DropdownMenuTrigger asChild className="bg-gray-100 dark:bg-gray-100/10">
                 <button
                   type="button"
                   className="w-full flex items-center justify-between bg-gray-100 py-3 px-3 rounded text-left text-sm text-gray-600 hover:shadow-sm"
                   aria-haspopup="true"
                 >
-                  <div className="flex items-center gap-3">
-                    <MapPin className="w-4 h-4 text-gray-500" />
+                  <div className="flex items-center gap-3 ">
+                    <MapPin className="w-4 h-4 text-gray-500 dark:text-white" />
                     <span
                       className={`${
-                        location ? "text-gray-800" : "text-gray-500"
+                        location ? "text-gray-800 dark:text-white" : "text-gray-500 dark:text-white"
                       }`}
                     >
                       {location || "Sélectionner un lieu"}
@@ -241,7 +241,7 @@ export default function AddTaskDialog({
               <DropdownMenuContent
                 align="start"
                 sideOffset={6}
-                className="w-56"
+                className="w-56 "
               >
                 <DropdownMenuItem onSelect={() => setLocation("Online")}>
                   Online
@@ -266,14 +266,14 @@ export default function AddTaskDialog({
               <DropdownMenuTrigger asChild>
                 <button
                   type="button"
-                  className="w-full flex items-center justify-between bg-gray-100 py-3 px-3 rounded text-left text-sm text-gray-600 hover:shadow-sm"
+                  className="w-full flex items-center justify-between bg-gray-100 dark:bg-gray-100/10 py-3 px-3 rounded text-left text-sm text-gray-600 hover:shadow-sm"
                   aria-haspopup="true"
                 >
                   <div className="flex items-center gap-3">
-                    <User2 className="w-4 h-4 text-gray-500" />
+                    <User2 className="w-4 h-4 text-gray-500 dark:text-white" />
                     <span
                       className={`${
-                        participant ? "text-gray-800" : "text-gray-500"
+                        participant ? "text-gray-800 dark:text-white" : "text-gray-500 dark:text-white"
                       }`}
                     >
                       {participant ?? "Chercher"}

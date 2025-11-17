@@ -31,6 +31,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+import AddDocumentModal from "./AddDocumentModal";
+import { Input } from "../ui/input";
+import { Textarea } from "../ui/textarea";
 
 interface Props {
   open: boolean;
@@ -40,6 +43,7 @@ interface Props {
 export default function CreateJalonModal({ open, onClose }: Props) {
   const [startDate, setStartDate] = useState<Date | undefined>();
   const [endDate, setEndDate] = useState<Date | undefined>();
+  const [addDocumentModalOpen, setAddDocumentModalOpen] = useState(false);
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -59,7 +63,7 @@ export default function CreateJalonModal({ open, onClose }: Props) {
             {/* Name */}
             <div className="col-span-6">
               <label className="block text-sm text-gray-700 dark:text-gray-300">Nom</label>
-              <input
+              <Input
                 type="text"
                 placeholder="Nommer le jalon"
                 className="w-full border rounded px-3 py-2 mt-1 bg-gray-50 dark:bg-neutral-800 border-gray-200 dark:border-neutral-700 text-sm text-gray-800 dark:text-gray-200 placeholder:text-gray-400 dark:placeholder:text-gray-500"
@@ -126,7 +130,7 @@ export default function CreateJalonModal({ open, onClose }: Props) {
             {/* Description */}
             <div className="col-span-6">
               <label className="block text-sm text-gray-700 dark:text-gray-300">Brève description</label>
-              <textarea
+              <Textarea
                 placeholder="Brève description"
                 className="w-full mt-1 border rounded px-3 py-2 bg-gray-50 dark:bg-neutral-800 border-gray-200 dark:border-neutral-700 text-sm h-24 text-gray-800 dark:text-gray-200 placeholder:text-gray-400 dark:placeholder:text-gray-500"
               />
@@ -179,18 +183,21 @@ export default function CreateJalonModal({ open, onClose }: Props) {
           <div className="mt-4 pt-4 border-t border-gray-200 dark:border-neutral-700">
             <div className="flex justify-start gap-3 items-center mb-4">
               <p className="text-sm italic text-gray-600 dark:text-gray-400">Créer une liste des livrables à compléter durant ce jalon</p>
-              <button className="px-3 py-1.5 bg-[#63A053] dark:bg-[#4e8742] text-white rounded-xs flex items-center gap-2">
+              <button
+                onClick={() => setAddDocumentModalOpen(true)}
+                className="px-3 py-1.5 bg-[#63A053] dark:bg-[#4e8742] text-white rounded-xs flex items-center gap-2 cursor-pointer"
+              >
                 <Plus className="w-4 h-4" />
               </button>
             </div>
 
             <div className="grid grid-cols-3 gap-8">
               {[0, 1].map((col) => (
-                <div key={col} className="space-y-4">
+                <div key={col} className="space-y-3 mb-5">
                   {[FileText, PlaySquare, ImageIcon].map((Icon, idx) => (
                     <div key={idx}>
                       <hr className="border-[#989898]/30 dark:border-[#ffffff]/10" />
-                      <div className="flex items-center gap-3 py-2">
+                      <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded flex items-center justify-center">
                           <Icon className="w-7 h-7 text-[#326EA6] dark:text-[#7fb5df]" />
                         </div>
@@ -205,16 +212,16 @@ export default function CreateJalonModal({ open, onClose }: Props) {
               ))}
 
               {/* Empty Column */}
-              <div className="space-y-4">
+              {/* <div className="space-y-3">
                 <div className="h-16"></div>
                 <div className="h-16"></div>
                 <div className="h-16"></div>
-              </div>
+              </div> */}
             </div>
           </div>
 
           {/* Footer */}
-          <div className="flex justify-center gap-4 mt-8">
+          <div className="flex justify-center gap-4">
             <button
               onClick={onClose}
               className="px-6 py-2 bg-gray-200 dark:bg-neutral-700 text-gray-800 dark:text-gray-100 rounded hover:bg-gray-300 dark:hover:bg-neutral-600"
@@ -227,6 +234,10 @@ export default function CreateJalonModal({ open, onClose }: Props) {
             </button>
           </div>
         </div>
+        <AddDocumentModal
+          open={addDocumentModalOpen}
+          onClose={() => setAddDocumentModalOpen(false)}
+        />
       </DialogContent>
     </Dialog>
   );
