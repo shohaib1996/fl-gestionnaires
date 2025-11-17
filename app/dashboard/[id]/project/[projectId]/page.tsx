@@ -15,7 +15,14 @@ import {
   Fullscreen,
   X,
 } from "lucide-react";
+import JalonDetailsModal from "@/components/modals/JalonDetailsModal";
 import CreateJalonModal from "@/components/modals/CreateJalonModal";
+
+interface Phase {
+  step: number;
+  title: string;
+  status: string;
+}
 
 interface ProjectData {
   project: {
@@ -23,7 +30,7 @@ interface ProjectData {
     name: string;
     lead: { name: string; role: string };
     goal: string;
-    phases: { step: number; title: string; status: string }[];
+    phases: Phase[];
     documents: {
       date: string;
       description: string;
@@ -46,6 +53,13 @@ const ProjectDetails = () => {
   const [data, setData] = useState<ProjectData | null>(null);
   const [fullscreenOpen, setFullscreenOpen] = useState(false); // FULLSCREEN MODAL STATE
   const [jalonModalOpen, setJalonModalOpen] = useState(false);
+  const [jalonDetailsModalOpen, setJalonDetailsModalOpen] = useState(false);
+  const [selectedPhase, setSelectedPhase] = useState<Phase | null>(null);
+
+  const handlePhaseClick = (phase: Phase) => {
+    setSelectedPhase(phase);
+    setJalonDetailsModalOpen(true);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -172,6 +186,7 @@ const ProjectDetails = () => {
           {project.phases.map((phase) => (
             <button
               key={phase.step}
+              onClick={() => handlePhaseClick(phase)}
               className={`rounded-xs text-sm font-medium py-2 ${
                 phase.status === "active"
                   ? "bg-[#63A053] text-white"
@@ -363,6 +378,13 @@ const ProjectDetails = () => {
         open={jalonModalOpen}
         onClose={() => setJalonModalOpen(false)}
       />
+      {selectedPhase && (
+        <JalonDetailsModal
+          open={jalonDetailsModalOpen}
+          onClose={() => setJalonDetailsModalOpen(false)}
+          phase={selectedPhase}
+        />
+      )}
     </div>
   );
 };
