@@ -86,12 +86,11 @@ export default function DashboardLayout({
               >
                 Projet
               </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => console.log("Add Contact")}
-                className="cursor-pointer focus:bg-[#326EA6] focus:text-white"
-              >
-                Contact
-              </DropdownMenuItem>
+              <Link href="/contact">
+                <DropdownMenuItem className="cursor-pointer focus:bg-[#326EA6] focus:text-white">
+                  Contact
+                </DropdownMenuItem>
+              </Link>
               <DropdownMenuItem
                 onClick={() => console.log("Add Dossier")}
                 className="cursor-pointer focus:bg-[#326EA6] focus:text-white"
@@ -114,7 +113,9 @@ export default function DashboardLayout({
 
         {/* Middle Section (Main Content) */}
         <main className="flex-1 flex flex-col max-w-[70vw] overflow-hidden px-4.5">
-          <div className="flex-1 overflow-y-auto hide-scrollbar">{children}</div>
+          <div className="flex-1 overflow-y-auto hide-scrollbar">
+            {children}
+          </div>
         </main>
 
         {/* Right Sidebar */}

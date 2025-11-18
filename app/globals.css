@@ -181,3 +181,43 @@ html {
 .hide-scrollbar::-webkit-scrollbar {
   display: none; /* Chrome, Safari */
 }
+
+.mes-contacts-css{
+  width: 150px; height: 40px;
+  display:flex; align-items:center; justify-content:center;
+  border-radius: 10px;
+  font-weight: 500;
+  color: #4C7B40;
+  position: relative; overflow: hidden;
+  border: 1px solid #FBFBFB;
+  backdrop-filter: blur(2.85px);
+  font-size: 16px;
+
+  /* split fill + subtle inner bevel */
+  background:
+    linear-gradient(to bottom, rgba(255,255,255,0.98) 0 49.2%, rgba(227,237,223,1) 49.2% 100%);
+  box-shadow:
+    inset 0 2px 0 rgba(255,255,255,0.7),
+    0 4px 12px rgba(99,160,83,0.06);
+}
+
+/* crisp center line */
+.mes-contacts-css::after{
+  content:"";
+  position:absolute;
+  left: 0; right: 0; height: 1px;
+  top: 50%; transform: translateY(-0.5px);
+  background: rgba(76,123,64,0.06);
+}
+
+/* faint decorative rim on top-left -> bottom-right */
+.mes-contacts-css::before{
+  content:"";
+  position:absolute; inset:0;
+  border-radius:18px;
+  pointer-events:none;
+  box-shadow:
+    inset 6px 6px 0 rgba(255,255,255,0.25), /* soft top-left highlight */
+    inset -6px -6px 0 rgba(76,123,64,0.02); /* soft bottom-right green tint */
+}
+

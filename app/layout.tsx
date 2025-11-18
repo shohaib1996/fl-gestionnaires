@@ -39,7 +39,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <main className="bg-[#ebebeb] dark:bg-card min-h-screen">{children}</main>
         </ThemeProvider>
       </body>
     </html>
