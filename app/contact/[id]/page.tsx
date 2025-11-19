@@ -13,6 +13,7 @@ import {
   MessageSquare,
 } from "lucide-react";
 import Header from "@/components/Header/Header";
+import Link from "next/link";
 
 const person = {
   name: "Jacqueline Katanga",
@@ -44,7 +45,7 @@ export default function ContactDetails() {
             </div>
 
             {/* contact meta (icons + label) */}
-            <ul className="space-y-6 text-gray-700 dark:text-gray-300 max-w-xl">
+            <ul className="space-y-5 text-gray-700 dark:text-gray-300 max-w-xl">
               <li className="flex items-center gap-4">
                 <div className="w-8 h-8 flex items-center justify-center rounded text-gray-700 dark:text-gray-200">
                   <svg
@@ -58,14 +59,14 @@ export default function ContactDetails() {
                   </svg>
                 </div>
 
-                <span className="text-sm">{person.skills}</span>
+                <span className="text-md">{person.skills}</span>
               </li>
 
               <li className="flex items-center gap-4">
                 <div className="w-8 h-8 flex items-center justify-center rounded text-gray-700 dark:text-gray-200">
                   <MapPin className="w-6 h-6" />
                 </div>
-                <span className="text-sm">{person.city}</span>
+                <span className="text-md">{person.city}</span>
               </li>
 
               <li className="flex items-center gap-4">
@@ -74,7 +75,7 @@ export default function ContactDetails() {
                 </div>
                 <a
                   href={`mailto:${person.email}`}
-                  className="text-sm text-gray-700 dark:text-gray-300 hover:underline"
+                  className="text-md text-gray-700 dark:text-gray-300 hover:underline"
                 >
                   {person.email}
                 </a>
@@ -86,48 +87,47 @@ export default function ContactDetails() {
           <aside className="max-w-[300px] fhrink-0">
             <div className="flex flex-col items-center">
               <div
-                className="relative w-[260px] h-[250px] rounded-lg overflow-hidden border border-gray-200 dark:border-[#2c3a32]
+                className="relative w-[15vw] h-[30vh] rounded-lg overflow-hidden border border-gray-200 dark:border-[#2c3a32]
               bg-white dark:bg-[#071014] shadow-sm"
               >
                 <Image
                   src={person.img}
                   alt={person.name}
                   fill
-                  sizes="(min-width: 1024px) 250px, 160px"
-                  className="object-cover"
+                  className="object-cover object-top scale-[1.15]"
                 />
               </div>
 
               {/* social icons */}
-              <div className="mt-6 flex items-center gap-6 text-gray-600 dark:text-gray-300">
-                <a
+              <div className="mt-6 flex items-center justify-end w-full gap-2.5 text-gray-600 dark:text-gray-300">
+                <Link
                   href="#"
                   className="hover:text-gray-900 dark:hover:text-white transition-colors"
                   aria-label="facebook"
                 >
-                  <Facebook className="w-5 h-5" />
-                </a>
-                <a
+                  <Facebook className="w-7 h-7" />
+                </Link>
+                <Link
                   href="#"
                   className="hover:text-gray-900 dark:hover:text-white transition-colors"
                   aria-label="twitter"
                 >
-                  <Twitter className="w-5 h-5" />
-                </a>
-                <a
+                  <Twitter className="w-7 h-7" />
+                </Link>
+                <Link
                   href="#"
                   className="hover:text-gray-900 dark:hover:text-white transition-colors"
                   aria-label="linkedin"
                 >
-                  <Linkedin className="w-5 h-5" />
-                </a>
+                  <Linkedin className="w-7 h-7" />
+                </Link>
               </div>
             </div>
           </aside>
         </div>
 
         {/* body paragraphs */}
-        <div className="mt-10 w-full text-justify space-y-6 text-gray-600 dark:text-gray-300 text-sm leading-7">
+        <div className="mt-5 w-full text-justify space-y-6 text-gray-600 dark:text-gray-300 text-sm leading-7">
           <p>{person.bio1}</p>
           <p>{person.bio2}</p>
 
@@ -149,23 +149,83 @@ export default function ContactDetails() {
         <div className="mt-16 flex justify-center items-center gap-6">
           <button
             aria-label="share"
-            className="w-12 h-12 rounded-full border-2 border-[#CFE8C9] bg-white dark:bg-[#071014] flex items-center justify-center shadow-sm hover:shadow-md transition"
+            className="dark:bg-[#071014] flex items-center justify-center shadow-sm hover:shadow-md transition"
           >
-            <Share2 className="w-5 h-5 text-[#63A053]" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="40"
+              height="40"
+              viewBox="0 0 28 28"
+              fill="none"
+            >
+              <path
+                d="M14 0.5C21.4558 0.5 27.5 6.54416 27.5 14C27.5 21.4558 21.4558 27.5 14 27.5C6.54416 27.5 0.5 21.4558 0.5 14C0.5 6.54416 6.54416 0.5 14 0.5Z"
+                fill="#63A053"
+                fill-opacity="0.31"
+                stroke="#63A053"
+              />
+              <path
+                d="M19.9033 13.6L16.3333 9.928V11.896L15.6644 12C12.3122 12.488 10.0411 14.296 8.74222 17.064C10.5467 15.752 12.7867 15.12 15.5556 15.12H16.3333V17.272M14.7778 15.936C11.3011 16.104 8.81222 17.392 7 20C7.77778 16 10.1111 12 15.5556 11.2V8L21 13.6L15.5556 19.2V15.92C15.2989 15.92 15.0422 15.928 14.7778 15.936Z"
+                fill="#63A053"
+              />
+              <path
+                d="M19.9033 13.6L16.3333 9.928V11.896L15.6644 12C12.3122 12.488 10.0411 14.296 8.74222 17.064C10.5467 15.752 12.7867 15.12 15.5556 15.12H16.3333V17.272M14.7778 15.92V15.936M14.7778 15.936C11.3011 16.104 8.81222 17.392 7 20C7.77778 16 10.1111 12 15.5556 11.2V8L21 13.6L15.5556 19.2V15.92C15.2989 15.92 15.0422 15.928 14.7778 15.936Z"
+                stroke="#63A053"
+                stroke-width="0.1"
+              />
+            </svg>
           </button>
 
           <button
             aria-label="add"
-            className="w-12 h-12 rounded-full border-2 border-[#CFE8C9] bg-white dark:bg-[#071014] flex items-center justify-center shadow-sm hover:shadow-md transition"
+            className="dark:bg-[#071014] flex items-center justify-center shadow-sm hover:shadow-md transition"
           >
-            <Plus className="w-5 h-5 text-[#63A053]" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="40"
+              height="40"
+              viewBox="0 0 28 28"
+              fill="none"
+            >
+              <path
+                d="M14 0.5C21.4558 0.5 27.5 6.54416 27.5 14C27.5 21.4558 21.4558 27.5 14 27.5C6.54416 27.5 0.5 21.4558 0.5 14C0.5 6.54416 6.54416 0.5 14 0.5Z"
+                fill="#63A053"
+                fill-opacity="0.31"
+                stroke="#63A053"
+              />
+              <path
+                d="M14.0001 7.77777V20.2222M20.2223 14H7.77783"
+                stroke="#63A053"
+                stroke-linecap="square"
+                stroke-linejoin="round"
+              />
+            </svg>
           </button>
 
           <button
             aria-label="message"
-            className="w-12 h-12 rounded-full border-2 border-[#CFE8C9] bg-white dark:bg-[#071014] flex items-center justify-center shadow-sm hover:shadow-md transition"
+            className=" dark:bg-[#071014] flex items-center justify-center shadow-sm hover:shadow-md transition"
           >
-            <MessageSquare className="w-5 h-5 text-[#63A053]" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="40"
+              height="40"
+              viewBox="0 0 28 28"
+              fill="none"
+            >
+              <path
+                d="M14 0.5C21.4558 0.5 27.5 6.54416 27.5 14C27.5 21.4558 21.4558 27.5 14 27.5C6.54416 27.5 0.5 21.4558 0.5 14C0.5 6.54416 6.54416 0.5 14 0.5Z"
+                fill="#63A053"
+                fill-opacity="0.31"
+                stroke="#63A053"
+              />
+              <path
+                d="M9 8.5H20C20.2761 8.5 20.5 8.72386 20.5 9V16.5H16.3398L16.209 16.5928L10.2373 20.8574L10.9902 17.0977L11.1104 16.5H9C8.72386 16.5 8.5 16.2761 8.5 16V9C8.5 8.72386 8.72386 8.5 9 8.5Z"
+                stroke="#63A053"
+              />
+              <path d="M11 11H18" stroke="#63A053" stroke-linecap="round" />
+              <path d="M11 13H15" stroke="#63A053" stroke-linecap="round" />
+            </svg>
           </button>
         </div>
       </div>

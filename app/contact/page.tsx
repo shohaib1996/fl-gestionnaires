@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Image from "next/image";
 import {
-  Search,
   ChevronDown,
   LayoutGrid,
   List,
@@ -239,75 +238,62 @@ const Contact = () => {
             ))}
           </div>
         ) : (
-          /* === LIST VIEW === */
-          <div className="space-y-3 transition-all">
+          /* === LIST VIEW (super minimal) === */
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5 transition-all">
             {dummyPeople.map((person) => (
-              <div
-                key={person.id}
-                className="
-                  flex items-center justify-between gap-4 bg-white border rounded p-4
-                  dark:bg-[#0D1514] dark:border-[#1F2A27] dark:shadow-none
-                  transition-all duration-300 ease-[cubic-bezier(.22,.61,.36,1)]
-                  hover:-translate-y-1 hover:shadow-[0_8px_20px_rgba(0,0,0,0.06)]
-                  hover:border-[#63A053]/40 hover:bg-[#FBFBFB]
-                  dark:hover:border-[#63A053]/40 dark:hover:shadow-[0_0_18px_rgba(99,160,83,0.1)]
-                  "
-              >
-                <div className="flex items-center gap-4">
-                  {/* Avatar */}
-                  <div className="relative p-1 rounded-full shrink-0">
-                    <BorderBeam className="absolute inset-0 rounded-full pointer-events-none" />
+              <Link href={`/contact/123456`}>
+                <div
+                  key={person.id}
+                  className="
+       flex items-center justify-between gap-4 bg-white border rounded px-4 py-1.5
+    dark:bg-[#0D1514] dark:border-[#1F2A27]
+    transition-all duration-300 ease-[cubic-bezier(.22,.61,.36,1)]
+    hover:-translate-y-1 hover:shadow-[0_8px_20px_rgba(0,0,0,0.06)]
+    hover:bg-[#FBFBFB] hover:border-[#63A053]/30 cursor-pointer
+      "
+                >
+                  {/* LEFT SIDE: Avatar + Info */}
+                  <div className="flex items-center gap-4 min-w-0">
+                    {/* Avatar */}
+                    <div className="relative p-1 rounded-full shrink-0">
+                      <BorderBeam className="absolute inset-0 rounded-full pointer-events-none" />
+                      <div className="w-12 h-12 rounded-full border-4 border-[#A9C5A1] dark:border-[#4F6D47] overflow-hidden">
+                        <Image
+                          src={person.img}
+                          alt={person.name}
+                          width={48}
+                          height={48}
+                          className="rounded-full object-cover"
+                        />
+                      </div>
+                    </div>
 
-                    <div className="w-16 h-16 rounded-full border-4 border-[#A9C5A1] dark:border-[#4F6D47] overflow-hidden">
-                      <Image
-                        src={person.img}
-                        alt={person.name}
-                        width={64}
-                        height={64}
-                        className="rounded-full"
-                      />
+                    {/* Name / Role / City inline */}
+                    <div className="flex items-center gap-3 text-sm text-gray-700 dark:text-gray-200 flex-wrap">
+                      <span className="font-semibold whitespace-nowrap">
+                        {person.name}
+                      </span>
+
+                      <span className="text-gray-400 dark:text-gray-500">
+                        |
+                      </span>
+
+                      <span className="whitespace-nowrap">{person.title}</span>
+
+                      <span className="text-gray-400 dark:text-gray-500">
+                        |
+                      </span>
+
+                      <span className="whitespace-nowrap">{person.city}</span>
                     </div>
                   </div>
 
-                  {/* Primary info */}
-                  <div className="min-w-0">
-                    <p className="text-sm font-semibold text-gray-900 dark:text-white">
-                      {person.name}
-                    </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-300 mt-1">
-                      {person.title}
-                    </p>
-
-                    <div className="flex items-center gap-2 mt-2 text-xs text-gray-500 dark:text-gray-300">
-                      <MapPin className="w-4 h-4 text-black dark:text-white" />
-                      <span>{person.city}</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Right actions */}
-                <div className="flex items-center gap-3">
-                  {/* small segmented control replicated */}
-                  <div className="flex rounded-full overflow-hidden">
-                    <Link href={`/contact/123456`}>
-                      <button className="px-6 py-1.5 text-sm cursor-pointer font-medium dark:bg-[#326EA6] bg-[#63A053] text-white rounded-l-full">
-                        Profil
-                      </button>
-                    </Link>
-
-                    <div className="w-px bg-[#4C7B40]/20"></div>
-
-                    <button className="px-4 py-1 text-sm font-medium bg-[#E3EDDF] dark:bg-[#326EA6]/30 dark:text-white/60 text-[#2E3A36] rounded-r-full">
-                      Message
-                    </button>
-                  </div>
-
-                  {/* More menu */}
-                  <button className="text-gray-400 dark:text-gray-300 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-[#0F1A18] transition">
+                  {/* THREE DOTS */}
+                  <button className="text-gray-400 dark:text-gray-300 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-[#0F1A18] transition shrink-0">
                     <MoreHorizontal className="w-5 h-5" />
                   </button>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         )}
