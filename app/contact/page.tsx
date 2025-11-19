@@ -14,6 +14,7 @@ import Header from "@/components/Header/Header";
 import { Input } from "@/components/ui/input";
 import { BorderBeam } from "@/components/ui/border-beam";
 import Link from "next/link";
+import AddContactModal from "@/components/modals/AddContactModal";
 
 const dummyPeople = [
   {
@@ -90,6 +91,7 @@ const dummyPeople = [
 
 const Contact = () => {
   const [view, setView] = useState<"grid" | "list">("grid");
+  const [openAddContact, setOpenAddContact] = useState(false);
 
   return (
     <div>
@@ -147,7 +149,10 @@ const Contact = () => {
                 </div>
 
                 {/* Add contact */}
-                <button className="flex items-center gap-2 bg-black dark:bg-[#63A053] text-white rounded px-4 py-1.5 text-sm shadow ml-3">
+                <button
+                  onClick={() => setOpenAddContact(true)}
+                  className="flex items-center cursor-pointer gap-2 bg-black dark:bg-[#63A053] text-white rounded px-4 py-1.5 text-sm shadow ml-3"
+                >
                   <Plus className="w-4 h-4" />
                   Ajouter un contact
                 </button>
@@ -327,6 +332,10 @@ const Contact = () => {
           </svg>
         </div>
       </div>
+      <AddContactModal
+        open={openAddContact}
+        onClose={() => setOpenAddContact(false)}
+      />
     </div>
   );
 };
