@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import AddTaskDialog from "@/components/modals/AddTaskDialog";
 import TaskDetailsModal from "@/components/modals/TaskDetailsModal";
 
+import { fr } from "date-fns/locale";
+
 export default function LeftSidebar() {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [openAdd, setOpenAdd] = useState(false);
@@ -62,6 +64,7 @@ export default function LeftSidebar() {
           mode="single"
           selected={date}
           onSelect={setDate}
+          locale={fr}
           className="w-full rounded-md "
         />
       </div>

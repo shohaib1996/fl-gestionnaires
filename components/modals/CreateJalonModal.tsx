@@ -62,7 +62,9 @@ export default function CreateJalonModal({ open, onClose }: Props) {
           <div className="grid grid-cols-12 gap-6 items-start">
             {/* Name */}
             <div className="col-span-6">
-              <label className="block text-sm text-gray-700 dark:text-gray-300">Nom</label>
+              <label className="block text-sm text-gray-700 dark:text-gray-300">
+                Nom
+              </label>
               <Input
                 type="text"
                 placeholder="Nommer le jalon"
@@ -72,25 +74,37 @@ export default function CreateJalonModal({ open, onClose }: Props) {
 
             {/* Start Date */}
             <div className="col-span-2">
-              <label className="block text-sm text-gray-700 dark:text-gray-300">Date de début</label>
+              <label className="block text-sm text-gray-700 dark:text-gray-300">
+                Date de début
+              </label>
               <Popover>
                 <PopoverTrigger asChild>
                   <button className="w-full mt-1 flex items-center gap-2 border rounded px-3 py-2 bg-gray-50 dark:bg-neutral-800 border-gray-200 dark:border-neutral-700 text-sm text-gray-700 dark:text-gray-200">
                     <CalendarIcon className="w-4 h-4 text-gray-500 dark:text-gray-400" />
                     <span className="flex-1 text-left">
-                      {startDate ? format(startDate, "dd/MM/yyyy") : "JJ/MM/AAAA"}
+                      {startDate
+                        ? format(startDate, "dd/MM/yyyy")
+                        : "JJ/MM/AAAA"}
                     </span>
                   </button>
                 </PopoverTrigger>
-                <PopoverContent className="p-2! bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-700">
-                  <Calendar mode="single" selected={startDate} onSelect={setStartDate} locale={fr} className="dark:bg-neutral-900 dark:text-gray-100" />
+                <PopoverContent className=" bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-700">
+                  <Calendar
+                    mode="single"
+                    selected={startDate}
+                    onSelect={setStartDate}
+                    locale={fr}
+                    className="dark:bg-neutral-900 dark:text-gray-100"
+                  />
                 </PopoverContent>
               </Popover>
             </div>
 
             {/* End Date */}
             <div className="col-span-2">
-              <label className="block text-sm text-gray-700 dark:text-gray-300">Date butoir</label>
+              <label className="block text-sm text-gray-700 dark:text-gray-300">
+                Date butoir
+              </label>
               <Popover>
                 <PopoverTrigger asChild>
                   <button className="w-full mt-1 flex items-center gap-2 border rounded px-3 py-2 bg-gray-50 dark:bg-neutral-800 border-gray-200 dark:border-neutral-700 text-sm text-gray-700 dark:text-gray-200">
@@ -100,15 +114,23 @@ export default function CreateJalonModal({ open, onClose }: Props) {
                     </span>
                   </button>
                 </PopoverTrigger>
-                <PopoverContent className="p-2! bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-700">
-                  <Calendar mode="single" selected={endDate} onSelect={setEndDate} locale={fr} className="dark:bg-neutral-900 dark:text-gray-100" />
+                <PopoverContent className=" bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-700">
+                  <Calendar
+                    mode="single"
+                    selected={endDate}
+                    onSelect={setEndDate}
+                    locale={fr}
+                    className="dark:bg-neutral-900 dark:text-gray-100"
+                  />
                 </PopoverContent>
               </Popover>
             </div>
 
             {/* Priority */}
             <div className="col-span-2">
-              <label className="block text-sm text-gray-700 dark:text-gray-300">Priorités</label>
+              <label className="block text-sm text-gray-700 dark:text-gray-300">
+                Priorités
+              </label>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button className="w-full mt-1 flex items-center justify-between border rounded px-3 py-2 bg-gray-50 dark:bg-neutral-800 border-gray-200 dark:border-neutral-700 text-sm text-gray-700 dark:text-gray-200">
@@ -117,7 +139,9 @@ export default function CreateJalonModal({ open, onClose }: Props) {
                   </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-full bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-700">
-                  <DropdownMenuItem className="text-sm">Normale</DropdownMenuItem>
+                  <DropdownMenuItem className="text-sm">
+                    Normale
+                  </DropdownMenuItem>
                   <DropdownMenuItem className="text-sm">Haute</DropdownMenuItem>
                   <DropdownMenuItem className="text-sm">Basse</DropdownMenuItem>
                 </DropdownMenuContent>
@@ -129,7 +153,9 @@ export default function CreateJalonModal({ open, onClose }: Props) {
           <div className="grid grid-cols-12 gap-6 items-start">
             {/* Description */}
             <div className="col-span-6">
-              <label className="block text-sm text-gray-700 dark:text-gray-300">Brève description</label>
+              <label className="block text-sm text-gray-700 dark:text-gray-300">
+                Brève description
+              </label>
               <Textarea
                 placeholder="Brève description"
                 className="w-full mt-1 border rounded px-3 py-2 bg-gray-50 dark:bg-neutral-800 border-gray-200 dark:border-neutral-700 text-sm h-24 text-gray-800 dark:text-gray-200 placeholder:text-gray-400 dark:placeholder:text-gray-500"
@@ -138,25 +164,39 @@ export default function CreateJalonModal({ open, onClose }: Props) {
 
             {/* Start Time */}
             <div className="col-span-2">
-              <label className="block text-sm text-gray-700 dark:text-gray-300">Heure de début</label>
+              <label className="block text-sm text-gray-700 dark:text-gray-300">
+                Heure de début
+              </label>
               <div className="w-full mt-1 flex items-center gap-2 border rounded px-3 py-2 bg-gray-50 dark:bg-neutral-800 border-gray-200 dark:border-neutral-700 text-sm text-gray-700 dark:text-gray-200">
                 <Clock className="w-4 h-4 text-gray-500 dark:text-gray-400" />
-                <input type="time" placeholder="HH:MM" className="w-full bg-transparent outline-none text-gray-800 dark:text-gray-200" />
+                <input
+                  type="time"
+                  placeholder="HH:MM"
+                  className="w-full bg-transparent outline-none text-gray-800 dark:text-gray-200"
+                />
               </div>
             </div>
 
             {/* End Time */}
             <div className="col-span-2">
-              <label className="block text-sm text-gray-700 dark:text-gray-300">Heure de fin</label>
+              <label className="block text-sm text-gray-700 dark:text-gray-300">
+                Heure de fin
+              </label>
               <div className="w-full mt-1 flex items-center gap-2 border rounded px-3 py-2 bg-gray-50 dark:bg-neutral-800 border-gray-200 dark:border-neutral-700 text-sm text-gray-700 dark:text-gray-200">
                 <Clock className="w-4 h-4 text-gray-500 dark:text-gray-400" />
-                <input type="text" placeholder="HH:MM" className="w-full bg-transparent outline-none text-gray-800 dark:text-gray-200" />
+                <input
+                  type="text"
+                  placeholder="HH:MM"
+                  className="w-full bg-transparent outline-none text-gray-800 dark:text-gray-200"
+                />
               </div>
             </div>
 
             {/* Responsable Dropdown */}
             <div className="col-span-2">
-              <label className="block text-sm text-gray-700 dark:text-gray-300">Responsable du jalon</label>
+              <label className="block text-sm text-gray-700 dark:text-gray-300">
+                Responsable du jalon
+              </label>
               <div className="w-full mt-1">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -170,9 +210,15 @@ export default function CreateJalonModal({ open, onClose }: Props) {
                   </DropdownMenuTrigger>
 
                   <DropdownMenuContent className="w-full bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-700">
-                    <DropdownMenuItem className="text-sm">Jean Dupont</DropdownMenuItem>
-                    <DropdownMenuItem className="text-sm">Marie Durand</DropdownMenuItem>
-                    <DropdownMenuItem className="text-sm">Antoine Bernard</DropdownMenuItem>
+                    <DropdownMenuItem className="text-sm">
+                      Jean Dupont
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className="text-sm">
+                      Marie Durand
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className="text-sm">
+                      Antoine Bernard
+                    </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
@@ -182,7 +228,9 @@ export default function CreateJalonModal({ open, onClose }: Props) {
           {/* Deliverables Section */}
           <div className="mt-4 pt-4 border-t border-gray-200 dark:border-neutral-700">
             <div className="flex justify-start gap-3 items-center mb-4">
-              <p className="text-sm italic text-gray-600 dark:text-gray-400">Créer une liste des livrables à compléter durant ce jalon</p>
+              <p className="text-sm italic text-gray-600 dark:text-gray-400">
+                Créer une liste des livrables à compléter durant ce jalon
+              </p>
               <button
                 onClick={() => setAddDocumentModalOpen(true)}
                 className="px-3 py-1.5 bg-[#63A053] dark:bg-[#4e8742] text-white rounded-xs flex items-center gap-2 cursor-pointer"
@@ -202,8 +250,12 @@ export default function CreateJalonModal({ open, onClose }: Props) {
                           <Icon className="w-7 h-7 text-[#326EA6] dark:text-[#7fb5df]" />
                         </div>
                         <div className="flex gap-5 items-center">
-                          <p className="text-sm font-medium text-[#343E47] dark:text-gray-100">Permit document 2025</p>
-                          <p className="text-xs text-gray-500 dark:text-gray-400">Document légal</p>
+                          <p className="text-sm font-medium text-[#343E47] dark:text-gray-100">
+                            Permit document 2025
+                          </p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400">
+                            Document légal
+                          </p>
                         </div>
                       </div>
                     </div>

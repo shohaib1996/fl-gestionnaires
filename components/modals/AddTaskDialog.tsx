@@ -218,7 +218,10 @@ export default function AddTaskDialog({
             <label className="text-sm font-medium mb-2 block">Lieu</label>
 
             <DropdownMenu>
-              <DropdownMenuTrigger asChild className="bg-gray-100 dark:bg-gray-100/10">
+              <DropdownMenuTrigger
+                asChild
+                className="bg-gray-100 dark:bg-gray-100/10"
+              >
                 <button
                   type="button"
                   className="w-full flex items-center justify-between bg-gray-100 py-3 px-3 rounded text-left text-sm text-gray-600 hover:shadow-sm"
@@ -228,7 +231,9 @@ export default function AddTaskDialog({
                     <MapPin className="w-4 h-4 text-gray-500 dark:text-white" />
                     <span
                       className={`${
-                        location ? "text-gray-800 dark:text-white" : "text-gray-500 dark:text-white"
+                        location
+                          ? "text-gray-800 dark:text-white"
+                          : "text-gray-500 dark:text-white"
                       }`}
                     >
                       {location || "Sélectionner un lieu"}
@@ -273,7 +278,9 @@ export default function AddTaskDialog({
                     <User2 className="w-4 h-4 text-gray-500 dark:text-white" />
                     <span
                       className={`${
-                        participant ? "text-gray-800 dark:text-white" : "text-gray-500 dark:text-white"
+                        participant
+                          ? "text-gray-800 dark:text-white"
+                          : "text-gray-500 dark:text-white"
                       }`}
                     >
                       {participant ?? "Chercher"}

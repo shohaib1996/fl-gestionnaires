@@ -18,6 +18,7 @@ import {
 import JalonDetailsModal from "@/components/modals/JalonDetailsModal";
 import CreateJalonModal from "@/components/modals/CreateJalonModal";
 import AddDocumentModal from "@/components/modals/AddDocumentModal";
+import EditDocumentModal from "@/components/modals/EditDocumentModal";
 
 interface Phase {
   step: number;
@@ -54,9 +55,10 @@ const ProjectDetails = () => {
   const [data, setData] = useState<ProjectData | null>(null);
   const [fullscreenOpen, setFullscreenOpen] = useState(false); // FULLSCREEN MODAL STATE
   const [jalonModalOpen, setJalonModalOpen] = useState(false);
+  const [openAddDoc, setOpenAddDoc] = useState(false);
+  const [openEditDoc, setOpenEditDoc] = useState(false);
   const [jalonDetailsModalOpen, setJalonDetailsModalOpen] = useState(false);
   const [selectedPhase, setSelectedPhase] = useState<Phase | null>(null);
-  const [addDocumentModalOpen, setAddDocumentModalOpen] = useState(false);
 
   const handlePhaseClick = (phase: Phase) => {
     setSelectedPhase(phase);
@@ -269,7 +271,10 @@ const ProjectDetails = () => {
                           </td>
 
                           <td className="px-4 py-2 gap-2 text-gray-700 dark:text-gray-200">
-                            <Icon className="w-6 h-6 text-[#326EA6]" />
+                            <Icon
+                              className="w-6 h-6 text-[#326EA6] cursor-pointer"
+                              onClick={() => setOpenEditDoc(true)}
+                            />
                           </td>
                           <td className="px-4 py-2 gap-2 text-gray-700 dark:text-gray-200">
                             {doc.description}
@@ -293,7 +298,7 @@ const ProjectDetails = () => {
             {/* Action Bar */}
             <div className="flex items-center gap-3 mt-3">
               <button
-                onClick={() => setAddDocumentModalOpen(true)}
+                onClick={() => setOpenAddDoc(true)}
                 className="bg-[#63A053] text-white px-2.5 rounded-xs text-xl cursor-pointer"
               >
                 +
@@ -391,8 +396,12 @@ const ProjectDetails = () => {
         />
       )}
       <AddDocumentModal
-        open={addDocumentModalOpen}
-        onClose={() => setAddDocumentModalOpen(false)}
+        open={openAddDoc}
+        onClose={() => setOpenAddDoc(false)}
+      />
+      <EditDocumentModal
+        open={openEditDoc}
+        onClose={() => setOpenEditDoc(false)}
       />
     </div>
   );

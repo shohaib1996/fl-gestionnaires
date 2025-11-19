@@ -138,7 +138,7 @@ const ProjectDetails = () => {
               <label className="block text-xs bg-[#F2F6F8] dark:bg-neutral-700 py-3 px-3 text-gray-500 dark:text-white mb-3">
                 Description non confidentielle du projet ou produit
               </label>
-              <p className="bg-[#FFFFFB] dark:bg-neutral-700 px-3 py-3 rounded text-sm leading-relaxed border-b">
+              <p className="bg-[#FFFFFB] dark:bg-[#262626] px-3 py-3 rounded text-sm leading-relaxed border-b">
                 {project.description}
               </p>
             </div>
@@ -153,7 +153,8 @@ const ProjectDetails = () => {
           <div className="bg-[#63a053]/25 p-4 mb-6">
             <div className="px-6 flex justify-between items-center">
               <h3 className="text-lg font-semibold text-gray-800 dark:text-white">
-                Entrepreneur <span className="font-normal ">{entrepreneur.name}</span>
+                Entrepreneur{" "}
+                <span className="font-normal ">{entrepreneur.name}</span>
               </h3>
               <span className="text-sm font-semibold text-gray-700 dark:text-white">
                 {entrepreneur.status}
@@ -163,55 +164,85 @@ const ProjectDetails = () => {
 
           <div className="grid grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-12 text-sm px-11">
             <div>
-              <label className="block text-gray-500 mb-1">Tuteur légal</label>
+              <label className="block text-gray-500 mb-1 bg-gray-500/20 dark:bg-gray-800/20">
+                Tuteur légal
+              </label>
               <p>{entrepreneur.legal_tutor}</p>
             </div>
 
             <div>
-              <label className="block text-gray-500 mb-1">Collaborateurs</label>
+              <label className="block text-gray-500 mb-1 bg-gray-500/20 dark:bg-gray-800/20">
+                Collaborateurs
+              </label>
               <p>{entrepreneur.collaborators}</p>
             </div>
 
             <div>
-              <label className="block text-gray-500 mb-1">Ville ou village de résidence</label>
+              <label className="block text-gray-500 mb-1 bg-gray-500/20 dark:bg-gray-800/20">
+                Ville ou village de résidence
+              </label>
               <p>{entrepreneur.residence_city}</p>
             </div>
 
             <div>
-              <label className="block text-gray-500 mb-1">Ville / village où se situe le projet</label>
+              <label className="block text-gray-500 mb-1 bg-gray-500/20 dark:bg-gray-800/20">
+                Ville / village où se situe le projet
+              </label>
               <p>{entrepreneur.project_city}</p>
             </div>
 
             <div>
-              <label className="block text-gray-500 mb-1">Province</label>
+              <label className="block text-gray-500 mb-1 bg-gray-500/20 dark:bg-gray-800/20">
+                Province
+              </label>
               <p>{entrepreneur.residence_province}</p>
             </div>
 
             <div>
-              <label className="block text-gray-500 mb-1">Téléphone</label>
+              <label className="block text-gray-500 mb-1 bg-gray-500/20 dark:bg-gray-800/20">
+                Téléphone
+              </label>
               <p>{entrepreneur.phone}</p>
             </div>
 
             <div>
-              <label className="block text-gray-500 mb-1">Email</label>
+              <label className="block text-gray-500 mb-1 bg-gray-500/20 dark:bg-gray-800/20">
+                Email
+              </label>
               <p>{entrepreneur.email}</p>
             </div>
 
             <div>
-              <label className="block text-gray-500 mb-1">Website</label>
+              <label className="block text-gray-500 mb-1 bg-gray-500/20 dark:bg-gray-800/20">
+                Website
+              </label>
               <p>{entrepreneur.website}</p>
             </div>
 
             <div>
-              <label className="block text-gray-500 mb-1">Liens</label>
+              <label className="block text-gray-500 mb-1 bg-gray-500/20 dark:bg-gray-800/20">
+                Liens
+              </label>
               <div className="flex gap-4 mt-1">
-                <a href={entrepreneur.social_links.facebook} target="_blank" rel="noreferrer">
+                <a
+                  href={entrepreneur.social_links.facebook}
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   <Facebook className="w-4 h-4 text-gray-600 hover:text-blue-600" />
                 </a>
-                <a href={entrepreneur.social_links.twitter} target="_blank" rel="noreferrer">
+                <a
+                  href={entrepreneur.social_links.twitter}
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   <Twitter className="w-4 h-4 text-gray-600 hover:text-sky-500" />
                 </a>
-                <a href={entrepreneur.social_links.linkedin} target="_blank" rel="noreferrer">
+                <a
+                  href={entrepreneur.social_links.linkedin}
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   <Linkedin className="w-4 h-4 text-gray-600 hover:text-blue-700" />
                 </a>
               </div>

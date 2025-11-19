@@ -149,7 +149,7 @@ export default function ContactDetails() {
         <div className="mt-16 flex justify-center items-center gap-6">
           <button
             aria-label="share"
-            className="dark:bg-[#071014] flex items-center justify-center shadow-sm hover:shadow-md transition"
+            className="dark:bg-[#171717] flex items-center justify-center shadow-sm hover:shadow-md "
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -178,7 +178,7 @@ export default function ContactDetails() {
 
           <button
             aria-label="add"
-            className="dark:bg-[#071014] flex items-center justify-center shadow-sm hover:shadow-md transition"
+            className="dark:bg-[#171717] flex items-center justify-center shadow-sm hover:shadow-md "
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -204,7 +204,7 @@ export default function ContactDetails() {
 
           <button
             aria-label="message"
-            className=" dark:bg-[#071014] flex items-center justify-center shadow-sm hover:shadow-md transition"
+            className=" dark:bg-[#171717] flex items-center justify-center shadow-sm hover:shadow-md "
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
