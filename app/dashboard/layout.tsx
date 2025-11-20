@@ -23,7 +23,7 @@ export default function DashboardLayout({
   return (
     <div className="h-screen w-screen flex flex-col bg-background text-gray-800 dark:bgbackround dark:text-gray-100 overflow-hidden">
       {/* Header */}
-      <header className="flex items-center justify-between border-b bg-white px-6 py-3 shadow-sm dark:bg-neutral-800 shrink-0">
+      <header className="hidden lg:flex items-center justify-between border-b bg-white px-6 py-3 shadow-sm dark:bg-neutral-800 shrink-0">
         <div className="flex items-center gap-3">
           <Link href={`/dashboard`}>
             <div className="flex items-center gap-3">
@@ -107,19 +107,19 @@ export default function DashboardLayout({
 
       {/* Main layout */}
       <main className="flex w-screen h-screen bg-[#ebebeb] dark:bg-card overflow-hidden">
-        <div className="flex-none min-w-[14vw] h-full mt-19 ml-10 max-h-[72vh]">
+        <div className="hidden lg:block flex-none min-w-[14vw] h-full mt-19 ml-10 max-h-[72vh]">
           <LeftSidebar />
         </div>
 
         {/* Middle Section (Main Content) */}
-        <main className="flex-1 flex flex-col max-w-[70vw] overflow-hidden px-4.5">
+        <main className="flex-1 flex flex-col lg:max-w-[70vw] overflow-hidden lg:px-4.5">
           <div className="flex-1 overflow-y-auto hide-scrollbar">
             {children}
           </div>
         </main>
 
         {/* Right Sidebar */}
-        <div className="flex-none min-w-[14vw] mt-19 mr-10 max-h-[35vh]">
+        <div className="hidden lg:block flex-none min-w-[14vw] mt-19 mr-10 max-h-[35vh]">
           <RightSidebar />
         </div>
       </main>

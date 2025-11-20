@@ -106,7 +106,7 @@ const ProjectDetails = () => {
                 {project.title}
               </h2>
             </Link>
-            <span className="text-sm font-medium text-gray-600 dark:text-gray-300 flex gap-7">
+            <span className="text-sm font-medium text-gray-600 dark:text-gray-300 flex items-center gap-7">
               {project.code}
               <Ellipsis />
             </span>
