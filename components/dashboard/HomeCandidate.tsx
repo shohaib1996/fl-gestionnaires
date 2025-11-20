@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { EvolutionDetail } from "./EvolutionDetail";
+import { TaskDetail } from "./TaskDetail";
 
 export const HomeCandidate = () => {
   const [showEvolution, setShowEvolution] = useState(false);
+  const [showTasks, setShowTasks] = useState(false);
 
   const menuItems = [
     { id: "evolution", label: "Evolution", hasCustomIcon: true },
@@ -20,6 +22,8 @@ export const HomeCandidate = () => {
           key="evolution"
           onBack={() => setShowEvolution(false)}
         />
+      ) : showTasks ? (
+        <TaskDetail key="tasks" onBack={() => setShowTasks(false)} />
       ) : (
         <div
           key="home"
@@ -106,9 +110,10 @@ export const HomeCandidate = () => {
                     type: "spring",
                     stiffness: 100,
                   }}
-                  onClick={() =>
-                    item.id === "evolution" && setShowEvolution(true)
-                  }
+                  onClick={() => {
+                    if (item.id === "evolution") setShowEvolution(true);
+                    if (item.id === "taches") setShowTasks(true);
+                  }}
                   className="flex rounded-xs shadow-sm overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
                 >
                   <div className="bg-white dark:bg-[#1e1e1e] flex items-center justify-center px-3 py-4 transition-colors duration-300">
