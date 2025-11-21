@@ -89,16 +89,16 @@ export const HomeCandidate = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4 }}
-              className="w-full max-w-md mx-auto bg-[#63a053] rounded-xs px-6 py-6 mb-6 shadow-sm"
+              className="w-full max-w-lg mx-auto bg-[#63a053] rounded-xs px-6 py-6 mb-6 shadow-sm"
             >
-              <p className="text-[#9dcc91] text-sm font-medium mb-1">Projet</p>
-              <h2 className="text-white text-base font-semibold">
+              <p className="text-[#9dcc91] text-xl font-medium mb-1">Projet</p>
+              <h2 className="text-white text-2xl font-semibold">
                 COLA NATURELLE
               </h2>
             </motion.div>
 
             {/* Menu Items */}
-            <div className="w-full max-w-md mx-auto space-y-4">
+            <div className="w-full max-w-lg mx-auto space-y-4">
               {menuItems.map((item, index) => (
                 <motion.div
                   key={item.id}
@@ -265,7 +265,7 @@ export const HomeCandidate = () => {
                     )}
                   </div>
                   <div className="bg-[#F4F4F4] dark:bg-[#2d2d2d] flex-1 flex items-center px-5 py-4 transition-colors duration-300">
-                    <span className="text-[#2d3748] dark:text-gray-100 font-medium text-base">
+                    <span className="text-[#2d3748] dark:text-gray-100 font-medium text-2xl">
                       {item.label}
                     </span>
                   </div>

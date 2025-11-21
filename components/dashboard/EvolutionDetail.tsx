@@ -89,11 +89,11 @@ export const EvolutionDetail = ({ onBack }: EvolutionDetailProps) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="w-full max-w-md mx-auto bg-[#63a053] rounded-xs px-6 py-6 mb-6 shadow-sm flex items-center justify-between"
+          className="w-full max-w-lg mx-auto bg-[#63a053] rounded-xs px-6 py-6 mb-6 shadow-sm flex items-center justify-between"
         >
           <div>
-            <p className="text-[#9dcc91] text-sm font-medium mb-1">Evolution</p>
-            <h2 className="text-white text-base font-semibold">
+            <p className="text-[#9dcc91] text-xl font-medium mb-1">Evolution</p>
+            <h2 className="text-white text-2xl font-semibold">
               COLA NATURELLE
             </h2>
           </div>
@@ -121,7 +121,7 @@ export const EvolutionDetail = ({ onBack }: EvolutionDetailProps) => {
         </motion.div>
 
         {/* Steps List */}
-        <div className="w-full max-w-md mx-auto space-y-3">
+        <div className="w-full max-w-lg mx-auto space-y-3">
           {steps.map((step, index) => (
             <motion.div
               key={step.id}
@@ -140,7 +140,7 @@ export const EvolutionDetail = ({ onBack }: EvolutionDetailProps) => {
               }`}
             >
               {step.completed && <Check className="w-5 h-5 mr-3 shrink-0" />}
-              <span className="font-medium text-base">
+              <span className="font-medium text-2xl">
                 {step.id}. {step.title}
               </span>
             </motion.div>
