@@ -1,12 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { ArrowLeft, List, Plus } from "lucide-react";
 import { motion } from "framer-motion";
+import AddTaskScreen from "./AddTaskScreen";
 
 interface TaskDetailProps {
   onBack: () => void;
 }
 
 export const TaskDetail = ({ onBack }: TaskDetailProps) => {
+  const [showAddTask, setShowAddTask] = useState(false);
+
   const tasks = [
     {
       id: 1,
@@ -80,6 +83,10 @@ export const TaskDetail = ({ onBack }: TaskDetailProps) => {
     },
   ];
 
+  if (showAddTask) {
+    return <AddTaskScreen onBack={() => setShowAddTask(false)} />;
+  }
+
   return (
     <div
       className="bg-[#e8e8e8] dark:bg-[#121212] w-full flex flex-col transition-colors duration-300 relative"
@@ -111,7 +118,27 @@ export const TaskDetail = ({ onBack }: TaskDetailProps) => {
           viewBox="0 0 23 22"
           fill="none"
         >
-          {/* ... svg paths ... */}
+          <path
+            d="M1.4375 11H21.5625"
+            stroke="#63A053"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M1.4375 5.25H21.5625"
+            stroke="#63A053"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M1.4375 16.75H21.5625"
+            stroke="#63A053"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
         </svg>
       </div>
 
@@ -181,7 +208,10 @@ export const TaskDetail = ({ onBack }: TaskDetailProps) => {
         className="fixed bottom-0 left-0 right-0 bg-[#63a053] hover:bg-[#528a43] z-50"
         style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
       >
-        <button className="w-full h-16 text-white font-semibold text-xl flex items-center justify-center gap-2">
+        <button
+          onClick={() => setShowAddTask(true)}
+          className="w-full h-16 text-white font-semibold text-xl flex items-center justify-center gap-2"
+        >
           <Plus className="w-6 h-6" />
           Ajouter une tâche
         </button>
