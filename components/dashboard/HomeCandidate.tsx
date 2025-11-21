@@ -2,10 +2,14 @@ import React, { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { EvolutionDetail } from "./EvolutionDetail";
 import { TaskDetail } from "./TaskDetail";
+import CalendarScreen from "./CalendarScreen";
+import AddTaskScreen from "./AddTaskScreen";
 
 export const HomeCandidate = () => {
   const [showEvolution, setShowEvolution] = useState(false);
   const [showTasks, setShowTasks] = useState(false);
+  const [showCalendar, setShowCalendar] = useState(false);
+  const [showAddTask, setShowAddTask] = useState(false);
 
   const menuItems = [
     { id: "evolution", label: "Evolution", hasCustomIcon: true },
@@ -24,6 +28,14 @@ export const HomeCandidate = () => {
         />
       ) : showTasks ? (
         <TaskDetail key="tasks" onBack={() => setShowTasks(false)} />
+      ) : showAddTask ? (
+        <AddTaskScreen key="add-task" onBack={() => setShowAddTask(false)} />
+      ) : showCalendar ? (
+        <CalendarScreen
+          key="calendar"
+          onBack={() => setShowCalendar(false)}
+          onAddTask={() => setShowAddTask(true)}
+        />
       ) : (
         <div
           key="home"
@@ -113,6 +125,7 @@ export const HomeCandidate = () => {
                   onClick={() => {
                     if (item.id === "evolution") setShowEvolution(true);
                     if (item.id === "taches") setShowTasks(true);
+                    if (item.id === "calendrier") setShowCalendar(true);
                   }}
                   className="flex rounded-xs shadow-sm overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
                 >

@@ -153,26 +153,29 @@ function Calendar({
             />
           );
         },
+        // in Calendar components:
         Chevron: ({ className, orientation, ...props }) => {
           if (orientation === "left") {
             return (
-              <ChevronLeftIcon className={cn("size-4", className)} {...props} />
-            );
-          }
-
-          if (orientation === "right") {
-            return (
-              <ChevronRightIcon
-                className={cn("size-4", className)}
+              <ChevronLeftIcon
+                className={cn("w-6 h-6", className)}
                 {...props}
               />
             );
           }
-
+          if (orientation === "right") {
+            return (
+              <ChevronRightIcon
+                className={cn("w-6 h-6", className)}
+                {...props}
+              />
+            );
+          }
           return (
-            <ChevronDownIcon className={cn("size-4", className)} {...props} />
+            <ChevronDownIcon className={cn("w-6 h-6", className)} {...props} />
           );
         },
+
         DayButton: CalendarDayButton,
         WeekNumber: ({ children, ...props }) => {
           return (

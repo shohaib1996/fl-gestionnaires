@@ -87,10 +87,12 @@ export default function TaskDetailScreen({
       </div>
 
       {/* ---------------- BOTTOM WHITE AREA ---------------- */}
-      <div className="bg-white w-full rounded-t-[40px] px-6 py-8 relative z-20 flex flex-col items-center text-center min-h-[55%]">
+      <div className="bg-white dark:bg-[#1e1e1e] w-full rounded-t-[40px] px-6 py-8 relative z-20 flex flex-col items-center text-center min-h-[55%] transition-colors duration-300">
         {/* Participants label */}
         <div className="flex items-center gap-2 mb-6">
-          <span className="text-[#9B9B9B] text-lg">Participants</span>
+          <span className="text-[#9B9B9B] dark:text-gray-400 text-lg">
+            Participants
+          </span>
           <span className="bg-[#FBC02D] text-white rounded-full px-2 py-0.5 text-sm font-bold min-w-[24px]">
             {participants.length}
           </span>
@@ -101,7 +103,7 @@ export default function TaskDetailScreen({
           {participants.map((p) => (
             <div
               key={p.id}
-              className="w-14 h-14 rounded-full border-4 border-white shadow-sm bg-cover bg-center bg-no-repeat bg-gray-200"
+              className="w-14 h-14 rounded-full border-4 border-white dark:border-[#1e1e1e] shadow-sm bg-cover bg-center bg-no-repeat bg-gray-200 dark:bg-gray-700"
               style={{
                 backgroundImage: p.img ? `url(${p.img})` : undefined,
               }}
@@ -109,20 +111,20 @@ export default function TaskDetailScreen({
           ))}
 
           {/* Add button */}
-          <button className="w-14 h-14 rounded-full bg-[#EEF6EE] text-[#63A053] flex items-center justify-center text-2xl border-4 border-white shadow-sm hover:bg-[#e0efe0] transition-colors">
+          <button className="w-14 h-14 rounded-full bg-[#EEF6EE] dark:bg-[#2a3f2a] text-[#63A053] dark:text-[#81c784] flex items-center justify-center text-2xl border-4 border-white dark:border-[#1e1e1e] shadow-sm hover:bg-[#e0efe0] dark:hover:bg-[#354f35] transition-colors">
             <Plus className="w-6 h-6" />
           </button>
         </div>
 
         {/* Description */}
-        <div className="text-[#333] text-xl leading-relaxed max-w-md mb-16">
+        <div className="text-[#333] dark:text-gray-200 text-xl leading-relaxed max-w-md mb-16">
           {
             "Gather and validate all legal files required for the design drafts, or updated business registration, and operating licenses. Ensure the team is fully ready before moving to the next stage"
           }
         </div>
 
         {/* Floating edit button */}
-        <button className="absolute right-6 bottom-6 w-14 h-14 rounded-full bg-[#63A053] text-white flex items-center justify-center shadow-lg hover:bg-[#528a45] transition-colors">
+        <button className="absolute right-6 bottom-6 w-14 h-14 rounded-full bg-[#63A053] hover:bg-[#528a45] text-white flex items-center justify-center shadow-lg transition-colors">
           <Edit2 className="w-6 h-6" />
         </button>
       </div>
