@@ -82,9 +82,9 @@ export const TaskDetail = ({ onBack }: TaskDetailProps) => {
 
   return (
     <div
-      className="bg-[#e8e8e8] dark:bg-[#121212] w-full flex flex-col transition-colors duration-300 relative"
+      className="bg-[#e8e8e8] dark:bg-[#121212] w-full h-[95vh] flex flex-col transition-colors duration-300 relative"
       // inline style uses the --vh variable; fallback to 1vh if it's not set
-      style={{ height: "calc(var(--vh, 1vh) * 100)" }}
+      // style={{ height: "calc(var(--vh, 1vh) * 100)" }}
     >
       {/* Header */}
       <div className="w-full h-24 flex items-center justify-between bg-white dark:bg-[#1e1e1e] shadow-sm px-6 mb-8 transition-colors duration-300 shrink-0">
