@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { ArrowLeft, List, Plus } from "lucide-react";
 import { motion } from "framer-motion";
 import AddTaskScreen from "./AddTaskScreen";
+import TaskDetailScreen from "./TaskDetailScreen";
 
 interface TaskDetailProps {
   onBack: () => void;
@@ -9,33 +10,53 @@ interface TaskDetailProps {
 
 export const TaskDetail = ({ onBack }: TaskDetailProps) => {
   const [showAddTask, setShowAddTask] = useState(false);
+  const [selectedTask, setSelectedTask] = useState<any>(null);
 
   const tasks = [
     {
       id: 1,
       date: "11 Mars 2026",
       description: "Expired or overdue task or appointment",
+      title: "Appointment with digital Creators",
+      subtitle: "2445 North West Library",
       time: "11:00 - 12:00",
       status: "expired", // gray/default
+      participants: [
+        { id: 1, img: "https://i.pravatar.cc/150?u=1" },
+        { id: 2, img: "https://i.pravatar.cc/150?u=2" },
+        { id: 3, img: "https://i.pravatar.cc/150?u=3" },
+        { id: 4, img: "https://i.pravatar.cc/150?u=4" },
+      ],
     },
     {
       id: 2,
       date: "13 Mars 2026",
       description: "Task or appointment set by Fond Local",
+      title: "Meeting with Local Fund",
+      subtitle: "Conference Room B",
       time: "11:00 - 12:00",
       status: "fond-local", // blue text
+      participants: [
+        { id: 5, img: "https://i.pravatar.cc/150?u=5" },
+        { id: 6, img: "https://i.pravatar.cc/150?u=6" },
+      ],
     },
     {
       id: 3,
       date: "16 Mars 2026",
       description: "Task or appointment set by User",
+      title: "User Strategy Session",
+      subtitle: "Online Meeting",
       time: "11:00 - 12:00",
       status: "user", // green dot + blue text
+      participants: [],
     },
     {
       id: 4,
       date: "13 Mars 2026",
       description: "Task or appointment set by Fond Local",
+      title: "Budget Review",
+      subtitle: "Finance Dept",
       time: "11:00 - 12:00",
       status: "fond-local",
     },
@@ -43,6 +64,8 @@ export const TaskDetail = ({ onBack }: TaskDetailProps) => {
       id: 5,
       date: "16 Mars 2026",
       description: "Task or appointment set by User",
+      title: "Client Call",
+      subtitle: "Phone",
       time: "11:00 - 12:00",
       status: "user",
     },
@@ -50,6 +73,8 @@ export const TaskDetail = ({ onBack }: TaskDetailProps) => {
       id: 6,
       date: "16 Mars 2026",
       description: "Task or appointment set by User",
+      title: "Team Sync",
+      subtitle: "Huddle Area",
       time: "11:00 - 12:00",
       status: "user",
     },
@@ -57,6 +82,8 @@ export const TaskDetail = ({ onBack }: TaskDetailProps) => {
       id: 7,
       date: "16 Mars 2026",
       description: "Task or appointment set by User",
+      title: "Project Kickoff",
+      subtitle: "Main Hall",
       time: "11:00 - 12:00",
       status: "user",
     },
@@ -64,6 +91,8 @@ export const TaskDetail = ({ onBack }: TaskDetailProps) => {
       id: 8,
       date: "16 Mars 2026",
       description: "Task or appointment set by User",
+      title: "Design Review",
+      subtitle: "Design Studio",
       time: "11:00 - 12:00",
       status: "user",
     },
@@ -71,6 +100,8 @@ export const TaskDetail = ({ onBack }: TaskDetailProps) => {
       id: 9,
       date: "16 Mars 2026",
       description: "Task or appointment set by User",
+      title: "Marketing Plan",
+      subtitle: "Marketing Office",
       time: "11:00 - 12:00",
       status: "user",
     },
@@ -78,6 +109,8 @@ export const TaskDetail = ({ onBack }: TaskDetailProps) => {
       id: 10,
       date: "16 Mars 2026",
       description: "Task or appointment set by User",
+      title: "Wrap Up",
+      subtitle: "Lobby",
       time: "11:00 - 12:00",
       status: "user",
     },
@@ -85,6 +118,15 @@ export const TaskDetail = ({ onBack }: TaskDetailProps) => {
 
   if (showAddTask) {
     return <AddTaskScreen onBack={() => setShowAddTask(false)} />;
+  }
+
+  if (selectedTask) {
+    return (
+      <TaskDetailScreen
+        task={selectedTask}
+        onBack={() => setSelectedTask(null)}
+      />
+    );
   }
 
   return (
@@ -174,7 +216,8 @@ export const TaskDetail = ({ onBack }: TaskDetailProps) => {
                 type: "spring",
                 stiffness: 100,
               }}
-              className="bg-white dark:bg-[#1e1e1e] rounded-xs shadow-sm p-4 transition-colors duration-300"
+              onClick={() => setSelectedTask(task)}
+              className="bg-white dark:bg-[#1e1e1e] rounded-xs shadow-sm p-4 transition-colors duration-300 cursor-pointer active:scale-[0.98]"
             >
               <div className="flex items-start gap-3">
                 {task.status === "user" && (
