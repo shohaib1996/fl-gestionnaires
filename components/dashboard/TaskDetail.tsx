@@ -177,12 +177,13 @@ export const TaskDetail = ({ onBack }: TaskDetailProps) => {
       </div>
 
       {/* Fixed Bottom Button */}
-      <div className="absolute bottom-0 left-0 right-0 bg-[#63a053] hover:bg-[#528a43] transition-colors">
-        <button className="w-full h-16 text-white font-semibold text-xl flex items-center justify-center gap-2">
-          <Plus className="w-6 h-6" />
-          Ajouter une tâche
-        </button>
-      </div>
+      <button
+        className="w-full bg-[#63a053] hover:bg-[#528a43]  h-16 text-white font-semibold text-xl flex items-center justify-center gap-2"
+        style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+      >
+        <Plus className="w-6 h-6" />
+        Ajouter une tâche
+      </button>
     </div>
   );
 };
