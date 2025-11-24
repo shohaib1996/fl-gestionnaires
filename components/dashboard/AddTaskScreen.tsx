@@ -97,7 +97,7 @@ export default function AddTaskScreen({ onBack }: AddTaskScreenProps) {
             </label>
             <Input
               placeholder="Titre de la tâche"
-              className="mt-1 bg-gray-100 h-12 dark:bg-gray-800 dark:text-white rounded-xs border-none placeholder:text-xl"
+              className="mt-1 bg-gray-100 text-xl h-12 dark:bg-gray-800 dark:text-white rounded-xs border-none placeholder:text-xl"
             />
           </div>
 
@@ -108,7 +108,7 @@ export default function AddTaskScreen({ onBack }: AddTaskScreenProps) {
             </label>
             <Textarea
               placeholder="Brève description"
-              className="mt-1 bg-gray-100 dark:bg-gray-800 dark:text-white min-h-[120px] rounded-xs border-none placeholder:text-xl"
+              className="mt-1 bg-gray-100 text-xl dark:bg-gray-800 dark:text-white min-h-[120px] rounded-xs border-none placeholder:text-xl"
             />
           </div>
 
@@ -215,7 +215,7 @@ export default function AddTaskScreen({ onBack }: AddTaskScreenProps) {
                 <Input
                   type="time"
                   placeholder="HH:MM"
-                  className="bg-gray-100 dark:bg-gray-800 dark:text-white pl-10 rounded-xs border-none placeholder:text-xl h-14"
+                  className="bg-gray-100 text-lg dark:bg-gray-800 dark:text-white pl-10 rounded-xs border-none placeholder:text-xl h-14"
                 />
                 <Clock className="w-4 h-4 text-gray-500 dark:text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
               </div>
@@ -230,7 +230,7 @@ export default function AddTaskScreen({ onBack }: AddTaskScreenProps) {
                 <Input
                   type="time"
                   placeholder="HH:MM"
-                  className="bg-gray-100 dark:bg-gray-800 dark:text-white pl-10 rounded-xs border-none placeholder:text-xl h-14"
+                  className="bg-gray-100 text-lg dark:bg-gray-800 dark:text-white pl-10 rounded-xs border-none placeholder:text-xl h-14"
                 />
                 <Clock className="w-4 h-4 text-gray-500 dark:text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
               </div>
@@ -274,13 +274,22 @@ export default function AddTaskScreen({ onBack }: AddTaskScreenProps) {
                 sideOffset={6}
                 className="w-56"
               >
-                <DropdownMenuItem onSelect={() => setLocation("Online")}>
+                <DropdownMenuItem
+                  className="text-lg"
+                  onSelect={() => setLocation("Online")}
+                >
                   Online
                 </DropdownMenuItem>
-                <DropdownMenuItem onSelect={() => setLocation("Sur site")}>
+                <DropdownMenuItem
+                  className="text-lg"
+                  onSelect={() => setLocation("Sur site")}
+                >
                   Sur site
                 </DropdownMenuItem>
-                <DropdownMenuItem onSelect={() => setLocation("Hybride")}>
+                <DropdownMenuItem
+                  className="text-lg"
+                  onSelect={() => setLocation("Hybride")}
+                >
                   Hybride
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -326,7 +335,7 @@ export default function AddTaskScreen({ onBack }: AddTaskScreenProps) {
                     value={participantQuery}
                     onChange={(e) => setParticipantQuery(e.target.value)}
                     placeholder="Chercher"
-                    className="bg-white dark:bg-gray-900 dark:text-white"
+                    className="bg-white dark:bg-gray-900 dark:text-white text-lg"
                   />
                 </div>
 
@@ -339,6 +348,7 @@ export default function AddTaskScreen({ onBack }: AddTaskScreenProps) {
                     filteredParticipants.map((p) => (
                       <DropdownMenuItem
                         key={p}
+                        className="text-lg"
                         onSelect={() => {
                           setParticipant(p);
                           setParticipantQuery("");
