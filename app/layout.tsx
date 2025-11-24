@@ -35,11 +35,13 @@ export default function RootLayout({
       >
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
+          defaultTheme="light"
           enableSystem
           disableTransitionOnChange
         >
-          <main className="bg-[#ebebeb] dark:bg-card min-h-screen">{children}</main>
+          <main className="bg-[#ebebeb] dark:bg-card min-h-screen">
+            {children}
+          </main>
         </ThemeProvider>
       </body>
     </html>

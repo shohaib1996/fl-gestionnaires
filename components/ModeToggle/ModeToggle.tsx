@@ -15,12 +15,12 @@ export function ModeToggle() {
   return (
     <Button
       variant="outline"
-      size="icon"
+      size="icon-lg"
       onClick={toggleTheme}
       aria-label="Toggle theme"
     >
-      <Sun className="h-[1.2rem] w-[1.2rem] transition-all dark:hidden" />
-      <Moon className="hidden h-[1.2rem] w-[1.2rem] transition-all dark:block" />
+      <Sun className="h-[1.3rem] w-[1.3rem] transition-all dark:hidden" />
+      <Moon className="hidden h-[1.3rem] w-[1.3rem] transition-all dark:block" />
     </Button>
   );
 }
