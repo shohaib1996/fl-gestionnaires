@@ -1,17 +1,38 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { ModeToggle } from "@/components/ModeToggle/ModeToggle";
+
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
+import { Stepper } from "@/components/project-submission/Stepper";
+import { PersonalInformationStep } from "@/components/project-submission/PersonalInformationStep";
+import { ProjectCategoryStep } from "@/components/project-submission/ProjectCategoryStep";
+import { ProjectDescriptionStep } from "@/components/project-submission/ProjectDescriptionStep";
+import { SignatureStep } from "@/components/project-submission/SignatureStep";
 
 const ProjectSubmission = () => {
+  const [isStarted, setIsStarted] = useState(false);
+  const [currentStep, setCurrentStep] = useState(0);
+
+  const handleNext = () => {
+    setCurrentStep((prev) => Math.min(prev + 1, 5));
+  };
+
+  const handlePrevious = () => {
+    if (currentStep === 0) {
+      setIsStarted(false);
+    } else {
+      setCurrentStep((prev) => Math.max(prev - 1, 0));
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-[#FAF9F6] dark:bg-background font-sans text-foreground">
+    <div className="min-h-screen bg-[#FAF9F6] font-sans text-foreground">
       {/* Custom Header */}
       <header className="px-4 lg:px-0 pt-5 lg:pt-[3.5vh]">
         <div className="max-w-7xl xl:container mx-auto">
@@ -28,17 +49,17 @@ const ProjectSubmission = () => {
             </Link>
 
             {/* Desktop/Laptop Navigation (Hidden on Mobile/Tablet) */}
-            <div className="hidden lg:flex justify-between items-center flex-2 border-t border-b border-black/50 dark:border-white/50 py-5 w-full ml-8 lg:ml-5">
+            <div className="hidden lg:flex justify-between items-center flex-2 border-t border-b border-black/50 py-5 w-full ml-8 lg:ml-5">
               {/* Navigation Links */}
               <nav className="flex items-center gap-6 text-lg font-medium text-muted-foreground">
                 <Link href="#" className="hover:text-foreground">
                   La une
                 </Link>
-                <div className="h-12 w-px bg-black/50 dark:bg-white/50" />
+                <div className="h-12 w-px bg-black/50" />
                 <Link href="#" className="hover:text-foreground">
                   Rapport du marché
                 </Link>
-                <div className="h-12 w-px bg-black/50 dark:bg-white/50" />
+                <div className="h-12 w-px bg-black/50" />
               </nav>
 
               <div className="flex items-center gap-4">
@@ -55,9 +76,8 @@ const ProjectSubmission = () => {
                     className="pl-12 text-lg rounded-xs bg-secondary border-none h-9 focus-visible:ring-1 focus-visible:ring-ring placeholder:text-muted-foreground"
                   />
                 </div>
-                <ModeToggle />
 
-                <div className="h-12 w-px bg-black/50 dark:bg-white/50" />
+                <div className="h-12 w-px bg-black/50" />
 
                 {/* Connexion */}
                 <Link
@@ -71,7 +91,6 @@ const ProjectSubmission = () => {
 
             {/* Mobile/Tablet Navigation (Hamburger Menu) */}
             <div className="lg:hidden flex items-center gap-4">
-              <ModeToggle />
               <Sheet>
                 <SheetTrigger asChild>
                   <Button variant="ghost" size="icon" className="h-11 w-11">
@@ -115,89 +134,146 @@ const ProjectSubmission = () => {
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-8 max-w-7xl">
-        {/* Hero Section */}
-        <div className="relative w-full h-[45vh] bg-muted rounded-xs overflow-hidden mb-8">
-          {/* Placeholder for the hero image - using a generic office/meeting image if available or a colored div */}
-          <div className="w-full h-full bg-muted/50 flex items-center justify-center">
-            {/* Attempting to use a placeholder image from unsplash source or similar if allowed, 
-                    but for now sticking to a solid color or the user's uploaded image if I could access it. 
-                    I'll use a standard placeholder pattern. */}
-            <Image
-              src="/images/Photo.png" // Trying manager.png as a placeholder, if it exists and looks okay.
-              alt="Team working"
-              fill
-              className="object-cover"
-              onError={(e) => {
-                // Fallback if image doesn't exist
-                e.currentTarget.style.display = "none";
-              }}
-            />
+      <main>
+        {!isStarted ? (
+          <div className="container mx-auto px-4 py-8 max-w-7xl">
+            {/* Hero Section */}
+            <div className="relative w-full h-[45vh] bg-muted rounded-xs overflow-hidden mb-8">
+              {/* Placeholder for the hero image - using a generic office/meeting image if available or a colored div */}
+              <div className="w-full h-full bg-muted/50 flex items-center justify-center">
+                {/* Attempting to use a placeholder image from unsplash source or similar if allowed, 
+                        but for now sticking to a solid color or the user's uploaded image if I could access it. 
+                        I'll use a standard placeholder pattern. */}
+                <Image
+                  src="/images/Photo.png" // Trying manager.png as a placeholder, if it exists and looks okay.
+                  alt="Team working"
+                  fill
+                  className="object-cover"
+                  onError={(e) => {
+                    // Fallback if image doesn't exist
+                    e.currentTarget.style.display = "none";
+                  }}
+                />
+              </div>
+            </div>
+
+            {/* Text Content */}
+            <div className="space-y-6 text-sm md:text-base leading-relaxed text-foreground">
+              <p>
+                Bienvenue sur la page de soumission en ligne de Fond Local !
+              </p>
+
+              <p>
+                Fond local est un programme d&apos;investissement qui organise,
+                entre autres, des événements de pitch où les entrepreneurs
+                présentent leurs entreprises, produits ou idées à un groupe
+                d&apos;investisseurs ou de partenaires potentiels, dans le but
+                de les convaincre d&apos;investir.
+              </p>
+
+              <p>
+                Les organisateurs du Fond Local cherchent à travers le pays les
+                prochains entrepreneurs, innovateurs, créateurs et inventeurs
+                avec les projets les plus prometteurs que la République
+                Démocratique du Congo a à offrir. Postulez pour
+                l&apos;opportunité de présenter votre projet au Fond Local et de
+                potentiellement obtenir un investissement.
+              </p>
+
+              <p>
+                Veuillez noter que vous devez remplir les conditions
+                d&apos;éligibilité suivantes pour participer à l&apos;événement
+                :
+              </p>
+
+              <ul className="list-disc pl-6 space-y-4">
+                <li>
+                  Vous devez avoir 18 ans (l&apos;âge de la majorité en RDC) ou
+                  plus ; ou si vous avez moins de l&apos;âge de la majorité, vos
+                  parents et/ou tuteurs légaux doivent postuler en votre nom et
+                  doivent également signer et accepter tous les documents liés à
+                  votre participation potentielle.
+                </li>
+                <li>
+                  Vous devez être légal et physiquement présent en République
+                  Démocratique du Congo pendant l&apos;événement de pitch
+                </li>
+                <li>
+                  Vous ne pouvez pas être un candidat pour un poste public.
+                </li>
+                <li>
+                  Vous ne devez pas avoir été condamné pour un crime grave au
+                  cours des 10 dernières années (sauf si innocenté ou effacé).
+                </li>
+                <li>
+                  Ni vous, ni aucun membre de votre famille immédiate ne pouvez
+                  être actuellement — ni avoir été au cours de l&apos;année
+                  écoulée — employé à temps plein, cadre ou directeur d&apos;une
+                  entreprise ou d&apos;une entité liée au Fond Local.
+                </li>
+                <li>
+                  Vous devez être disposé à vous soumettre à une vérification
+                  des antécédents.
+                </li>
+              </ul>
+            </div>
+
+            {/* Footer Action */}
+            <div className="mt-12 flex justify-center">
+              <Button
+                onClick={() => setIsStarted(true)}
+                className="bg-[#5F9E50] hover:bg-[#4d8240] text-white px-12 py-6 text-lg rounded-xs"
+              >
+                Continuer
+              </Button>
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="container mx-auto px-4 py-8">
+            <Stepper currentStep={currentStep} />
 
-        {/* Text Content */}
-        <div className="space-y-6 text-sm md:text-base leading-relaxed text-foreground">
-          <p>Bienvenue sur la page de soumission en ligne de Fond Local !</p>
-
-          <p>
-            Fond local est un programme d&apos;investissement qui organise,
-            entre autres, des événements de pitch où les entrepreneurs
-            présentent leurs entreprises, produits ou idées à un groupe
-            d&apos;investisseurs ou de partenaires potentiels, dans le but de
-            les convaincre d&apos;investir.
-          </p>
-
-          <p>
-            Les organisateurs du Fond Local cherchent à travers le pays les
-            prochains entrepreneurs, innovateurs, créateurs et inventeurs avec
-            les projets les plus prometteurs que la République Démocratique du
-            Congo a à offrir. Postulez pour l&apos;opportunité de présenter
-            votre projet au Fond Local et de potentiellement obtenir un
-            investissement.
-          </p>
-
-          <p>
-            Veuillez noter que vous devez remplir les conditions
-            d&apos;éligibilité suivantes pour participer à l&apos;événement :
-          </p>
-
-          <ul className="list-disc pl-6 space-y-4">
-            <li>
-              Vous devez avoir 18 ans (l&apos;âge de la majorité en RDC) ou plus
-              ; ou si vous avez moins de l&apos;âge de la majorité, vos parents
-              et/ou tuteurs légaux doivent postuler en votre nom et doivent
-              également signer et accepter tous les documents liés à votre
-              participation potentielle.
-            </li>
-            <li>
-              Vous devez être légal et physiquement présent en République
-              Démocratique du Congo pendant l&apos;événement de pitch
-            </li>
-            <li>Vous ne pouvez pas être un candidat pour un poste public.</li>
-            <li>
-              Vous ne devez pas avoir été condamné pour un crime grave au cours
-              des 10 dernières années (sauf si innocenté ou effacé).
-            </li>
-            <li>
-              Ni vous, ni aucun membre de votre famille immédiate ne pouvez être
-              actuellement — ni avoir été au cours de l&apos;année écoulée —
-              employé à temps plein, cadre ou directeur d&apos;une entreprise ou
-              d&apos;une entité liée au Fond Local.
-            </li>
-            <li>
-              Vous devez être disposé à vous soumettre à une vérification des
-              antécédents.
-            </li>
-          </ul>
-        </div>
-
-        {/* Footer Action */}
-        <div className="mt-12 flex justify-center">
-          <Button className="bg-[#5F9E50] hover:bg-[#4d8240] text-white px-12 py-6 text-lg rounded-xs">
-            Continuer
-          </Button>
-        </div>
+            <div className="mt-8">
+              {currentStep === 0 && (
+                <PersonalInformationStep
+                  onNext={handleNext}
+                  onPrevious={handlePrevious}
+                />
+              )}
+              {currentStep === 1 && (
+                <ProjectCategoryStep
+                  onNext={handleNext}
+                  onPrevious={handlePrevious}
+                />
+              )}
+              {currentStep === 2 && (
+                <ProjectDescriptionStep
+                  onNext={handleNext}
+                  onPrevious={handlePrevious}
+                />
+              )}
+              {currentStep === 3 && (
+                <SignatureStep
+                  onNext={handleNext}
+                  onPrevious={handlePrevious}
+                />
+              )}
+              {/* Placeholders for other steps */}
+              {currentStep > 3 && (
+                <div className="text-center py-20">
+                  <h2 className="text-2xl font-bold mb-4">
+                    Step {currentStep + 1} Coming Soon
+                  </h2>
+                  <div className="flex justify-center gap-4">
+                    <Button onClick={handlePrevious} variant="outline">
+                      Précédent
+                    </Button>
+                    <Button onClick={handleNext}>Suivant</Button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </main>
     </div>
   );
