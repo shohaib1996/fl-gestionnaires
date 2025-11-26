@@ -1,22 +1,43 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import SignatureCanvas from "react-signature-canvas";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { FormData } from "./types";
 
 interface SignatureStepProps {
+  formData: FormData;
+  updateFormData: (updates: Partial<FormData>) => void;
   onNext: () => void;
   onPrevious: () => void;
 }
 
 export const SignatureStep: React.FC<SignatureStepProps> = ({
+  formData,
+  updateFormData,
   onNext,
   onPrevious,
 }) => {
   const sigCanvas = useRef<SignatureCanvas>(null);
-  const [name, setName] = useState("");
+
+  // Load signature from formData if it exists
+  useEffect(() => {
+    if (sigCanvas.current && formData.signature) {
+      sigCanvas.current.fromDataURL(formData.signature);
+    }
+  }, []);
 
   const clearSignature = () => {
     sigCanvas.current?.clear();
+    updateFormData({ signature: null });
+  };
+
+  const handleNext = () => {
+    if (sigCanvas.current) {
+      if (!sigCanvas.current.isEmpty()) {
+        updateFormData({ signature: sigCanvas.current.toDataURL() });
+      }
+    }
+    onNext();
   };
 
   return (
@@ -94,6 +115,11 @@ export const SignatureStep: React.FC<SignatureStepProps> = ({
                 className: "w-full h-[200px] rounded-sm",
               }}
               backgroundColor="#F0F4F4"
+              onEnd={() => {
+                if (sigCanvas.current) {
+                  updateFormData({ signature: sigCanvas.current.toDataURL() });
+                }
+              }}
             />
             <div className="border-t border-gray-300 p-2 flex justify-end bg-white rounded-b-sm">
               <Button
@@ -116,16 +142,22 @@ export const SignatureStep: React.FC<SignatureStepProps> = ({
             18. Entrez votre nom complet
           </label>
           <Input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={formData.signerName}
+            onChange={(e) => updateFormData({ signerName: e.target.value })}
             placeholder="Nom complet"
             className="bg-[#F0F4F4] border-none h-12 rounded-xs text-base placeholder:text-gray-400"
           />
         </div>
 
-        <div className="flex justify-center pt-8 pb-8">
+        <div className="flex justify-center gap-32 pt-8 pb-8">
           <Button
-            onClick={onNext}
+            onClick={onPrevious}
+            className="bg-[#5F8E70] hover:bg-[#4d755b] text-white px-12 py-6 text-lg rounded-xs"
+          >
+            Précédent
+          </Button>
+          <Button
+            onClick={handleNext}
             className="bg-[#5F8E70] hover:bg-[#4d755b] text-white px-12 py-6 text-lg rounded-xs"
           >
             Vérifiez et envoyez

@@ -3,30 +3,39 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Plus, Upload, CloudUpload } from "lucide-react";
+import { FormData } from "./types";
 
 interface ProjectDescriptionStepProps {
+  formData: FormData;
+  updateFormData: (updates: Partial<FormData>) => void;
   onNext: () => void;
   onPrevious: () => void;
 }
 
 export const ProjectDescriptionStep: React.FC<ProjectDescriptionStepProps> = ({
+  formData,
+  updateFormData,
   onNext,
   onPrevious,
 }) => {
-  const [links, setLinks] = useState<string[]>([""]);
-
   const addLink = () => {
-    setLinks([...links, ""]);
+    updateFormData({ links: [...formData.links, ""] });
   };
 
   const updateLink = (index: number, value: string) => {
-    const newLinks = [...links];
+    const newLinks = [...formData.links];
     newLinks[index] = value;
-    setLinks(newLinks);
+    updateFormData({ links: newLinks });
   };
 
   const removeLink = (index: number) => {
-    setLinks(links.filter((_, i) => i !== index));
+    updateFormData({ links: formData.links.filter((_, i) => i !== index) });
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      updateFormData({ logo: e.target.files[0] });
+    }
   };
 
   return (
@@ -44,6 +53,8 @@ export const ProjectDescriptionStep: React.FC<ProjectDescriptionStepProps> = ({
             projet ou produit
           </label>
           <Textarea
+            value={formData.description}
+            onChange={(e) => updateFormData({ description: e.target.value })}
             placeholder="Description non confidentielle"
             className="bg-[#F0F4F4] border-none min-h-[120px] text-base placeholder:text-gray-400 resize-none rounded-xs"
           />
@@ -61,16 +72,14 @@ export const ProjectDescriptionStep: React.FC<ProjectDescriptionStepProps> = ({
 
             <div className="flex items-center gap-2 bg-gray-200/50 px-4 py-2 rounded-sm mt-4">
               <span className="text-sm text-black font-medium">
-                Déposez l'image ici ou
+                {formData.logo ? formData.logo.name : "Déposez l'image ici ou"}
               </span>
               <input
                 type="file"
                 id="file-upload"
                 className="hidden"
-                onChange={(e) => {
-                  // Handle file selection here
-                  console.log(e.target.files);
-                }}
+                onChange={handleFileChange}
+                accept="image/*"
               />
               <Button
                 variant="secondary"
@@ -90,7 +99,7 @@ export const ProjectDescriptionStep: React.FC<ProjectDescriptionStepProps> = ({
           </label>
 
           <div className="space-y-3">
-            {links.map((link, index) => (
+            {formData.links.map((link, index) => (
               <div key={index} className="flex gap-2">
                 <Input
                   value={link}

@@ -1,8 +1,11 @@
 import React from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { FormData } from "./types";
 
 interface ProjectCategoryStepProps {
+  formData: FormData;
+  updateFormData: (updates: Partial<FormData>) => void;
   onNext: () => void;
   onPrevious: () => void;
 }
@@ -58,9 +61,22 @@ const phases = [
 ];
 
 export const ProjectCategoryStep: React.FC<ProjectCategoryStepProps> = ({
+  formData,
+  updateFormData,
   onNext,
   onPrevious,
 }) => {
+  const toggleCategory = (category: string) => {
+    const currentCategories = formData.categories;
+    if (currentCategories.includes(category)) {
+      updateFormData({
+        categories: currentCategories.filter((c) => c !== category),
+      });
+    } else {
+      updateFormData({ categories: [...currentCategories, category] });
+    }
+  };
+
   return (
     <div className="w-full max-w-4xl mx-auto py-4">
       <div className="mb-8">
@@ -76,6 +92,8 @@ export const ProjectCategoryStep: React.FC<ProjectCategoryStepProps> = ({
             <span className="text-red-500">*</span>
           </label>
           <Input
+            value={formData.projectName}
+            onChange={(e) => updateFormData({ projectName: e.target.value })}
             placeholder="Entrez un nom"
             className="bg-[#F0F4F4] border-none rounded-xs h-12 text-base placeholder:text-gray-400"
           />
@@ -97,6 +115,8 @@ export const ProjectCategoryStep: React.FC<ProjectCategoryStepProps> = ({
                 <div className="relative flex items-center justify-center">
                   <input
                     type="checkbox"
+                    checked={formData.categories.includes(category)}
+                    onChange={() => toggleCategory(category)}
                     className="peer appearance-none w-5 h-5 border-2 border-gray-300 rounded-sm checked:border-[#5F9E50] checked:bg-[#5F9E50]"
                   />
                   <svg
@@ -132,6 +152,8 @@ export const ProjectCategoryStep: React.FC<ProjectCategoryStepProps> = ({
                   <input
                     type="radio"
                     name="projectPhase"
+                    checked={formData.projectPhase === phase}
+                    onChange={() => updateFormData({ projectPhase: phase })}
                     className="peer appearance-none w-5 h-5 border-2 border-gray-400 rounded-full checked:border-[#5F9E50] checked:bg-white"
                   />
                   <div className="absolute w-2.5 h-2.5 rounded-full bg-[#5F9E50] opacity-0 peer-checked:opacity-100 transition-opacity" />

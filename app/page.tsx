@@ -1,10 +1,9 @@
-import Image from "next/image";
 import AdminLoginPage from "./login/page";
 
 export default function Home() {
   return (
-   <>
-   <AdminLoginPage />
-   </>
+    <>
+      <AdminLoginPage />
+    </>
   );
 }

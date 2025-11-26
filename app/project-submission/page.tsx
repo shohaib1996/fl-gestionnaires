@@ -14,10 +14,21 @@ import { PersonalInformationStep } from "@/components/project-submission/Persona
 import { ProjectCategoryStep } from "@/components/project-submission/ProjectCategoryStep";
 import { ProjectDescriptionStep } from "@/components/project-submission/ProjectDescriptionStep";
 import { SignatureStep } from "@/components/project-submission/SignatureStep";
+import {
+  FormData,
+  initialFormData,
+} from "@/components/project-submission/types";
+import { VerificationStep } from "@/components/project-submission/VerificationStep";
+import { ConfirmationStep } from "@/components/project-submission/ConfirmationStep";
 
 const ProjectSubmission = () => {
   const [isStarted, setIsStarted] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
+  const [formData, setFormData] = useState<FormData>(initialFormData);
+
+  const updateFormData = (updates: Partial<FormData>) => {
+    setFormData((prev) => ({ ...prev, ...updates }));
+  };
 
   const handleNext = () => {
     setCurrentStep((prev) => Math.min(prev + 1, 5));
@@ -49,21 +60,20 @@ const ProjectSubmission = () => {
             </Link>
 
             {/* Desktop/Laptop Navigation (Hidden on Mobile/Tablet) */}
-            <div className="hidden lg:flex justify-between items-center flex-2 border-t border-b border-black/50 py-5 w-full ml-8 lg:ml-5">
+            <div className="hidden lg:flex justify-between items-center flex-2 w-full ml-8 lg:ml-5">
               {/* Navigation Links */}
               <nav className="flex items-center gap-6 text-lg font-medium text-muted-foreground">
                 <Link href="#" className="hover:text-foreground">
-                  La une
+                  FOND LOCAL
                 </Link>
                 <div className="h-12 w-px bg-black/50" />
                 <Link href="#" className="hover:text-foreground">
-                  Rapport du marché
+                  Soumission de Projet
                 </Link>
-                <div className="h-12 w-px bg-black/50" />
+                {/* <div className="h-12 w-px bg-black/50" /> */}
               </nav>
 
-              <div className="flex items-center gap-4">
-                {/* Search Bar */}
+              {/* <div className="flex items-center gap-4">
                 <div className="relative w-64">
                   <div className="absolute inset-y-0 left-0 flex items-center pl-2 pointer-events-none">
                     <div className="bg-primary p-0.5 rounded-sm">
@@ -78,15 +88,13 @@ const ProjectSubmission = () => {
                 </div>
 
                 <div className="h-12 w-px bg-black/50" />
-
-                {/* Connexion */}
                 <Link
                   href="/login"
                   className="text-lg font-medium text-muted-foreground hover:text-foreground"
                 >
                   Connexion
                 </Link>
-              </div>
+              </div> */}
             </div>
 
             {/* Mobile/Tablet Navigation (Hamburger Menu) */}
@@ -235,42 +243,45 @@ const ProjectSubmission = () => {
             <div className="mt-8">
               {currentStep === 0 && (
                 <PersonalInformationStep
+                  formData={formData}
+                  updateFormData={updateFormData}
                   onNext={handleNext}
                   onPrevious={handlePrevious}
                 />
               )}
               {currentStep === 1 && (
                 <ProjectCategoryStep
+                  formData={formData}
+                  updateFormData={updateFormData}
                   onNext={handleNext}
                   onPrevious={handlePrevious}
                 />
               )}
               {currentStep === 2 && (
                 <ProjectDescriptionStep
+                  formData={formData}
+                  updateFormData={updateFormData}
                   onNext={handleNext}
                   onPrevious={handlePrevious}
                 />
               )}
               {currentStep === 3 && (
                 <SignatureStep
+                  formData={formData}
+                  updateFormData={updateFormData}
                   onNext={handleNext}
                   onPrevious={handlePrevious}
                 />
               )}
-              {/* Placeholders for other steps */}
-              {currentStep > 3 && (
-                <div className="text-center py-20">
-                  <h2 className="text-2xl font-bold mb-4">
-                    Step {currentStep + 1} Coming Soon
-                  </h2>
-                  <div className="flex justify-center gap-4">
-                    <Button onClick={handlePrevious} variant="outline">
-                      Précédent
-                    </Button>
-                    <Button onClick={handleNext}>Suivant</Button>
-                  </div>
-                </div>
+
+              {currentStep === 4 && (
+                <VerificationStep
+                  formData={formData}
+                  onNext={handleNext}
+                  onPrevious={handlePrevious}
+                />
               )}
+              {currentStep === 5 && <ConfirmationStep />}
             </div>
           </div>
         )}
