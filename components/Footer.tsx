@@ -1,5 +1,3 @@
-import React from "react";
-import Image from "next/image";
 import Link from "next/link";
 
 const Footer = () => {
@@ -137,12 +135,6 @@ const Footer = () => {
             <Link href="#" className="hover:text-foreground">
               S'abonner à l'infolettre
             </Link>
-            <Link href="#" className="hover:text-foreground">
-              Contact Presse
-            </Link>
-            <Link href="#" className="hover:text-foreground">
-              Ecrivez-nous
-            </Link>
           </div>
 
           {/* Column 2 */}
@@ -155,9 +147,6 @@ const Footer = () => {
             </Link>
             <Link href="#" className="hover:text-foreground">
               Relations Publiques
-            </Link>
-            <Link href="#" className="hover:text-foreground">
-              Galerie
             </Link>
           </div>
 
