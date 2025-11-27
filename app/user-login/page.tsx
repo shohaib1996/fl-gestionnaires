@@ -45,7 +45,7 @@ const UserLoginPage = () => {
       </div>
 
       {/* Right Pane (Form) */}
-      <div className="relative z-10 min-h-dvh w-full md:w-1/2 flex flex-col items-center justify-around md:justify-center px-6 py-12 md:bg-[#FAF9F6]">
+      <div className="relative z-10 min-h-dvh w-full md:w-1/2 flex flex-col items-center justify-between md:justify-center px-6 py-12 md:bg-[#FAF9F6]">
         {/* Mobile Logo (Visible only on mobile) */}
         <div className="flex md:hidden flex-col items-center mb-8 mt-12">
           <div className="relative w-32 h-32 mb-4">
