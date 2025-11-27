@@ -5,9 +5,13 @@ import { Input } from "@/components/ui/input";
 
 const UserLoginPage = () => {
   return (
-    <div className="min-h-[90vh] md:min-h-dvh w-full flex">
-      {/* Mobile Background (Visible only on mobile) */}
-      <div className="absolute h-full inset-0 z-0 md:hidden">
+    <div
+      // Use full dynamic viewport; tailwind arbitrary value ensures mobile dynamic VH
+      className="min-h-dvh w-full flex"
+      style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+    >
+      {/* Mobile Background (fixed so it always covers viewport) */}
+      <div className="fixed inset-0 -z-20 md:hidden">
         <Image
           src="/images/Rectangle 660.png"
           alt="Background"
@@ -44,11 +48,11 @@ const UserLoginPage = () => {
         </div>
       </div>
 
-      {/* Right Pane (Form) */}
-      <div className="relative z-10 min-h-[90vh] md:min-h-dvh w-full md:w-1/2 flex flex-col items-center justify-between md:justify-center px-6 py-12 md:bg-[#FAF9F6]">
+      {/* Right Pane (Form) - no forced min-height here, center content */}
+      <div className="relative z-10 w-full md:w-1/2 flex flex-col items-center justify-center px-6 py-8 md:py-12 md:bg-[#FAF9F6]">
         {/* Mobile Logo (Visible only on mobile) */}
-        <div className="flex md:hidden flex-col items-center mb-8 mt-12">
-          <div className="relative w-32 h-32 mb-4">
+        <div className="flex md:hidden flex-col items-center mb-4 mt-6">
+          <div className="relative w-32 h-32 mb-2">
             <Image
               src="/images/FL FondLocal.svg"
               alt="FL Fond Local"
@@ -59,20 +63,20 @@ const UserLoginPage = () => {
           <h1 className="text-white text-sm tracking-widest font-medium uppercase">
             FOND LOCAL
           </h1>
-          <h2 className="text-[#63A053] text-3xl md:text-4xl font-medium mb-2 block md:hidden mt-10">
+          <h2 className="text-[#63A053] text-3xl md:text-4xl font-medium mb-2 block md:hidden mt-4">
             Demandez un compte
           </h2>
         </div>
 
-        <div className="w-full max-w-2xl space-y-8">
-          <div className="text-center mb-8">
-            <h2 className="text-[#63A053] text-3xl md:text-4xl font-medium mb-2 hidden md:block">
+        <div className="w-full max-w-2xl space-y-6">
+          <div className="text-center mb-4 hidden md:block">
+            <h2 className="text-[#63A053] text-3xl md:text-4xl font-medium mb-2">
               Demandez un compte
             </h2>
           </div>
 
-          <form className="space-y-6 ">
-            <div className="space-y-2">
+          <form className="space-y-5">
+            <div className="space-y-1">
               <label className="text-white md:text-gray-500 text-sm md:text-base ml-1">
                 Nom et prénom
               </label>
@@ -83,7 +87,7 @@ const UserLoginPage = () => {
               />
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-1">
               <label className="text-white md:text-gray-500 text-sm md:text-base ml-1">
                 Email
               </label>
@@ -94,7 +98,7 @@ const UserLoginPage = () => {
               />
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-1">
               <label className="text-white md:text-gray-500 text-sm md:text-base ml-1">
                 Mot de passe
               </label>
@@ -105,7 +109,7 @@ const UserLoginPage = () => {
               />
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-1">
               <label className="text-white md:text-gray-500 text-sm md:text-base ml-1">
                 Confirmer le mot de passe
               </label>
@@ -116,7 +120,7 @@ const UserLoginPage = () => {
               />
             </div>
 
-            <div className="pt-4">
+            <div className="pt-2">
               <Button
                 type="submit"
                 className="w-full h-12 md:h-14 bg-[#63A053] hover:bg-[#528644] text-white text-lg font-medium rounded-xs transition-colors"
