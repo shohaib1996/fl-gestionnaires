@@ -15,7 +15,6 @@ const UserLoginPage = () => {
           className="object-cover"
           priority
         />
-        {/* <div className="absolute inset-0 bg-black/60" /> */}
       </div>
 
       {/* Left Pane (Desktop/Tablet only) */}
@@ -28,8 +27,6 @@ const UserLoginPage = () => {
             className="object-cover"
             priority
           />
-          {/* Overlay to match the design tint */}
-          {/* <div className="absolute inset-0 bg-[#4A5D52]/80 mix-blend-multiply" /> */}
         </div>
 
         <div className="relative z-10 flex flex-col items-center h-full">
@@ -41,14 +38,14 @@ const UserLoginPage = () => {
               className="object-contain"
             />
           </div>
-          <h1 className="text-white text-sm tracking-widest font-medium uppercase mt-8">
+          <h1 className="text-white text-sm tracking-widest font-medium uppercase mt-8 absolute top-9/10">
             FOND LOCAL
           </h1>
         </div>
       </div>
 
       {/* Right Pane (Form) */}
-      <div className="relative z-10 w-full md:w-1/2 flex flex-col justify-between md:justify-center px-6 py-12 md:bg-[#FAF9F6] min-h-screen md:min-h-0">
+      <div className="relative z-10 w-full md:w-1/2 flex flex-col items-center justify-around md:justify-center px-6 py-12 md:bg-[#FAF9F6]">
         {/* Mobile Logo (Visible only on mobile) */}
         <div className="flex md:hidden flex-col items-center mb-8 mt-12">
           <div className="relative w-32 h-32 mb-4">
@@ -62,14 +59,14 @@ const UserLoginPage = () => {
           <h1 className="text-white text-sm tracking-widest font-medium uppercase">
             FOND LOCAL
           </h1>
-          <h2 className="text-[#63A053] text-3xl font-medium mt-12 md:hidden">
+          <h2 className="text-[#63A053] text-3xl md:text-4xl font-medium mb-2 block md:hidden mt-10">
             Demandez un compte
           </h2>
         </div>
 
-        <div className="w-full max-w-2xl space-y-8 mb-8 md:mb-0">
-          <div className="text-center mb-8 hidden md:block">
-            <h2 className="text-[#63A053] text-3xl md:text-4xl font-medium mb-2">
+        <div className="w-full max-w-2xl space-y-8">
+          <div className="text-center mb-8">
+            <h2 className="text-[#63A053] text-3xl md:text-4xl font-medium mb-2 hidden md:block">
               Demandez un compte
             </h2>
           </div>
@@ -82,7 +79,7 @@ const UserLoginPage = () => {
               <Input
                 type="text"
                 placeholder="Nom et prénom"
-                className="h-14 bg-[#F5F5F5] border-none text-black placeholder:text-gray-400 rounded-sm text-base"
+                className="h-12 md:h-14 bg-[#F5F5F5] border-none text-black placeholder:text-gray-400 rounded-sm text-base"
               />
             </div>
 
@@ -93,7 +90,7 @@ const UserLoginPage = () => {
               <Input
                 type="email"
                 placeholder="Votre email"
-                className="h-14 bg-[#F5F5F5] border-none text-black placeholder:text-gray-400 rounded-sm text-base"
+                className="h-12 md:h-14 bg-[#F5F5F5] border-none text-black placeholder:text-gray-400 rounded-sm text-base"
               />
             </div>
 
@@ -104,7 +101,7 @@ const UserLoginPage = () => {
               <Input
                 type="password"
                 placeholder="Votre mot de passe"
-                className="h-14 bg-[#F5F5F5] border-none text-black placeholder:text-gray-400 rounded-sm text-base"
+                className="h-12 md:h-14 bg-[#F5F5F5] border-none text-black placeholder:text-gray-400 rounded-sm text-base"
               />
             </div>
 
@@ -115,14 +112,14 @@ const UserLoginPage = () => {
               <Input
                 type="password"
                 placeholder="Confirmer votre mot de passe"
-                className="h-14 bg-[#F5F5F5] border-none text-black placeholder:text-gray-400 rounded-sm text-base"
+                className="h-12 md:h-14 bg-[#F5F5F5] border-none text-black placeholder:text-gray-400 rounded-sm text-base"
               />
             </div>
 
             <div className="pt-4">
               <Button
                 type="submit"
-                className="w-full h-14 bg-[#63A053] hover:bg-[#528644] text-white text-lg font-medium rounded-xs transition-colors"
+                className="w-full h-12 md:h-14 bg-[#63A053] hover:bg-[#528644] text-white text-lg font-medium rounded-xs transition-colors"
               >
                 Connexion
               </Button>
