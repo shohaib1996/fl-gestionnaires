@@ -11,10 +11,11 @@ const steps = [
   "Description de votre projet",
   "Signature",
   "Vérification",
-  "Envoyer",
+  "Confirmation",
 ];
 
 export const Stepper: React.FC<StepperProps> = ({ currentStep }) => {
+  if (currentStep === 5) return null;
   return (
     <div className="w-full py-8 mb-8">
       <div className="relative flex items-center w-full">

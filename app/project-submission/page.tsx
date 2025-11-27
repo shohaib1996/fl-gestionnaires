@@ -49,15 +49,17 @@ const ProjectSubmission = () => {
         <div className="max-w-7xl xl:container mx-auto">
           <div className="flex items-center justify-between">
             {/* Logo */}
-            <Link href="/" className="flex items-center">
-              <Image
-                src="/images/216_1705.png"
-                alt="FL Logo"
-                width={125}
-                height={100}
-                className="rounded-full w-20 h-auto md:w-28 lg:w-[125px]"
-              />
-            </Link>
+            {currentStep !== 5 && (
+              <Link href="/" className="flex items-center">
+                <Image
+                  src="/images/216_1705.png"
+                  alt="FL Logo"
+                  width={125}
+                  height={100}
+                  className="rounded-full w-20 h-auto md:w-28 lg:w-[125px]"
+                />
+              </Link>
+            )}
 
             {/* Desktop/Laptop Navigation (Hidden on Mobile/Tablet) */}
             <div className="hidden lg:flex justify-between items-center flex-2 w-full ml-8 lg:ml-5">
