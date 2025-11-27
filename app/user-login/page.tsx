@@ -6,9 +6,11 @@ import { Input } from "@/components/ui/input";
 const UserLoginPage = () => {
   return (
     <div
-      // Use full dynamic viewport; tailwind arbitrary value ensures mobile dynamic VH
-      className="min-h-dvh w-full flex"
-      style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+      className="fixed inset-0 bg-cover bg-center"
+      style={{
+        backgroundImage: "url('/images/Rectangle 660.png')",
+        paddingTop: "env(safe-area-inset-top)",
+      }}
     >
       {/* Mobile Background (fixed so it always covers viewport) */}
       <div className="fixed inset-0 -z-20 md:hidden">
