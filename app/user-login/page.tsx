@@ -5,20 +5,14 @@ import { Input } from "@/components/ui/input";
 
 const UserLoginPage = () => {
   return (
-    <div
-      className="fixed inset-0 bg-cover bg-center"
-      style={{
-        backgroundImage: "url('/images/Rectangle 660.png')",
-        paddingTop: "env(safe-area-inset-top)",
-      }}
-    >
-      {/* Mobile Background (fixed so it always covers viewport) */}
-      <div className="fixed inset-0 -z-20 md:hidden">
+    <div className="min-h-dvh w-full flex">
+      {/* Mobile Background (Visible only on mobile) */}
+      <div className="absolute h-full inset-0 z-0 md:hidden">
         <Image
           src="/images/Rectangle 660.png"
           alt="Background"
           fill
-          className="object-cover"
+          className="object-fill"
           priority
         />
       </div>
@@ -50,11 +44,11 @@ const UserLoginPage = () => {
         </div>
       </div>
 
-      {/* Right Pane (Form) - no forced min-height here, center content */}
-      <div className="relative z-10 w-full md:w-1/2 flex flex-col items-center justify-center px-6 py-8 md:py-12 md:bg-[#FAF9F6]">
+      {/* Right Pane (Form) */}
+      <div className="relative z-10 min-h-dvh w-full md:w-1/2 flex flex-col items-center justify-between md:justify-center px-6 py-12 md:bg-[#FAF9F6]">
         {/* Mobile Logo (Visible only on mobile) */}
-        <div className="flex md:hidden flex-col items-center mb-4 mt-6">
-          <div className="relative w-32 h-32 mb-2">
+        <div className="flex md:hidden flex-col items-center mb-8 mt-24">
+          <div className="relative w-32 h-32 mb-4">
             <Image
               src="/images/FL FondLocal.svg"
               alt="FL Fond Local"
@@ -65,20 +59,20 @@ const UserLoginPage = () => {
           <h1 className="text-white text-sm tracking-widest font-medium uppercase">
             FOND LOCAL
           </h1>
-          <h2 className="text-[#63A053] text-3xl md:text-4xl font-medium mb-2 block md:hidden mt-4">
+          <h2 className="text-[#63A053] text-3xl md:text-4xl font-medium mb-2 block md:hidden mt-10">
             Demandez un compte
           </h2>
         </div>
 
-        <div className="w-full max-w-2xl space-y-6">
-          <div className="text-center mb-4 hidden md:block">
-            <h2 className="text-[#63A053] text-3xl md:text-4xl font-medium mb-2">
+        <div className="w-full max-w-2xl space-y-8 mb-16 md:mb-0">
+          <div className="text-center mb-8">
+            <h2 className="text-[#63A053] text-3xl md:text-4xl font-medium mb-2 hidden md:block">
               Demandez un compte
             </h2>
           </div>
 
-          <form className="space-y-5">
-            <div className="space-y-1">
+          <form className="space-y-6 ">
+            <div className="space-y-2">
               <label className="text-white md:text-gray-500 text-sm md:text-base ml-1">
                 Nom et prénom
               </label>
@@ -89,7 +83,7 @@ const UserLoginPage = () => {
               />
             </div>
 
-            <div className="space-y-1">
+            <div className="space-y-2">
               <label className="text-white md:text-gray-500 text-sm md:text-base ml-1">
                 Email
               </label>
@@ -100,7 +94,7 @@ const UserLoginPage = () => {
               />
             </div>
 
-            <div className="space-y-1">
+            <div className="space-y-2">
               <label className="text-white md:text-gray-500 text-sm md:text-base ml-1">
                 Mot de passe
               </label>
@@ -111,7 +105,7 @@ const UserLoginPage = () => {
               />
             </div>
 
-            <div className="space-y-1">
+            <div className="space-y-2">
               <label className="text-white md:text-gray-500 text-sm md:text-base ml-1">
                 Confirmer le mot de passe
               </label>
@@ -122,7 +116,7 @@ const UserLoginPage = () => {
               />
             </div>
 
-            <div className="pt-2">
+            <div className="pt-4">
               <Button
                 type="submit"
                 className="w-full h-12 md:h-14 bg-[#63A053] hover:bg-[#528644] text-white text-lg font-medium rounded-xs transition-colors"
