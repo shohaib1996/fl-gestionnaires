@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -6,12 +8,161 @@ import { FormData, Collaborator } from "./types";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 
+import { Autosuggest } from "@/components/ui/Autosuggest"; // <-- path where you put Autosuggest
+
 interface PersonalInformationStepProps {
   formData: FormData;
   updateFormData: (updates: Partial<FormData>) => void;
   onNext: () => void;
   onPrevious: () => void;
 }
+
+/* ---------- Static data: provinces + cities ---------- */
+const PROVINCES = [
+  "Kinshasa",
+  "Kongo Central",
+  "Kwango",
+  "Kwilu",
+  "Mai-Ndombe",
+  "Équateur",
+  "Mongala",
+  "Nord-Ubangi",
+  "Sud-Ubangi",
+  "Tshuapa",
+  "Tshopo",
+  "Bas-Uele",
+  "Haut-Uele",
+  "Ituri",
+  "Nord-Kivu",
+  "Sud-Kivu",
+  "Maniema",
+  "Haut-Lomami",
+  "Lomami",
+  "Kasaï",
+  "Kasaï Central",
+  "Kasaï Oriental",
+  "Tanganyika",
+  "Haut-Katanga",
+  "Lualaba",
+  "Sankuru",
+];
+
+const CITIES = [
+  "Aketi",
+  "Ango",
+  "Aru",
+  "Bafwasende",
+  "Bagata",
+  "Bandundu",
+  "Banalia",
+  "Baraka",
+  "Beni",
+  "Bikoro",
+  "Bokoro",
+  "Bokungu",
+  "Boma",
+  "Bondo",
+  "Boende",
+  "Bukama",
+  "Bukavu",
+  "Bulungu",
+  "Bunia",
+  "Bumba",
+  "Buta",
+  "Butembo",
+  "Dabia",
+  "Demba",
+  "Dibaya",
+  "Dilolo",
+  "Djolu",
+  "Dungu",
+  "Feshi",
+  "Fizi",
+  "Fungurume",
+  "Gbadolite",
+  "Gemena",
+  "Goma",
+  "Gungu",
+  "Ikela",
+  "Ilebo",
+  "Ingende",
+  "Inongo",
+  "Isangi",
+  "Isiro",
+  "Kabalo",
+  "Kabambare",
+  "Kabinda",
+  "Kabongo",
+  "Kalehe",
+  "Kalemie",
+  "Kamina",
+  "Kananga",
+  "Karawa",
+  "Kasaji",
+  "Kasongo",
+  "Kasongo-Lunda",
+  "Kasumbalesa",
+  "Katako-Kombe",
+  "Kenge",
+  "Kiwanja",
+  "Kisangani",
+  "Kindu",
+  "Kipushi",
+  "Kikwit",
+  "Kole",
+  "Kolwezi",
+  "Komanda",
+  "Kongolo",
+  "Kutu",
+  "Likasi",
+  "Libenge",
+  "Lisala",
+  "Lodja",
+  "Lubao",
+  "Lubero",
+  "Lubumbashi",
+  "Lukolela",
+  "Lukula",
+  "Lusambo",
+  "Luiza",
+  "Luebo",
+  "Mahagi",
+  "Malemba-Nkulu",
+  "Maluku",
+  "Mambasa",
+  "Matadi",
+  "Mbandaka",
+  "Mbanza-Ngungu",
+  "Mbuji-Mayi",
+  "Miabi",
+  "Mobayi-Mbongo",
+  "Moanda",
+  "Muanda",
+  "Mushie",
+  "Mutshatsha",
+  "Mwene-Ditu",
+  "Mwenga",
+  "Mweka",
+  "Ngandajika",
+  "Nioki",
+  "N’Sele",
+  "Nyunzu",
+  "Punia",
+  "Rungu",
+  "Rutshuru",
+  "Sakania",
+  "Tembo",
+  "Tshikapa",
+  "Tshilenge",
+  "Tshela",
+  "Uvira",
+  "Wangata",
+  "Wania Rukula",
+  "Watsa",
+  "Yakoma",
+  "Zongo",
+];
+/* ----------------------------------------------------- */
 
 export const PersonalInformationStep: React.FC<
   PersonalInformationStepProps
@@ -28,7 +179,7 @@ export const PersonalInformationStep: React.FC<
           projectCity: "",
           residenceCity: "",
           province: "",
-        },
+        } as Collaborator,
       ],
     });
   };
@@ -41,7 +192,7 @@ export const PersonalInformationStep: React.FC<
 
   const updateCollaboratorField = (
     index: number,
-    field: keyof FormData["collaborators"][0],
+    field: keyof Collaborator,
     value: string
   ) => {
     const updated = [...formData.collaborators];
@@ -58,6 +209,7 @@ export const PersonalInformationStep: React.FC<
       </div>
 
       <div className="space-y-8">
+        {/* 1 First Name */}
         <div className="space-y-2">
           <label className="text-sm text-gray-600">
             1. Prénom <span className="text-red-500">*</span>
@@ -70,6 +222,7 @@ export const PersonalInformationStep: React.FC<
           />
         </div>
 
+        {/* 2 Last Name */}
         <div className="space-y-2">
           <label className="text-sm text-gray-600">
             2. Nom <span className="text-red-500">*</span>
@@ -82,6 +235,7 @@ export const PersonalInformationStep: React.FC<
           />
         </div>
 
+        {/* 3 Parent name (optional) */}
         <div className="space-y-2">
           <label className="text-sm text-gray-600">
             3. Si le candidat est un mineur, nom du parent ou autre tuteur légal
@@ -95,6 +249,7 @@ export const PersonalInformationStep: React.FC<
           />
         </div>
 
+        {/* 4 Phone */}
         <div className="space-y-2">
           <label className="text-sm text-gray-600">
             4. Numéro de téléphone <span className="text-red-500">*</span>
@@ -103,11 +258,22 @@ export const PersonalInformationStep: React.FC<
             value={formData.phone}
             onChange={(value) => updateFormData({ phone: value || "" })}
             placeholder="Entrez votre numéro"
-            defaultCountry="US"
-            className="bg-[#F0F6F4] border-b border-black/60 rounded-none border-t-0 border-x-0 h-12 text-base placeholder:text-gray-400 focus-visible:ring-0 focus-visible:border-black"
+            defaultCountry="CD"
+            className="w-full"
+            // react-phone-number-input provides its own input UI; wrap it visually by applying styles below:
+            inputComponent={({ value, onChange, ...rest }: any) => (
+              <input
+                {...rest}
+                value={value}
+                onChange={onChange}
+                className="bg-[#F0F6F4] border-b border-black/60 rounded-none border-t-0 border-x-0 h-12 px-3 text-base placeholder:text-gray-400 focus-visible:ring-0 focus-visible:border-black w-full"
+                placeholder="Entrez votre numéro"
+              />
+            )}
           />
         </div>
 
+        {/* 5 Email */}
         <div className="space-y-2">
           <label className="text-sm text-gray-600">
             5. Email <span className="text-red-500">*</span>
@@ -120,52 +286,66 @@ export const PersonalInformationStep: React.FC<
           />
         </div>
 
+        {/* 6 Project City (autosuggest) */}
         <div className="space-y-2">
           <label className="text-sm text-gray-600">
             6. Ville ou village où se situe ou commence votre projet{" "}
             <span className="text-red-500">*</span>
           </label>
-          <Input
-            value={formData.projectCity}
-            onChange={(e) => updateFormData({ projectCity: e.target.value })}
+
+          <Autosuggest
+            id="project-city"
+            options={CITIES}
+            value={formData.projectCity || ""}
+            onChange={(v) => updateFormData({ projectCity: v })}
             placeholder="Entrez la ville où vous postulez"
-            className="bg-[#F0F6F4] border-b border-black/60 rounded-none border-t-0 border-x-0 h-12 text-base placeholder:text-gray-400 focus-visible:ring-0 focus-visible:border-black"
+            noResultsText="Aucune ville trouvée."
+            className=""
           />
         </div>
 
+        {/* 7 Residence City (autosuggest) */}
         <div className="space-y-2">
           <label className="text-sm text-gray-600">
             7. Ville ou village de résidence{" "}
             <span className="text-red-500">*</span>
           </label>
-          <Input
-            value={formData.residenceCity}
-            onChange={(e) => updateFormData({ residenceCity: e.target.value })}
+
+          <Autosuggest
+            id="residence-city"
+            options={CITIES}
+            value={formData.residenceCity || ""}
+            onChange={(v) => updateFormData({ residenceCity: v })}
             placeholder="Entrez la ville ou le village où vous vivez"
-            className="bg-[#F0F6F4] border-b border-black/60 rounded-none border-t-0 border-x-0 h-12 text-base placeholder:text-gray-400 focus-visible:ring-0 focus-visible:border-black"
+            noResultsText="Aucune ville trouvée."
           />
         </div>
 
+        {/* 8 Province (autosuggest) */}
         <div className="space-y-2">
           <label className="text-sm text-gray-600">
             8. Province <span className="text-red-500">*</span>
           </label>
-          <Input
-            value={formData.province}
-            onChange={(e) => updateFormData({ province: e.target.value })}
+
+          <Autosuggest
+            id="province"
+            options={PROVINCES}
+            value={formData.province || ""}
+            onChange={(v) => updateFormData({ province: v })}
             placeholder="Entrez la province où vous postulez"
-            className="bg-[#F0F6F4] border-b border-black/60 rounded-none border-t-0 border-x-0 h-12 text-base placeholder:text-gray-400 focus-visible:ring-0 focus-visible:border-black"
+            noResultsText="Aucune province trouvée."
           />
         </div>
 
+        {/* Collaborators */}
         <div className="py-4 border-t border-dashed border-gray-300 my-8" />
 
         <div className="space-y-4">
-          <label className="text-sm text-gray-600">
+          <label className="text-sm text-gray-500">
             12. Postulez-vous avec des collaborateurs ?{" "}
             <span className="text-red-500">*</span>
           </label>
-          <div className="flex gap-8">
+          <div className="flex gap-8 mt-3">
             <label className="flex items-center gap-2 cursor-pointer group">
               <div className="relative flex items-center justify-center">
                 <input
@@ -238,6 +418,7 @@ export const PersonalInformationStep: React.FC<
                           className="bg-white border-b border-black/60 rounded-none border-t-0 border-x-0 h-10 text-sm placeholder:text-gray-400 focus-visible:ring-0 focus-visible:border-black"
                         />
                       </div>
+
                       <div className="space-y-2">
                         <label className="text-sm text-gray-600">
                           Nom <span className="text-red-500">*</span>
@@ -255,6 +436,7 @@ export const PersonalInformationStep: React.FC<
                           className="bg-white border-b border-black/60 rounded-none border-t-0 border-x-0 h-10 text-sm placeholder:text-gray-400 focus-visible:ring-0 focus-visible:border-black"
                         />
                       </div>
+
                       <div className="space-y-2">
                         <label className="text-sm text-gray-600">
                           Numéro de téléphone{" "}
@@ -262,14 +444,26 @@ export const PersonalInformationStep: React.FC<
                         </label>
                         <PhoneInput
                           value={collaborator.phone}
-                          onChange={(value) =>
-                            updateCollaboratorField(index, "phone", value || "")
+                          onChange={(val) =>
+                            updateCollaboratorField(index, "phone", val || "")
                           }
-                          placeholder="Téléphone"
-                          defaultCountry="US"
-                          className="bg-white border-b border-black/60 rounded-none border-t-0 border-x-0 h-10 text-sm placeholder:text-gray-400 focus-visible:ring-0 focus-visible:border-black"
+                          defaultCountry="CD"
+                          inputComponent={({
+                            value,
+                            onChange,
+                            ...rest
+                          }: any) => (
+                            <input
+                              {...rest}
+                              value={value}
+                              onChange={onChange}
+                              className="bg-white border-b border-black/60 rounded-none border-t-0 border-x-0 h-10 px-3 text-sm placeholder:text-gray-400 focus-visible:ring-0 focus-visible:border-black w-full"
+                              placeholder="Téléphone"
+                            />
+                          )}
                         />
                       </div>
+
                       <div className="space-y-2">
                         <label className="text-sm text-gray-600">
                           Email <span className="text-red-500">*</span>
@@ -287,63 +481,56 @@ export const PersonalInformationStep: React.FC<
                           className="bg-white border-b border-black/60 rounded-none border-t-0 border-x-0 h-10 text-sm placeholder:text-gray-400 focus-visible:ring-0 focus-visible:border-black"
                         />
                       </div>
+
                       <div className="space-y-2">
                         <label className="text-sm text-gray-600">
                           Ville du projet{" "}
                           <span className="text-red-500">*</span>
                         </label>
-                        <Input
-                          value={collaborator.projectCity}
-                          onChange={(e) =>
-                            updateCollaboratorField(
-                              index,
-                              "projectCity",
-                              e.target.value
-                            )
+                        <Autosuggest
+                          id={`collab-${index}-projectCity`}
+                          options={CITIES}
+                          value={collaborator.projectCity || ""}
+                          onChange={(v) =>
+                            updateCollaboratorField(index, "projectCity", v)
                           }
                           placeholder="Ville du projet"
-                          className="bg-white border-b border-black/60 rounded-none border-t-0 border-x-0 h-10 text-sm placeholder:text-gray-400 focus-visible:ring-0 focus-visible:border-black"
                         />
                       </div>
+
                       <div className="space-y-2">
                         <label className="text-sm text-gray-600">
                           Ville de résidence{" "}
                           <span className="text-red-500">*</span>
                         </label>
-                        <Input
-                          value={collaborator.residenceCity}
-                          onChange={(e) =>
-                            updateCollaboratorField(
-                              index,
-                              "residenceCity",
-                              e.target.value
-                            )
+                        <Autosuggest
+                          id={`collab-${index}-residenceCity`}
+                          options={CITIES}
+                          value={collaborator.residenceCity || ""}
+                          onChange={(v) =>
+                            updateCollaboratorField(index, "residenceCity", v)
                           }
                           placeholder="Ville de résidence"
-                          className="bg-white border-b border-black/60 rounded-none border-t-0 border-x-0 h-10 text-sm placeholder:text-gray-400 focus-visible:ring-0 focus-visible:border-black"
                         />
                       </div>
+
                       <div className="space-y-2 md:col-span-2">
                         <label className="text-sm text-gray-600">
                           Province <span className="text-red-500">*</span>
                         </label>
-                        <Input
-                          value={collaborator.province}
-                          onChange={(e) =>
-                            updateCollaboratorField(
-                              index,
-                              "province",
-                              e.target.value
-                            )
+                        <Autosuggest
+                          id={`collab-${index}-province`}
+                          options={PROVINCES}
+                          value={collaborator.province || ""}
+                          onChange={(v) =>
+                            updateCollaboratorField(index, "province", v)
                           }
                           placeholder="Province"
-                          className="bg-white border-b border-black/60 rounded-none border-t-0 border-x-0 h-10 text-sm placeholder:text-gray-400 focus-visible:ring-0 focus-visible:border-black"
                         />
                       </div>
                     </div>
                   </div>
                 ))}
-
                 <Button
                   variant="outline"
                   onClick={addCollaboratorField}
@@ -357,6 +544,7 @@ export const PersonalInformationStep: React.FC<
           )}
         </div>
 
+        {/* Navigation */}
         <div className="flex justify-center gap-32 pt-12 pb-8">
           <Button
             onClick={onPrevious}

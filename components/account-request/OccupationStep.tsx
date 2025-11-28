@@ -10,7 +10,11 @@ interface OccupationStepProps {
   onPrevious: () => void;
 }
 
+import { Input } from "@/components/ui/input";
+
 export const OccupationStep: React.FC<OccupationStepProps> = ({
+  formData,
+  updateFormData,
   onNext,
   onPrevious,
 }) => {
@@ -23,9 +27,46 @@ export const OccupationStep: React.FC<OccupationStepProps> = ({
       </div>
 
       <div className="space-y-8">
-        {/* Placeholder for occupation form fields */}
-        <div className="text-center p-8 border border-dashed rounded-md">
-          <p>Les champs du formulaire pour cette étape seront ajoutés ici.</p>
+        <div className="space-y-2">
+          <label className="text-base font-semibold text-gray-500">
+            13. Profession / Occupation <span className="text-red-500">*</span>
+          </label>
+          <p className="text-xs text-gray-500">
+            Écrivez "Aucune" si vous n'êtes pas employé(e) et n'avez pas
+            d'occupation
+          </p>
+          <Input
+            value={formData.occupation || ""}
+            onChange={(e) => updateFormData({ occupation: e.target.value })}
+            placeholder="Profession / Occupation"
+            className="bg-[#F0F4F4] border-none h-12 rounded-xs text-base placeholder:text-gray-400"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <label className="text-base font-semibold text-gray-500">
+            14. Nom de l'employeur : (Optionnel)
+          </label>
+          <Input
+            value={formData.employerName || ""}
+            onChange={(e) => updateFormData({ employerName: e.target.value })}
+            placeholder="Entrez le nom de votre employeur"
+            className="bg-[#F0F4F4] border-none h-12 rounded-xs text-base placeholder:text-gray-400"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <label className="text-base font-semibold text-gray-500">
+            15. Adresse professionnelle : (Optionnel)
+          </label>
+          <Input
+            value={formData.employerAddress || ""}
+            onChange={(e) =>
+              updateFormData({ employerAddress: e.target.value })
+            }
+            placeholder="Entrez l'adresse de votre employeur"
+            className="bg-[#F0F4F4] border-none h-12 rounded-xs text-base placeholder:text-gray-400"
+          />
         </div>
       </div>
 

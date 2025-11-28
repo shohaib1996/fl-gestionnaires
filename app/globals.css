@@ -237,3 +237,7 @@ body,
   box-shadow: inset 6px 6px 0 rgba(255, 255, 255, 0.25),
     /* soft top-left highlight */ inset -6px -6px 0 rgba(76, 123, 64, 0.02); /* soft bottom-right green tint */
 }
+
+.radix-popover-content {
+  z-index: 9999 !important;
+}

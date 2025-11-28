@@ -111,15 +111,19 @@ const AccountRequestPage = () => {
         <div className="max-w-7xl xl:container mx-auto">
           <div className="flex items-center justify-between">
             {/* Logo */}
-            <Link href="/" className="flex items-center">
-              <Image
-                src="/images/216_1705.png"
-                alt="FL Logo"
-                width={125}
-                height={100}
-                className="rounded-full w-20 h-auto md:w-28 lg:w-[125px]"
-              />
-            </Link>
+            {currentStep !== 6 ? (
+              <Link href="/" className="flex items-center">
+                <Image
+                  src="/images/216_1705.png"
+                  alt="FL Logo"
+                  width={125}
+                  height={100}
+                  className="rounded-full w-20 h-auto md:w-28 lg:w-[125px]"
+                />
+              </Link>
+            ) : (
+              <div /> // Spacer to maintain layout if needed, or just null. Using div for safety with justify-between
+            )}
 
             {/* Desktop/Laptop Navigation (Hidden on Mobile/Tablet) */}
             <div className="hidden lg:flex justify-between items-center flex-2 w-full ml-8 lg:ml-5">
@@ -244,8 +248,9 @@ const AccountRequestPage = () => {
                 </h2>
                 <p className="mb-4">
                   Pour garantir la sécurité et la conformité de notre
-                  plateforme, vous devez remplir les conditions d&apos;éligibilité
-                  suivantes pour obtenir un compte Fond Local :
+                  plateforme, vous devez remplir les conditions
+                  d&apos;éligibilité suivantes pour obtenir un compte Fond Local
+                  :
                 </p>
                 <ol className="list-decimal pl-6 space-y-4">
                   <li>
@@ -292,9 +297,9 @@ const AccountRequestPage = () => {
               </div>
 
               <p>
-                En remplissant le formulaire de demande de compte, vous confirmez
-                que vous remplissez toutes ces conditions et que vous acceptez de
-                vous conformer à nos politiques et réglementations.
+                En remplissant le formulaire de demande de compte, vous
+                confirmez que vous remplissez toutes ces conditions et que vous
+                acceptez de vous conformer à nos politiques et réglementations.
               </p>
             </div>
 
@@ -310,10 +315,12 @@ const AccountRequestPage = () => {
           </div>
         ) : (
           <div className="container mx-auto px-4 py-8">
-            <h1 className="text-2xl md:text-3xl font-bold text-center mb-8 md:mb-12">
-              Formulaire de demande de compte
-            </h1>
-            <Stepper currentStep={currentStep} />
+            {currentStep !== 6 && (
+              <h1 className="text-2xl md:text-3xl font-bold text-center mb-8 md:mb-12">
+                Formulaire de demande de compte
+              </h1>
+            )}
+            {currentStep !== 6 && <Stepper currentStep={currentStep} />}
             <div>{renderStep()}</div>
           </div>
         )}

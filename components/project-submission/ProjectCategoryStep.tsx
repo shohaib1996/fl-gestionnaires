@@ -1,7 +1,7 @@
 import React from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { FormData } from "./types";
+import { FormData } from "../../components/project-submission/types";
 
 interface ProjectCategoryStepProps {
   formData: FormData;
