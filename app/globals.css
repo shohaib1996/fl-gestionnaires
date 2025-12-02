@@ -241,3 +241,18 @@ body,
 .radix-popover-content {
   z-index: 9999 !important;
 }
+
+/* Main wrapper */
+.PhoneInput {
+  @apply w-full bg-[#F0F6F4] border-b border-black/60 border-t-0 border-x-0 rounded-none flex items-center h-12;
+}
+
+/* Country selector box (flag area) */
+.PhoneInputCountry {
+  @apply h-12 flex items-center px-2 bg-[#F0F6F4] border-b border-black/60 border-t-0 border-x-0 rounded-none;
+}
+
+/* Actual input field */
+.PhoneInputInput {
+  @apply flex-1 bg-[#F0F6F4] border-b border-black/60 border-t-0 border-x-0 outline-none h-12 px-3 text-base placeholder:text-gray-400;
+}

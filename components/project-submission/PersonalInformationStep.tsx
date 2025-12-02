@@ -257,19 +257,9 @@ export const PersonalInformationStep: React.FC<
           <PhoneInput
             value={formData.phone}
             onChange={(value) => updateFormData({ phone: value || "" })}
-            placeholder="Entrez votre numéro"
+            placeholder="Entrez votre numéro de téléphone"
             defaultCountry="CD"
-            className="w-full"
-            // react-phone-number-input provides its own input UI; wrap it visually by applying styles below:
-            inputComponent={({ value, onChange, ...rest }: any) => (
-              <input
-                {...rest}
-                value={value}
-                onChange={onChange}
-                className="bg-[#F0F6F4] border-b border-black/60 rounded-none border-t-0 border-x-0 h-12 px-3 text-base placeholder:text-gray-400 focus-visible:ring-0 focus-visible:border-black w-full"
-                placeholder="Entrez votre numéro"
-              />
-            )}
+            className="bg-[#F0F6F4] border-b border-black/60 rounded-none border-t-0 border-x-0 h-12 text-base placeholder:text-gray-400 focus-visible:ring-0 focus-visible:border-black"
           />
         </div>
 
@@ -444,23 +434,12 @@ export const PersonalInformationStep: React.FC<
                         </label>
                         <PhoneInput
                           value={collaborator.phone}
-                          onChange={(val) =>
-                            updateCollaboratorField(index, "phone", val || "")
+                          onChange={(value) =>
+                            updateCollaboratorField(index, "phone", value || "")
                           }
+                          placeholder="Téléphone"
                           defaultCountry="CD"
-                          inputComponent={({
-                            value,
-                            onChange,
-                            ...rest
-                          }: any) => (
-                            <input
-                              {...rest}
-                              value={value}
-                              onChange={onChange}
-                              className="bg-white border-b border-black/60 rounded-none border-t-0 border-x-0 h-10 px-3 text-sm placeholder:text-gray-400 focus-visible:ring-0 focus-visible:border-black w-full"
-                              placeholder="Téléphone"
-                            />
-                          )}
+                          className="bg-white border-b border-black/60 rounded-none border-t-0 border-x-0 h-10 text-sm placeholder:text-gray-400 focus-visible:ring-0 focus-visible:border-black w-full"
                         />
                       </div>
 

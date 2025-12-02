@@ -20,6 +20,8 @@ import {
 } from "@/components/project-submission/types";
 import { VerificationStep } from "@/components/project-submission/VerificationStep";
 import { ConfirmationStep } from "@/components/project-submission/ConfirmationStep";
+import { createProject } from "../actions";
+import { uploadLogo } from "@/app/actions/upload-logo";
 
 const ProjectSubmission = () => {
   const [isStarted, setIsStarted] = useState(false);
@@ -30,8 +32,106 @@ const ProjectSubmission = () => {
     setFormData((prev) => ({ ...prev, ...updates }));
   };
 
-  const handleNext = () => {
-    setCurrentStep((prev) => Math.min(prev + 1, 5));
+  const handleNext = async () => {
+    if (currentStep === 4) {
+      //
+      // 1. Sanitize for debugging (optional)
+      //
+      const sanitize = (fd: FormData) => {
+        const { logo, ...rest } = fd as any;
+        return {
+          ...rest,
+          logo: logo
+            ? {
+                name: logo.name,
+                size: logo.size,
+                type: logo.type,
+              }
+            : null,
+        };
+      };
+
+      console.log("🔍 FULL FORM DATA:", sanitize(formData));
+
+      //
+      // 2. Upload logo (if exists)
+      //
+      let logoUrl = null;
+
+      if (formData.logo instanceof File) {
+        console.log("📤 Uploading logo…");
+
+        const uploadResult = await uploadLogo(formData.logo);
+
+        if (uploadResult.error) {
+          console.error("❌ Logo upload failed:", uploadResult.error);
+          alert("Logo upload failed. Please try again.");
+          return;
+        }
+
+        logoUrl = uploadResult.url;
+        console.log("✅ Logo uploaded:", logoUrl);
+      }
+
+      //
+      // 3. Build final project payload
+      //
+      const projectData = {
+        // Personal info
+        first_name: formData.firstName,
+        last_name: formData.lastName,
+        parent_name: formData.parentName || null,
+        phone: formData.phone,
+        email: formData.email,
+
+        // Location
+        project_city: formData.projectCity,
+        residence_city: formData.residenceCity,
+        province: formData.province,
+
+        // Collaborators
+        collaborators: formData.hasCollaborators ? formData.collaborators : [],
+
+        // Project details
+        title: formData.projectName,
+        description: formData.description,
+        categories: formData.categories,
+        phase: formData.projectPhase,
+        links: formData.links.filter(Boolean),
+
+        // Uploaded file URL
+        logo_url: logoUrl,
+
+        // Signature + signer
+        signature: formData.signature || null,
+        signer_name: formData.signerName || null,
+
+        // Enum status
+        status: "submitted",
+      };
+
+      console.log("📦 PROJECT PAYLOAD TO SUPABASE:", projectData);
+
+      //
+      // 4. Save project
+      //
+      const result = await createProject(projectData);
+
+      if (result.error) {
+        console.error("❌ Failed to create project:", result.error);
+        alert(`Error: ${result.error}`);
+        return;
+      }
+
+      console.log("✅ Project created successfully:", result.data);
+
+      //
+      // 5. Move to confirmation
+      //
+      setCurrentStep((prev) => Math.min(prev + 1, 5));
+    } else {
+      setCurrentStep((prev) => Math.min(prev + 1, 5));
+    }
   };
 
   const handlePrevious = () => {
