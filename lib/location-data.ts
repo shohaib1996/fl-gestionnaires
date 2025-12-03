@@ -28,6 +28,7 @@ export const PROVINCES = [
 ];
 
 export const CITIES = [
+  "Kinshasa",
   "Aketi",
   "Ango",
   "Aru",

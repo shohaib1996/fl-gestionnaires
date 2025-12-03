@@ -201,13 +201,10 @@ export const ComplianceStep: React.FC<ComplianceStepProps> = ({
 
       <div className="flex justify-center gap-32 pt-12 pb-8">
         <Button
-          onClick={() => {
-            // Handle save logic here if needed
-            console.log("Sauvegarder", formData);
-          }}
+          onClick={onPrevious}
           className="bg-[#5F8E70] hover:bg-[#4d755b] text-white px-12 py-6 text-lg rounded-xs"
         >
-          Sauvegarder
+          Précédent
         </Button>
         <Button
           onClick={onNext}

@@ -22,6 +22,7 @@ import {
   AccountRequestFormData,
   initialFormData,
 } from "@/components/account-request/types";
+import { createAccountRequest } from "@/app/actions/createAccountRequest";
 
 const AccountRequestPage = () => {
   const [isStarted, setIsStarted] = useState(false);
@@ -93,7 +94,7 @@ const AccountRequestPage = () => {
         return (
           <ReviewStep
             formData={formData}
-            onNext={onNext}
+            onNext={handleSubmit}
             onPrevious={onPrevious}
           />
         );
@@ -102,6 +103,22 @@ const AccountRequestPage = () => {
       default:
         return <div>Étape non trouvée</div>;
     }
+  };
+
+  const handleSubmit = async () => {
+    console.log("📤 Submitting full form...", formData);
+
+    const result = await createAccountRequest(formData);
+
+    if (result.error) {
+      console.error("❌ Submission Failed:", result.error);
+      alert("Something went wrong. Please try again.");
+      return;
+    }
+
+    console.log("✅ Submission Success:", result.data);
+
+    onNext(); // Move to ConfirmationStep
   };
 
   return (

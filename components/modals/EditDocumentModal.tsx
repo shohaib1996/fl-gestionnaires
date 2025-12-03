@@ -20,7 +20,6 @@ import {
   Link,
   UploadCloud,
 } from "lucide-react";
-import React from "react";
 import {
   Select,
   SelectContent,
@@ -28,15 +27,51 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useState } from "react";
+import { editDocument } from "@/app/actions/edit-document";
+
+interface DocumentType {
+  id: string;
+  name: string;
+  category: string;
+  description: string;
+  file_format: string;
+  file_path?: string | null;
+}
 
 interface Props {
   open: boolean;
   onClose: () => void;
-  // In a real app, you'd pass the document data here to pre-fill
-  // document?: DocumentType;
+  doc: DocumentType;
 }
 
-export default function EditDocumentModal({ open, onClose }: Props) {
+export default function EditDocumentModal({ open, onClose, doc }: Props) {
+  const [name, setName] = useState(doc.name);
+  const [category, setCategory] = useState(doc.category);
+  const [description, setDescription] = useState(doc.description);
+  const [fileFormat, setFileFormat] = useState(doc.file_format);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  const handleSave = async () => {
+    const updates = {
+      name,
+      category,
+      description,
+      file_format: fileFormat,
+      old_file_path: doc.file_path || null,
+    };
+
+    const res = await editDocument(doc.id, updates, selectedFile || undefined);
+
+    if (res.error) {
+      alert("❌ Failed to update document");
+      return;
+    }
+
+    alert("✅ Document updated successfully");
+    onClose();
+  };
+
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="p-0 min-w-[30vw] bg-white dark:bg-neutral-900 text-gray-800 dark:text-gray-200 border-none rounded-none">
@@ -55,7 +90,8 @@ export default function EditDocumentModal({ open, onClose }: Props) {
               <label className="block text-sm font-medium">Nom*</label>
               <Input
                 placeholder="Nommer le document"
-                defaultValue="Permit document 2025" // Example pre-filled
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 className="mt-1 bg-gray-50 dark:bg-neutral-800 border-gray-300 dark:border-neutral-700 h-9 rounded-xs"
               />
             </div>
@@ -64,7 +100,7 @@ export default function EditDocumentModal({ open, onClose }: Props) {
             <div className="col-span-6">
               <label className="block text-sm font-medium">Catégorie</label>
 
-              <Select defaultValue="legal">
+              <Select value={category} onValueChange={setCategory}>
                 <SelectTrigger className="w-full mt-1 bg-gray-50 dark:bg-neutral-800 border border-gray-300 dark:border-neutral-700 px-3 py-2 text-gray-700 dark:text-gray-200 rounded-xs">
                   <SelectValue placeholder="Catégorie" />
                 </SelectTrigger>
@@ -105,7 +141,8 @@ export default function EditDocumentModal({ open, onClose }: Props) {
               </label>
               <Textarea
                 placeholder="Brève description"
-                defaultValue="Document légal pour le projet..." // Example pre-filled
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
                 className="mt-1 bg-gray-50 dark:bg-neutral-800 border-gray-300 dark:border-neutral-700 h-24 rounded-xs"
               />
             </div>
@@ -118,7 +155,7 @@ export default function EditDocumentModal({ open, onClose }: Props) {
                   Format du fichier
                 </label>
 
-                <Select defaultValue="document">
+                <Select value={fileFormat} onValueChange={setFileFormat}>
                   <SelectTrigger className="w-full mt-1 bg-gray-50 dark:bg-neutral-800 border border-gray-300 dark:border-neutral-700 rounded-xs px-3 py-2 text-gray-700 dark:text-gray-200">
                     <SelectValue placeholder="Format du fichier" />
                   </SelectTrigger>
@@ -177,7 +214,14 @@ export default function EditDocumentModal({ open, onClose }: Props) {
                         ou glisser-déposer
                       </p>
                     </div>
-                    <input id="dropzone-file" type="file" className="hidden" />
+                    <input
+                      id="dropzone-file"
+                      type="file"
+                      className="hidden"
+                      onChange={(e) =>
+                        setSelectedFile(e.target.files?.[0] || null)
+                      }
+                    />
                   </label>
                 </div>
               </div>
@@ -193,7 +237,10 @@ export default function EditDocumentModal({ open, onClose }: Props) {
               Annuler
             </button>
 
-            <button className="px-6 py-2 bg-[#326EA6] text-white rounded hover:bg-[#255583]">
+            <button
+              onClick={handleSave}
+              className="px-6 py-2 bg-[#326EA6] text-white rounded hover:bg-[#255583]"
+            >
               Sauvegarder
             </button>
           </div>

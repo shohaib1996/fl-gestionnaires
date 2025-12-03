@@ -6,7 +6,7 @@
       "name": "Jeanne Aki",
       "role": "Lead"
     },
-    "goal": "Rassembler tous les documents légaux requis et mettre l’entreprise en règle.",
+    "goal": "Rassembler tous les documents légaux requis et mettre l'entreprise en règle.",
     "phases": [
       {
         "step": 1,
@@ -36,46 +36,70 @@
     ],
     "documents": [
       {
+        "id": "4d2c3652-1431-48fd-8db7-f2b48709c640",
+        "name": "Legal Documents 2025",
         "date": "2025-09-03",
         "description": "Legal Documents 2025",
-        "category": "Document légal",
+        "category": "legal",
         "status": "Complété",
-        "type": "file"
+        "type": "file",
+        "file_format": "document",
+        "file_path": "/uploads/legal-doc-2025.pdf"
       },
       {
+        "id": "5e3d4763-2542-59ge-9ec8-g3c59810d751",
+        "name": "Legal Video 2025",
         "date": "2025-09-09",
         "description": "Legal Documents 2025",
-        "category": "Document légal",
+        "category": "legal",
         "status": "Complété",
-        "type": "video"
+        "type": "video",
+        "file_format": "video",
+        "file_path": "/uploads/legal-video-2025.mp4"
       },
       {
+        "id": "6f4e5874-3653-60hf-0fd9-h4d60921e862",
+        "name": "Compliance Report",
         "date": "2025-09-10",
         "description": "Legal Documents 2025",
-        "category": "Document légal",
+        "category": "legal",
         "status": "Complété",
-        "type": "file"
+        "type": "file",
+        "file_format": "document",
+        "file_path": "/uploads/compliance-report.pdf"
       },
       {
+        "id": "7g5f6985-4764-71ig-1ge0-i5e71032f973",
+        "name": "Company Website",
         "date": "2025-09-12",
         "description": "Legal Documents 2025",
-        "category": "Document légal",
+        "category": "legal",
         "status": "Complété",
-        "type": "web"
+        "type": "web",
+        "file_format": "web",
+        "file_path": null
       },
       {
+        "id": "8h6g7096-5875-82jh-2hf1-j6f82143g084",
+        "name": "External Resources",
         "date": "2025-09-23",
         "description": "Legal Documents 2025",
-        "category": "Document légal",
+        "category": "legal",
         "status": "Complété",
-        "type": "web"
+        "type": "web",
+        "file_format": "external",
+        "file_path": null
       },
       {
+        "id": "9i7h8107-6986-93ki-3ig2-k7g93254h195",
+        "name": "Legal Portal",
         "date": "2025-09-23",
         "description": "Legal Documents 2025",
-        "category": "Document légal",
+        "category": "legal",
         "status": "Complété",
-        "type": "web"
+        "type": "web",
+        "file_format": "web",
+        "file_path": null
       }
     ],
     "preview": {
@@ -84,4 +108,3 @@
     }
   }
 }
- 

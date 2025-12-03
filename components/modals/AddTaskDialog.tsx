@@ -23,16 +23,19 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+
 import { Calendar } from "@/components/ui/calendar";
 
 import {
   MapPin,
-  Search as SearchIcon,
-  ChevronDown,
   User2,
   Calendar1,
   Clock,
+  ChevronDown,
+  X,
+  Check,
 } from "lucide-react";
+import { createTask } from "@/app/actions/createTask";
 
 export default function AddTaskDialog({
   open,
@@ -41,34 +44,102 @@ export default function AddTaskDialog({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
+  // form fields
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [startTime, setStartTime] = useState("");
+  const [endTime, setEndTime] = useState("");
+
   const [location, setLocation] = useState<string>("Online");
-  const [participant, setParticipant] = useState<string | null>(null);
-  const [participantQuery, setParticipantQuery] = useState("");
 
-  // use `Date | undefined` to match Calendar prop types
-  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
-  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
+  // multi-select participants -------------------------------
+  type Participant = { name: string; email: string };
 
-  // example participants — replace with real data if you have it
-  const allParticipants = useMemo(
+  const allParticipants: Participant[] = useMemo(
     () => [
-      "Alice Dupont",
-      "Benoît Martin",
-      "Céline Durand",
-      "David Moreau",
-      "Emma Laurent",
+      { name: "Alice Dupont", email: "alice@example.com" },
+      { name: "Benoît Martin", email: "benoit@example.com" },
+      { name: "Céline Durand", email: "celine@example.com" },
+      { name: "David Moreau", email: "david@example.com" },
+      { name: "Emma Laurent", email: "emma@example.com" },
     ],
     []
   );
 
+  const [participantQuery, setParticipantQuery] = useState("");
+  const [selectedParticipants, setSelectedParticipants] = useState<
+    Participant[]
+  >([]);
+
   const filteredParticipants = useMemo(() => {
     const q = participantQuery.trim().toLowerCase();
     if (!q) return allParticipants;
-    return allParticipants.filter((p) => p.toLowerCase().includes(q));
-  }, [allParticipants, participantQuery]);
+    return allParticipants.filter(
+      (p) =>
+        p.name.toLowerCase().includes(q) || p.email.toLowerCase().includes(q)
+    );
+  }, [participantQuery, allParticipants]);
 
-  // safe formatter — returns empty string when date is undefined
+  const addParticipant = (p: Participant) => {
+    if (!selectedParticipants.find((x) => x.email === p.email)) {
+      setSelectedParticipants((prev) => [...prev, p]);
+    }
+  };
+
+  const removeParticipant = (email: string) => {
+    setSelectedParticipants((prev) => prev.filter((p) => p.email !== email));
+  };
+
+  // date pickers -------------------------------------------
+  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
+
+  const [endDateEnabled, setEndDateEnabled] = useState(false);
+  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
+
   const fmt = (d: Date | undefined) => (d ? format(d, "dd/MM/yyyy") : "");
+
+  const resetForm = () => {
+    setTitle("");
+    setDescription("");
+    setStartDate(undefined);
+    setEndDate(undefined);
+    setEndDateEnabled(false);
+    setStartTime("");
+    setEndTime("");
+    setLocation("Online");
+    setSelectedParticipants([]);
+    setParticipantQuery("");
+  };
+
+  const handleSave = async () => {
+    const task = {
+      title,
+      description,
+      startDate: startDate ? fmt(startDate) : null,
+      endDate: endDateEnabled && endDate ? fmt(endDate) : null,
+      startTime,
+      endTime,
+      location,
+      participants: selectedParticipants,
+    };
+
+    console.log("📝 NEW TASK:", task);
+
+    const result = await createTask(task);
+
+    if (result.error) {
+      alert("❌ Failed to create task");
+      return;
+    }
+
+    console.log("✅ Task created:", result.data);
+
+    // ⭐ Reset everything
+    resetForm();
+
+    // Close dialog
+    onOpenChange(false);
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -84,6 +155,8 @@ export default function AddTaskDialog({
           <div>
             <label className="text-sm font-medium">Titre</label>
             <Input
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
               placeholder="Titre de la tâche"
               className="mt-1 bg-gray-100 rounded-xs"
             />
@@ -93,161 +166,132 @@ export default function AddTaskDialog({
           <div>
             <label className="text-sm font-medium">Brève description</label>
             <Textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
               placeholder="Brève description"
               className="mt-1 bg-gray-100 min-h-[100px] rounded-xs"
             />
           </div>
 
-          {/* Date pickers (shadcn calendar popovers) */}
+          {/* Date pickers */}
           <div className="grid grid-cols-2 gap-4">
-            {/* Start Date */}
+            {/* Start date */}
             <div>
-              <label className="text-sm font-medium">Date</label>
-
+              <label className="text-sm font-medium">Date de début</label>
               <Popover>
-                <PopoverTrigger asChild className="dark:bg-gray-100/10">
-                  <button
-                    type="button"
-                    className="w-full flex items-center justify-between bg-gray-100 py-3 px-3 rounded text-left text-sm text-gray-600 hover:shadow-sm"
-                  >
+                <PopoverTrigger asChild>
+                  <button className="w-full flex items-center justify-between bg-gray-100 py-3 px-3 rounded text-sm text-gray-600">
                     <div className="flex items-center gap-3">
                       <Calendar1 className="w-4 h-4 text-gray-500" />
-                      <span
-                        className={`${
-                          startDate ? "text-gray-800" : "text-gray-500"
-                        }`}
-                      >
-                        {startDate ? fmt(startDate) : "JJ/MM/AAAA"}
-                      </span>
+                      <span>{startDate ? fmt(startDate) : "JJ/MM/AAAA"}</span>
                     </div>
                     <ChevronDown className="w-4 h-4 text-gray-500" />
                   </button>
                 </PopoverTrigger>
 
-                <PopoverContent
-                  align="start"
-                  sideOffset={8}
-                  className="w-auto p-0"
-                >
-                  {/* Calendar expects Date | undefined */}
+                <PopoverContent className="w-auto p-0" align="start">
                   <Calendar
                     mode="single"
                     selected={startDate}
-                    onSelect={(d) => {
-                      // d has type Date | undefined — matches our state type
-                      setStartDate(d);
-                    }}
-                    autoFocus
-                    className="rounded-xs"
+                    onSelect={setStartDate}
                   />
                 </PopoverContent>
               </Popover>
             </div>
 
-            {/* End Date */}
+            {/* End date with dynamic icon */}
             <div>
-              <label className="text-sm font-medium">Date</label>
+              <label className="text-sm font-medium">Date de fin</label>
 
               <Popover>
-                <PopoverTrigger asChild className="dark:bg-gray-100/10">
+                <PopoverTrigger asChild>
                   <button
-                    type="button"
-                    className="w-full flex items-center justify-between bg-gray-100 py-3 px-3 rounded text-left text-sm text-gray-600 hover:shadow-sm"
+                    className={`w-full flex items-center justify-between py-3 px-3 rounded text-sm transition ${
+                      endDateEnabled
+                        ? "bg-gray-100 text-gray-700"
+                        : "bg-gray-200 text-gray-400"
+                    }`}
+                    onClick={(e) => {
+                      // If disabled, clicking should ONLY toggle
+                      if (!endDateEnabled) {
+                        e.preventDefault();
+                        setEndDateEnabled(true);
+                        return;
+                      }
+                    }}
                   >
                     <div className="flex items-center gap-3">
-                      <Calendar1 className="w-4 h-4 text-gray-500" />
-                      <span
-                        className={`${
-                          endDate ? "text-gray-800" : "text-gray-500"
-                        }`}
-                      >
-                        {endDate ? fmt(endDate) : "JJ/MM/AAAA"}
-                      </span>
+                      <Calendar1 className="w-4 h-4" />
+                      <span>{endDate ? fmt(endDate) : "JJ/MM/AAAA"}</span>
                     </div>
-                    <ChevronDown className="w-4 h-4 text-gray-500" />
+
+                    {/* RIGHT-SIDE ICON */}
+                    {endDateEnabled ? (
+                      <ChevronDown className="w-4 h-4 text-gray-600" />
+                    ) : (
+                      <Check
+                        className="w-4 h-4 text-gray-400"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setEndDateEnabled(true);
+                        }}
+                      />
+                    )}
                   </button>
                 </PopoverTrigger>
 
-                <PopoverContent
-                  align="start"
-                  sideOffset={8}
-                  className="w-auto p-0"
-                >
-                  <Calendar
-                    mode="single"
-                    className="rounded-xs"
-                    selected={endDate}
-                    onSelect={(d) => {
-                      setEndDate(d);
-                    }}
-                  />
-                </PopoverContent>
+                {endDateEnabled && (
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={endDate}
+                      onSelect={(d) => setEndDate(d!)}
+                    />
+                  </PopoverContent>
+                )}
               </Popover>
             </div>
           </div>
 
-          {/* Hours */}
+          {/* Time pickers */}
           <div className="grid grid-cols-2 gap-4">
-            {/* Heure de début */}
             <div>
               <label className="text-sm font-medium">Heure de début</label>
-              <div className="relative mt-1">
-                <Input
-                  placeholder="HH:MM"
-                  className="bg-gray-100 pl-10 rounded-xs"
-                />
-                <Clock className="w-4 h-4 text-gray-500 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-              </div>
+              <Input
+                type="time"
+                value={startTime}
+                onChange={(e) => setStartTime(e.target.value)}
+                className="bg-gray-100 mt-1"
+              />
             </div>
 
-            {/* Heure de fin */}
             <div>
               <label className="text-sm font-medium">Heure de fin</label>
-              <div className="relative mt-1">
-                <Input
-                  placeholder="HH:MM"
-                  className="bg-gray-100 pl-10 rounded-xs"
-                />
-                <Clock className="w-4 h-4 text-gray-500 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-              </div>
+              <Input
+                type="time"
+                value={endTime}
+                onChange={(e) => setEndTime(e.target.value)}
+                className="bg-gray-100 mt-1"
+              />
             </div>
           </div>
 
-          {/* Lieu (dropdown) */}
+          {/* Location */}
           <div>
             <label className="text-sm font-medium mb-2 block">Lieu</label>
 
             <DropdownMenu>
-              <DropdownMenuTrigger
-                asChild
-                className="bg-gray-100 dark:bg-gray-100/10"
-              >
-                <button
-                  type="button"
-                  className="w-full flex items-center justify-between bg-gray-100 py-3 px-3 rounded text-left text-sm text-gray-600 hover:shadow-sm"
-                  aria-haspopup="true"
-                >
-                  <div className="flex items-center gap-3 ">
-                    <MapPin className="w-4 h-4 text-gray-500 dark:text-white" />
-                    <span
-                      className={`${
-                        location
-                          ? "text-gray-800 dark:text-white"
-                          : "text-gray-500 dark:text-white"
-                      }`}
-                    >
-                      {location || "Sélectionner un lieu"}
-                    </span>
+              <DropdownMenuTrigger asChild>
+                <button className="w-full flex items-center justify-between bg-gray-100 py-3 px-3 rounded text-sm text-gray-600">
+                  <div className="flex items-center gap-3">
+                    <MapPin className="w-4 h-4" />
+                    <span>{location}</span>
                   </div>
-                  <ChevronDown className="w-4 h-4 text-gray-500" />
+                  <ChevronDown className="w-4 h-4" />
                 </button>
               </DropdownMenuTrigger>
 
-              <DropdownMenuContent
-                align="start"
-                sideOffset={6}
-                className="w-56 "
-              >
+              <DropdownMenuContent className="w-56">
                 <DropdownMenuItem onSelect={() => setLocation("Online")}>
                   Online
                 </DropdownMenuItem>
@@ -261,76 +305,84 @@ export default function AddTaskDialog({
             </DropdownMenu>
           </div>
 
-          {/* Participants (dropdown with search) */}
+          {/* Participants Multi-select */}
           <div>
             <label className="text-sm font-medium mb-2 block">
               Participants
             </label>
 
+            {/* Selected chips */}
+            <div className="flex flex-wrap gap-2 mb-2">
+              {selectedParticipants.slice(0, 2).map((p) => (
+                <div
+                  key={p.email}
+                  className="flex items-center gap-1 bg-gray-200 text-sm px-2 py-1 rounded"
+                >
+                  {p.name}
+                  <button
+                    onClick={() => removeParticipant(p.email)}
+                    className="text-gray-600 hover:text-black"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              ))}
+
+              {selectedParticipants.length > 2 && (
+                <span className="text-xs text-gray-500">
+                  +{selectedParticipants.length - 2} more
+                </span>
+              )}
+            </div>
+
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button
-                  type="button"
-                  className="w-full flex items-center justify-between bg-gray-100 dark:bg-gray-100/10 py-3 px-3 rounded text-left text-sm text-gray-600 hover:shadow-sm"
-                  aria-haspopup="true"
-                >
+                <button className="w-full flex items-center justify-between bg-gray-100 py-3 px-3 rounded text-sm text-gray-600">
                   <div className="flex items-center gap-3">
-                    <User2 className="w-4 h-4 text-gray-500 dark:text-white" />
-                    <span
-                      className={`${
-                        participant
-                          ? "text-gray-800 dark:text-white"
-                          : "text-gray-500 dark:text-white"
-                      }`}
-                    >
-                      {participant ?? "Chercher"}
-                    </span>
+                    <User2 className="w-4 h-4" />
+                    <span>Ajouter</span>
                   </div>
-                  <ChevronDown className="w-4 h-4 text-gray-500" />
+                  <ChevronDown className="w-4 h-4" />
                 </button>
               </DropdownMenuTrigger>
 
-              <DropdownMenuContent
-                align="start"
-                sideOffset={6}
-                className="w-72 p-2"
-              >
-                {/* Search field inside dropdown */}
+              <DropdownMenuContent className="w-72 p-2">
+                {/* search */}
                 <div className="px-1 pb-2">
                   <Input
                     value={participantQuery}
                     onChange={(e) => setParticipantQuery(e.target.value)}
                     placeholder="Chercher"
-                    className="bg-white"
                   />
                 </div>
 
-                {/* participant list */}
+                {/* list */}
                 <div className="max-h-44 overflow-auto">
-                  {filteredParticipants.length === 0 ? (
-                    <div className="px-3 py-2 text-sm text-gray-500">
-                      Aucun résultat
-                    </div>
-                  ) : (
-                    filteredParticipants.map((p) => (
+                  {filteredParticipants.map((p) => {
+                    const selected = !!selectedParticipants.find(
+                      (x) => x.email === p.email
+                    );
+                    return (
                       <DropdownMenuItem
-                        key={p}
-                        onSelect={() => {
-                          setParticipant(p);
-                          setParticipantQuery("");
-                        }}
+                        key={p.email}
+                        disabled={selected}
+                        onSelect={() => addParticipant(p)}
+                        className={`flex flex-col ${
+                          selected ? "opacity-50" : ""
+                        }`}
                       >
-                        {p}
+                        <span>{p.name}</span>
+                        <span className="text-xs text-gray-500">{p.email}</span>
                       </DropdownMenuItem>
-                    ))
-                  )}
+                    );
+                  })}
                 </div>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
 
           {/* Buttons */}
-          <div className="flex justify-center gap-3 pt-2 pb-8">
+          <div className="flex justify-center gap-3 pt-4 pb-8">
             <Button
               variant="outline"
               onClick={() => onOpenChange(false)}
@@ -339,7 +391,10 @@ export default function AddTaskDialog({
               Annuler
             </Button>
 
-            <Button className="bg-[#63a053] hover:bg-[#528a45] px-6 h-11 rounded-none">
+            <Button
+              onClick={handleSave}
+              className="bg-[#63a053] hover:bg-[#528a45] px-6 h-11 rounded-none"
+            >
               Sauvegarder
             </Button>
           </div>

@@ -34,11 +34,15 @@ interface ProjectData {
     goal: string;
     phases: Phase[];
     documents: {
+      id: string;
+      name: string;
       date: string;
       description: string;
       category: string;
       status: string;
       type: string;
+      file_format: string;
+      file_path?: string | null;
     }[];
     preview: { image: string; type: string };
   };
@@ -57,6 +61,14 @@ const ProjectDetails = () => {
   const [jalonModalOpen, setJalonModalOpen] = useState(false);
   const [openAddDoc, setOpenAddDoc] = useState(false);
   const [openEditDoc, setOpenEditDoc] = useState(false);
+  const [selectedDocument, setSelectedDocument] = useState<{
+    id: string;
+    name: string;
+    category: string;
+    description: string;
+    file_format: string;
+    file_path?: string | null;
+  } | null>(null);
   const [jalonDetailsModalOpen, setJalonDetailsModalOpen] = useState(false);
   const [selectedPhase, setSelectedPhase] = useState<Phase | null>(null);
 
@@ -273,7 +285,17 @@ const ProjectDetails = () => {
                           <td className="px-4 py-2 gap-2 text-gray-700 dark:text-gray-200">
                             <Icon
                               className="w-6 h-6 text-[#326EA6] cursor-pointer"
-                              onClick={() => setOpenEditDoc(true)}
+                              onClick={() => {
+                                setSelectedDocument({
+                                  id: "4d2c3652-1431-48fd-8db7-f2b48709c640",
+                                  name: doc.name,
+                                  category: doc.category,
+                                  description: doc.description,
+                                  file_format: doc.file_format,
+                                  file_path: doc.file_path || null,
+                                });
+                                setOpenEditDoc(true);
+                              }}
                             />
                           </td>
                           <td className="px-4 py-2 gap-2 text-gray-700 dark:text-gray-200">
@@ -399,10 +421,13 @@ const ProjectDetails = () => {
         open={openAddDoc}
         onClose={() => setOpenAddDoc(false)}
       />
-      <EditDocumentModal
-        open={openEditDoc}
-        onClose={() => setOpenEditDoc(false)}
-      />
+      {selectedDocument && (
+        <EditDocumentModal
+          open={openEditDoc}
+          onClose={() => setOpenEditDoc(false)}
+          doc={selectedDocument}
+        />
+      )}
     </div>
   );
 };
