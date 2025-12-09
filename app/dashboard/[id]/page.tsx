@@ -2,57 +2,66 @@
 
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Ellipsis, Facebook, Linkedin, Twitter, Undo2 } from "lucide-react";
+import { Ellipsis, Undo2 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import ImageGallery from "@/components/Gallery/ImageGallery";
 import Link from "next/link";
+import { getProjectById } from "@/app/actions";
 
-interface ProjectData {
-  project: {
-    title: string;
-    number: number;
-    code: string;
-    category: string;
-    phase: string;
-    description: string;
-  };
-  images: string[];
-  entrepreneur: {
-    name: string;
-    status: string;
-    legal_tutor: string;
-    collaborators: string;
-    residence_city: string;
-    project_city: string;
-    residence_province: string;
-    phone: string;
-    email: string;
-    website: string;
-    social_links: {
-      linkedin: string;
-      facebook: string;
-      twitter: string;
-    };
-  };
-  scores: {
-    project_score: number;
-  };
+interface Project {
+  id: string;
+  first_name: string;
+  last_name: string;
+  parent_name: string;
+  phone: string;
+  email: string;
+  project_city: string;
+  residence_city: string;
+  province: string;
+  collaborators: any;
+  title: string;
+  description: string;
+  categories: string[];
+  phase: string;
+  links: string[];
+  signature: string;
+  signer_name: string;
+  logo_url: string;
+  logo_urls: string[]; // Array of logo image URLs
+  claimed: number;
+  status: string;
+  created_at: string;
+  project_id: string;
 }
 
 const ProjectDetails = () => {
-  const [data, setData] = useState<ProjectData | null>(null);
+  const [project, setProject] = useState<Project | null>(null);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
   const params = useParams();
-  const id = params?.id;
+  const id = params?.id as string;
 
   useEffect(() => {
-    fetch("/data/projects.json")
-      .then((res) => res.json())
-      .then(setData)
-      .catch((err) => console.error("Error fetching project data:", err));
+    async function fetchProject() {
+      if (!id) return;
+
+      const { data, error } = await getProjectById(id);
+
+      if (error) {
+        console.error("Error fetching project:", error);
+        setLoading(false);
+        return;
+      }
+
+      console.log("📋 Project details:", data);
+      setProject(data);
+      setLoading(false);
+    }
+
+    fetchProject();
   }, [id]);
 
-  if (!data) {
+  if (loading) {
     return (
       <div className="flex h-full items-center justify-center text-gray-600 dark:text-gray-300">
         Loading project details...
@@ -60,7 +69,13 @@ const ProjectDetails = () => {
     );
   }
 
-  const { project, images, entrepreneur } = data;
+  if (!project) {
+    return (
+      <div className="flex h-full items-center justify-center text-gray-600 dark:text-gray-300">
+        Project not found
+      </div>
+    );
+  }
 
   return (
     // make this a column so header stays fixed and the content below scrolls
@@ -75,25 +90,26 @@ const ProjectDetails = () => {
           <Undo2 className="h-4 w-4" />
         </Button>
 
-        {/* Partager Button */}
-        <Button className="bg-[#23405A] hover:bg-[#1d354a] text-white font-semibold rounded-none text-xs h-7">
-          Partager
-        </Button>
-
         {/* Reçus Button */}
-        <Button className="bg-[#63a053] hover:bg-[#528a45] text-white font-semibold rounded-none text-xs h-7">
-          Reçus
-        </Button>
+        <Link href="/dashboard?tab=recu">
+          <Button className="bg-[#63a053] hover:bg-[#528a45] text-white font-semibold rounded-none text-xs h-7">
+            Reçus
+          </Button>
+        </Link>
 
-        {/* Retenus Button */}
-        <Button className="bg-[#326EA6] hover:bg-[#275984] text-white font-semibold rounded-none text-xs h-7">
-          Retenus
-        </Button>
+        {/* Mes projets Button */}
+        <Link href="/dashboard?tab=mes-projets">
+          <Button className="bg-[#326EA6] hover:bg-[#275984] text-white font-semibold rounded-none text-xs h-7">
+            Mes projets
+          </Button>
+        </Link>
 
         {/* En cours Button */}
-        <Button className="bg-[#326EA6] hover:bg-[#275984] text-white font-semibold rounded-none text-xs h-7">
-          En cours
-        </Button>
+        <Link href="/dashboard?tab=encours">
+          <Button className="bg-[#326EA6] hover:bg-[#275984] text-white font-semibold rounded-none text-xs h-7">
+            En cours
+          </Button>
+        </Link>
       </header>
 
       {/* Make THIS container the scroller (fills remaining height) */}
@@ -107,7 +123,7 @@ const ProjectDetails = () => {
               </h2>
             </Link>
             <span className="text-sm font-medium text-gray-600 dark:text-gray-300 flex items-center gap-7">
-              {project.code}
+              ID: {project.project_id}
               <Ellipsis />
             </span>
           </div>
@@ -120,7 +136,9 @@ const ProjectDetails = () => {
                     Catégorie qui décrit le mieux le projet ou produit
                   </span>
                 </label>
-                <p className="px-3 py-2 rounded text-sm">{project.category}</p>
+                <p className="px-3 py-2 rounded text-sm">
+                  {project.categories?.join(", ") || "Non spécifié"}
+                </p>
               </div>
 
               <div className="col-start-4">
@@ -129,7 +147,9 @@ const ProjectDetails = () => {
                     Phase actuelle du projet
                   </span>
                 </label>
-                <p className="px-3 py-2 rounded text-sm">{project.phase}</p>
+                <p className="px-3 py-2 rounded text-sm">
+                  {project.phase || "Non spécifié"}
+                </p>
               </div>
             </div>
 
@@ -139,14 +159,16 @@ const ProjectDetails = () => {
                 Description non confidentielle du projet ou produit
               </label>
               <p className="bg-[#FFFFFB] dark:bg-[#262626] px-3 py-3 rounded text-sm leading-relaxed border-b">
-                {project.description}
+                {project.description || "Aucune description disponible"}
               </p>
             </div>
           </div>
         </section>
 
         {/* Image Gallery */}
-        <ImageGallery images={images} />
+        {project.logo_urls && project.logo_urls.length > 0 && (
+          <ImageGallery images={project.logo_urls} />
+        )}
 
         {/* Entrepreneur Info */}
         <section className=" mt-6 pb-10 bg-card">
@@ -154,10 +176,12 @@ const ProjectDetails = () => {
             <div className="px-6 flex justify-between items-center">
               <h3 className="text-lg font-semibold text-gray-800 dark:text-white">
                 Entrepreneur{" "}
-                <span className="font-normal ">{entrepreneur.name}</span>
+                <span className="font-normal ">
+                  {project.first_name} {project.last_name}
+                </span>
               </h3>
               <span className="text-sm font-semibold text-gray-700 dark:text-white">
-                {entrepreneur.status}
+                {project.status}
               </span>
             </div>
           </div>
@@ -167,56 +191,78 @@ const ProjectDetails = () => {
               <label className="block text-gray-500 mb-1 bg-gray-500/20 dark:bg-gray-800/20">
                 Tuteur légal
               </label>
-              <p>{entrepreneur.legal_tutor}</p>
+              <p>{project.parent_name || "Non spécifié"}</p>
             </div>
 
             <div>
               <label className="block text-gray-500 mb-1 bg-gray-500/20 dark:bg-gray-800/20">
                 Collaborateurs
               </label>
-              <p>{entrepreneur.collaborators}</p>
+              <div>
+                {project.collaborators &&
+                typeof project.collaborators === "string" ? (
+                  (() => {
+                    try {
+                      const collabs = JSON.parse(project.collaborators);
+                      if (Array.isArray(collabs) && collabs.length > 0) {
+                        return collabs.map((collab: any, idx: number) => (
+                          <p key={idx} className="mb-1">
+                            {collab.firstName} {collab.lastName} ({collab.email}
+                            )
+                          </p>
+                        ));
+                      }
+                      return <p>Aucun</p>;
+                    } catch {
+                      return <p>Aucun</p>;
+                    }
+                  })()
+                ) : Array.isArray(project.collaborators) &&
+                  project.collaborators.length > 0 ? (
+                  project.collaborators.map((collab: any, idx: number) => (
+                    <p key={idx} className="mb-1">
+                      {collab.firstName} {collab.lastName} ({collab.email})
+                    </p>
+                  ))
+                ) : (
+                  <p>Aucun</p>
+                )}
+              </div>
             </div>
 
             <div>
               <label className="block text-gray-500 mb-1 bg-gray-500/20 dark:bg-gray-800/20">
                 Ville ou village de résidence
               </label>
-              <p>{entrepreneur.residence_city}</p>
+              <p>{project.residence_city || "Non spécifié"}</p>
             </div>
 
             <div>
               <label className="block text-gray-500 mb-1 bg-gray-500/20 dark:bg-gray-800/20">
                 Ville / village où se situe le projet
               </label>
-              <p>{entrepreneur.project_city}</p>
+              <p>{project.project_city || "Non spécifié"}</p>
             </div>
 
             <div>
               <label className="block text-gray-500 mb-1 bg-gray-500/20 dark:bg-gray-800/20">
                 Province
               </label>
-              <p>{entrepreneur.residence_province}</p>
+              <p>{project.province || "Non spécifié"}</p>
             </div>
 
             <div>
               <label className="block text-gray-500 mb-1 bg-gray-500/20 dark:bg-gray-800/20">
                 Téléphone
               </label>
-              <p>{entrepreneur.phone}</p>
+              <p>{project.phone || "Non spécifié"}</p>
             </div>
 
             <div>
               <label className="block text-gray-500 mb-1 bg-gray-500/20 dark:bg-gray-800/20">
                 Email
               </label>
-              <p>{entrepreneur.email}</p>
-            </div>
-
-            <div>
-              <label className="block text-gray-500 mb-1 bg-gray-500/20 dark:bg-gray-800/20">
-                Website
-              </label>
-              <p>{entrepreneur.website}</p>
+              <p>{project.email || "Non spécifié"}</p>
             </div>
 
             <div>
@@ -224,27 +270,21 @@ const ProjectDetails = () => {
                 Liens
               </label>
               <div className="flex gap-4 mt-1">
-                <a
-                  href={entrepreneur.social_links.facebook}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <Facebook className="w-4 h-4 text-gray-600 hover:text-blue-600" />
-                </a>
-                <a
-                  href={entrepreneur.social_links.twitter}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <Twitter className="w-4 h-4 text-gray-600 hover:text-sky-500" />
-                </a>
-                <a
-                  href={entrepreneur.social_links.linkedin}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <Linkedin className="w-4 h-4 text-gray-600 hover:text-blue-700" />
-                </a>
+                {project.links && project.links.length > 0 ? (
+                  project.links.map((link, index) => (
+                    <a
+                      key={index}
+                      href={link}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-blue-600 hover:underline"
+                    >
+                      {link}
+                    </a>
+                  ))
+                ) : (
+                  <p className="text-gray-500">Aucun lien disponible</p>
+                )}
               </div>
             </div>
           </div>

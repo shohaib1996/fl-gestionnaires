@@ -28,7 +28,8 @@ export interface FormData {
 
   // Project Description
   description: string;
-  logo: File | null;
+  logos: File[]; // Changed from single logo to array (max 6)
+  logoUrls: string[]; // Array of uploaded image URLs
   links: string[];
 
   // Signature
@@ -51,7 +52,8 @@ export const initialFormData: FormData = {
   categories: [],
   projectPhase: "",
   description: "",
-  logo: null,
+  logos: [],
+  logoUrls: [],
   links: [""],
   signature: null,
   signerName: "",

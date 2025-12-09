@@ -25,87 +25,91 @@
 --   signature TEXT,
 --   signer_name TEXT,
 --   logo_url TEXT,
+--   claimed INTEGER DEFAULT 0,
 --   status project_status DEFAULT 'submitted',
 --   created_at TIMESTAMPTZ DEFAULT NOW()
 -- );
--- create table public.account_requests (
---   id uuid primary key default gen_random_uuid(),
---   -- Personal Information
---   first_name text not null,
---   last_name text not null,
---   postnom text,
---   birth_date text not null,
---   address text not null,
---   phone_number text not null,
---   email text not null,
---   -- Identification
---   id_type text [] not null,
---   other_id_type text,
---   id_number text,
---   id_front_image text,
---   -- Supabase Storage URL
---   id_back_image text,
---   -- Supabase Storage URL
---   -- Financial
---   income_sources text [] not null,
---   other_income_source text,
---   -- Occupation
---   occupation text not null,
---   employer_name text,
---   employer_address text,
---   -- Compliance
---   terms_accepted boolean default false,
---   privacy_accepted boolean default false,
---   funds_source_confirmed boolean default false,
---   -- Signature
---   signature_url text,
---   -- stored in Storage, not DB base64
---   signer_name text,
---   -- System fields
---   status text default 'pending',
---   -- pending / verified / rejected
---   created_at timestamp default now(),
---   updated_at timestamp default now()
--- );
--- create table public.tasks (
---   id uuid primary key default gen_random_uuid(),
---   title text not null,
+-- -- create table public.account_requests (
+-- --   id uuid primary key default gen_random_uuid(),
+-- --   -- Personal Information
+-- --   first_name text not null,
+-- --   last_name text not null,
+-- --   postnom text,
+-- --   birth_date text not null,
+-- --   address text not null,
+-- --   phone_number text not null,
+-- --   email text not null,
+-- --   -- Identification
+-- --   id_type text [] not null,
+-- --   other_id_type text,
+-- --   id_number text,
+-- --   id_front_image text,
+-- --   -- Supabase Storage URL
+-- --   id_back_image text,
+-- --   -- Supabase Storage URL
+-- --   -- Financial
+-- --   income_sources text [] not null,
+-- --   other_income_source text,
+-- --   -- Occupation
+-- --   occupation text not null,
+-- --   employer_name text,
+-- --   employer_address text,
+-- --   -- Compliance
+-- --   terms_accepted boolean default false,
+-- --   privacy_accepted boolean default false,
+-- --   funds_source_confirmed boolean default false,
+-- --   -- Signature
+-- --   signature_url text,
+-- --   -- stored in Storage, not DB base64
+-- --   signer_name text,
+-- --   -- System fields
+-- --   status text default 'pending',
+-- --   -- pending / verified / rejected
+-- --   created_at timestamp default now(),
+-- --   updated_at timestamp default now()
+-- -- );
+-- -- create table public.tasks (
+-- --   id uuid primary key default gen_random_uuid(),
+-- --   title text not null,
+-- --   description text,
+-- --   start_date text,
+-- --   end_date text,
+-- --   start_time text,
+-- --   end_time text,
+-- --   location text,
+-- --   participants jsonb not null default '[]'::jsonb,
+-- --   created_at timestamptz default now()
+-- -- );
+-- -- create table public.contacts (
+-- --   id uuid primary key default gen_random_uuid(),
+-- --   name text not null,
+-- --   title text,
+-- --   email text not null,
+-- --   phone text,
+-- --   city text,
+-- --   skills text,
+-- --   bio text,
+-- --   image_url text,
+-- --   -- public URL of uploaded profile photo
+-- --   image_path text,
+-- --   -- internal storage path
+-- --   created_at timestamptz default now()
+-- -- );
+-- CREATE TABLE documents (
+--   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+--   project_id uuid,
+--   -- nullable for now
+--   name text NOT NULL,
+--   category text NOT NULL,
 --   description text,
---   start_date text,
---   end_date text,
---   start_time text,
---   end_time text,
---   location text,
---   participants jsonb not null default '[]'::jsonb,
---   created_at timestamptz default now()
+--   file_format text NOT NULL,
+--   file_url text,
+--   -- public URL (nullable)
+--   file_path text,
+--   -- storage path (nullable)
+--   created_at timestamptz DEFAULT now(),
+--   updated_at timestamptz DEFAULT now()
 -- );
--- create table public.contacts (
---   id uuid primary key default gen_random_uuid(),
---   name text not null,
---   title text,
---   email text not null,
---   phone text,
---   city text,
---   skills text,
---   bio text,
---   image_url text,
---   -- public URL of uploaded profile photo
---   image_path text,
---   -- internal storage path
---   created_at timestamptz default now()
--- );
-CREATE TABLE documents (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  project_id uuid,
-  -- nullable for now
-  name text NOT NULL,
-  category text NOT NULL,
-  description text,
-  file_format text NOT NULL,
-  file_url text,
-  -- public URL (nullable)
-  file_path text,
-  -- storage path (nullable)
-  created_at timestamptz DEFAULT now(),
-  updated_at timestamptz DEFAULT now()
-);
+ALTER TABLE public.projects
+ADD COLUMN approved_at TIMESTAMPTZ,
+    ADD COLUMN assigned_at TIMESTAMPTZ;

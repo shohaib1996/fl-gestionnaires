@@ -22,6 +22,7 @@ import { VerificationStep } from "@/components/project-submission/VerificationSt
 import { ConfirmationStep } from "@/components/project-submission/ConfirmationStep";
 import { createProject } from "../actions";
 import { uploadLogo } from "@/app/actions/upload-logo";
+import { generateProjectId } from "@/lib/project-id-mappings";
 
 const ProjectSubmission = () => {
   const [isStarted, setIsStarted] = useState(false);
@@ -38,45 +39,69 @@ const ProjectSubmission = () => {
       // 1. Sanitize for debugging (optional)
       //
       const sanitize = (fd: FormData) => {
-        const { logo, ...rest } = fd as any;
+        const { logos, ...rest } = fd as any;
         return {
           ...rest,
-          logo: logo
-            ? {
-                name: logo.name,
-                size: logo.size,
-                type: logo.type,
-              }
-            : null,
+          logos:
+            logos?.map((logo: File) => ({
+              name: logo.name,
+              size: logo.size,
+              type: logo.type,
+            })) || [],
         };
       };
 
       console.log("🔍 FULL FORM DATA:", sanitize(formData));
 
       //
-      // 2. Upload logo (if exists)
+      // 2. Upload logos (if exist)
       //
-      let logoUrl = null;
+      const logoUrls: string[] = [];
 
-      if (formData.logo instanceof File) {
-        console.log("📤 Uploading logo…");
+      if (formData.logos && formData.logos.length > 0) {
+        console.log(`📤 Uploading ${formData.logos.length} logo(s)…`);
 
-        const uploadResult = await uploadLogo(formData.logo);
+        for (let i = 0; i < formData.logos.length; i++) {
+          const file = formData.logos[i];
+          console.log(
+            `📤 Uploading image ${i + 1}/${formData.logos.length}...`
+          );
 
-        if (uploadResult.error) {
-          console.error("❌ Logo upload failed:", uploadResult.error);
-          alert("Logo upload failed. Please try again.");
-          return;
+          const uploadResult = await uploadLogo(file);
+
+          if (uploadResult.error) {
+            console.error(
+              `❌ Logo ${i + 1} upload failed:`,
+              uploadResult.error
+            );
+            alert(`Image ${i + 1} upload failed. Please try again.`);
+            return;
+          }
+
+          logoUrls.push(uploadResult.url!);
+          console.log(`✅ Logo ${i + 1} uploaded:`, uploadResult.url);
         }
 
-        logoUrl = uploadResult.url;
-        console.log("✅ Logo uploaded:", logoUrl);
+        // Update form data with uploaded URLs
+        updateFormData({ logoUrls });
       }
 
       //
-      // 3. Build final project payload
+      // 3. Generate unique project ID
+      //
+      const projectId = generateProjectId(
+        formData.province,
+        formData.categories
+      );
+      console.log("🆔 Generated Project ID:", projectId);
+
+      //
+      // 4. Build final project payload
       //
       const projectData = {
+        // Project ID
+        project_id: projectId,
+
         // Personal info
         first_name: formData.firstName,
         last_name: formData.lastName,
@@ -99,8 +124,8 @@ const ProjectSubmission = () => {
         phase: formData.projectPhase,
         links: formData.links.filter(Boolean),
 
-        // Uploaded file URL
-        logo_url: logoUrl,
+        // Uploaded file URLs (array of strings)
+        logo_urls: logoUrls,
 
         // Signature + signer
         signature: formData.signature || null,
@@ -108,12 +133,13 @@ const ProjectSubmission = () => {
 
         // Enum status
         status: "submitted",
+        claimed: 0,
       };
 
       console.log("📦 PROJECT PAYLOAD TO SUPABASE:", projectData);
 
       //
-      // 4. Save project
+      // 5. Save project
       //
       const result = await createProject(projectData);
 
@@ -126,7 +152,7 @@ const ProjectSubmission = () => {
       console.log("✅ Project created successfully:", result.data);
 
       //
-      // 5. Move to confirmation
+      // 6. Move to confirmation
       //
       setCurrentStep((prev) => Math.min(prev + 1, 5));
     } else {

@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus, Upload, CloudUpload } from "lucide-react";
+import { Plus, Upload, CloudUpload, X } from "lucide-react";
 import { FormData } from "./types";
+import Image from "next/image";
 
 interface ProjectDescriptionStepProps {
   formData: FormData;
@@ -11,6 +12,8 @@ interface ProjectDescriptionStepProps {
   onNext: () => void;
   onPrevious: () => void;
 }
+
+const MAX_IMAGES = 6;
 
 export const ProjectDescriptionStep: React.FC<ProjectDescriptionStepProps> = ({
   formData,
@@ -33,9 +36,26 @@ export const ProjectDescriptionStep: React.FC<ProjectDescriptionStepProps> = ({
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      updateFormData({ logo: e.target.files[0] });
+    if (e.target.files) {
+      const filesArray = Array.from(e.target.files);
+      const currentLogos = formData.logos || [];
+
+      // Limit to MAX_IMAGES total
+      const availableSlots = MAX_IMAGES - currentLogos.length;
+      const filesToAdd = filesArray.slice(0, availableSlots);
+
+      if (filesToAdd.length > 0) {
+        updateFormData({ logos: [...currentLogos, ...filesToAdd] });
+      }
+
+      // Reset input
+      e.target.value = "";
     }
+  };
+
+  const removeImage = (index: number) => {
+    const newLogos = formData.logos.filter((_, i) => i !== index);
+    updateFormData({ logos: newLogos });
   };
 
   return (
@@ -62,34 +82,81 @@ export const ProjectDescriptionStep: React.FC<ProjectDescriptionStepProps> = ({
 
         <div className="space-y-2">
           <label className="text-sm text-gray-600">
-            14. Si vous en avez, vous pouvez télécharger votre logo ou une image
-            de votre produit ou de votre entreprise.
+            14. Si vous en avez, vous pouvez télécharger des images de votre
+            logo, produit ou entreprise (Maximum {MAX_IMAGES} images)
           </label>
-          <div className="border-2 border-gray-200 rounded-sm bg-[#F0F4F4] p-8 flex flex-col items-center justify-center text-center min-h-[250px]">
-            <div className="bg-gray-200 rounded-full p-4 mb-4">
-              <CloudUpload className="h-10 w-10 text-white" />
-            </div>
 
-            <div className="flex items-center gap-2 bg-gray-200/50 px-4 py-2 rounded-sm mt-4">
-              <span className="text-sm text-black font-medium">
-                {formData.logo ? formData.logo.name : "Déposez l'image ici ou"}
-              </span>
-              <input
-                type="file"
-                id="file-upload"
-                className="hidden"
-                onChange={handleFileChange}
-                accept="image/*"
-              />
-              <Button
-                variant="secondary"
-                className="bg-white text-black hover:bg-gray-50 h-8 text-xs font-normal shadow-sm"
-                onClick={() => document.getElementById("file-upload")?.click()}
-              >
-                Sélectionnez un fichier
-              </Button>
+          {/* Image Previews */}
+          {formData.logos.length > 0 && (
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
+              {formData.logos.map((file, index) => (
+                <div key={index} className="relative group">
+                  <div className="aspect-square bg-gray-100 rounded-sm overflow-hidden border-2 border-gray-200">
+                    <Image
+                      src={URL.createObjectURL(file)}
+                      alt={`Preview ${index + 1}`}
+                      width={200}
+                      height={200}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <button
+                    onClick={() => removeImage(index)}
+                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                    type="button"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                  <p className="text-xs text-gray-500 mt-1 truncate">
+                    {file.name}
+                  </p>
+                </div>
+              ))}
             </div>
-          </div>
+          )}
+
+          {/* Upload Area */}
+          {formData.logos.length < MAX_IMAGES && (
+            <div className="border-2 border-dashed border-gray-300 rounded-sm bg-[#F0F4F4] p-8 flex flex-col items-center justify-center text-center min-h-[200px]">
+              <div className="bg-gray-200 rounded-full p-4 mb-4">
+                <CloudUpload className="h-10 w-10 text-white" />
+              </div>
+
+              <p className="text-sm text-gray-600 mb-2">
+                {formData.logos.length} / {MAX_IMAGES} images téléchargées
+              </p>
+
+              <div className="flex items-center gap-2 bg-gray-200/50 px-4 py-2 rounded-sm mt-2">
+                <span className="text-sm text-black font-medium">
+                  Déposez les images ici ou
+                </span>
+                <input
+                  type="file"
+                  id="file-upload"
+                  className="hidden"
+                  onChange={handleFileChange}
+                  accept="image/*"
+                  multiple
+                />
+                <Button
+                  variant="secondary"
+                  className="bg-white text-black hover:bg-gray-50 h-8 text-xs font-normal shadow-sm"
+                  onClick={() =>
+                    document.getElementById("file-upload")?.click()
+                  }
+                  type="button"
+                >
+                  Sélectionnez des fichiers
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {formData.logos.length >= MAX_IMAGES && (
+            <p className="text-sm text-amber-600 text-center">
+              Limite maximale de {MAX_IMAGES} images atteinte
+            </p>
+          )}
         </div>
 
         <div className="space-y-4">

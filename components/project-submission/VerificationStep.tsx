@@ -160,13 +160,36 @@ export const VerificationStep: React.FC<VerificationStepProps> = ({
             </div>
             <div>
               <p className="text-sm text-gray-500 mb-1">
-                14. Logo ou image du produit
+                14. Logos ou images du produit
               </p>
-              {formData.logo ? (
-                <p className="text-base font-medium">{formData.logo.name}</p>
+              {formData.logos && formData.logos.length > 0 ? (
+                <div className="space-y-2">
+                  <p className="text-base font-medium">
+                    {formData.logos.length} image(s) téléchargée(s)
+                  </p>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                    {formData.logos.map((logo, index) => (
+                      <div
+                        key={index}
+                        className="bg-gray-100 p-2 rounded border border-gray-200"
+                      >
+                        <Image
+                          src={URL.createObjectURL(logo)}
+                          alt={`Logo ${index + 1}`}
+                          width={150}
+                          height={150}
+                          className="w-full h-32 object-cover rounded"
+                        />
+                        <p className="text-xs text-gray-600 mt-1 truncate">
+                          {logo.name}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               ) : (
                 <p className="text-base font-medium text-gray-400">
-                  Aucun fichier sélectionné
+                  Aucune image sélectionnée
                 </p>
               )}
             </div>
