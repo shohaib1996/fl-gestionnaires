@@ -1,25 +1,29 @@
 "use client";
 
+import LogoutButton from "@/components/auth/LogoutButton";
 import LeftSidebar from "@/components/dashboard/LeftSidebar";
 import RightSidebar from "@/components/dashboard/RightSidebar";
 import { ModeToggle } from "@/components/ModeToggle/ModeToggle";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MenuIcon, Search, Plus } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { MenuIcon, Plus, Search } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const router = useRouter();
+
   return (
     <div className="h-screen w-screen flex flex-col bg-background text-gray-800 dark:bgbackround dark:text-gray-100 overflow-hidden">
       {/* Header */}
@@ -96,6 +100,20 @@ export default function DashboardLayout({
                 className="cursor-pointer focus:bg-[#326EA6] focus:text-white"
               >
                 Dossier
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => router.push("/profile")}
+                className="cursor-pointer focus:bg-[#326EA6] focus:text-white"
+              >
+                Profil
+              </DropdownMenuItem>
+
+              <div className="h-px bg-gray-300 my-1"></div>
+
+              {/* logout button */}
+
+              <DropdownMenuItem className="cursor-pointer transition text-destructive focus:bg-red-600/40 hover:text-white focus:text-white">
+                <LogoutButton />
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
