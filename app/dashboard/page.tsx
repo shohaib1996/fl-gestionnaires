@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
@@ -9,7 +9,7 @@ import { HomeCandidate } from "@/components/dashboard/HomeCandidate";
 import { getAllProjects } from "@/app/actions";
 import { useSearchParams } from "next/navigation";
 
-export default function DashboardPage() {
+function DashboardContent() {
   const searchParams = useSearchParams();
   const tabFromUrl = searchParams.get("tab");
 
@@ -211,5 +211,19 @@ export default function DashboardPage() {
         </div>
       </div>
     </>
+  );
+}
+
+export default function DashboardPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center h-screen">
+          Chargement...
+        </div>
+      }
+    >
+      <DashboardContent />
+    </Suspense>
   );
 }
