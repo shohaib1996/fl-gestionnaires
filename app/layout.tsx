@@ -1,5 +1,7 @@
 import { ThemeProvider } from "@/components/ThemeProvider/theme-provier";
+import { Toaster } from "@/components/ui/sonner";
 import { createClient } from "@/lib/supabase/server";
+import ReactQueryProvider from "@/providers/ReactQueryProvider";
 import { UserProvider } from "@/providers/UserProvider";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
@@ -34,20 +36,26 @@ export default async function RootLayout({
   const { data } = await supabase.auth.getUser();
 
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} antialiased font-sans`}
+        suppressHydrationWarning
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <main className="bg-[#ebebeb] dark:bg-card min-h-screen">
-            <UserProvider initialUser={data?.user}>{children}</UserProvider>
-          </main>
-        </ThemeProvider>
+        <ReactQueryProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="light"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <UserProvider initialUser={data?.user}>
+              <main className="bg-[#ebebeb] dark:bg-card min-h-screen">
+                <Toaster />
+                {children}
+              </main>
+            </UserProvider>
+          </ThemeProvider>
+        </ReactQueryProvider>
       </body>
     </html>
   );

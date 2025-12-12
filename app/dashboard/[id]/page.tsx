@@ -1,12 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Ellipsis, Undo2 } from "lucide-react";
-import { useParams, useRouter } from "next/navigation";
-import ImageGallery from "@/components/Gallery/ImageGallery";
-import Link from "next/link";
 import { getProjectById } from "@/app/actions";
+import ProjectActionsMenu from "@/components/dashboard/ProjectActions";
+import ImageGallery from "@/components/Gallery/ImageGallery";
+import { Button } from "@/components/ui/button";
+import { useProjectActions } from "@/hooks/useProjectActions";
+import { Undo2 } from "lucide-react";
+import Link from "next/link";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 interface Project {
   id: string;
@@ -40,6 +42,7 @@ const ProjectDetails = () => {
   const router = useRouter();
   const params = useParams();
   const id = params?.id as string;
+  const { claim, approve, decline, invite } = useProjectActions();
 
   useEffect(() => {
     async function fetchProject() {
@@ -124,7 +127,12 @@ const ProjectDetails = () => {
             </Link>
             <span className="text-sm font-medium text-gray-600 dark:text-gray-300 flex items-center gap-7">
               ID: {project.project_id}
-              <Ellipsis />
+              <ProjectActionsMenu
+                onInvite={() => invite(project.email)}
+                onClaim={() => claim(id)}
+                onApprove={() => approve(id)}
+                onDecline={() => decline(id)}
+              />
             </span>
           </div>
           <div className="px-11 py-5 space-y-6">

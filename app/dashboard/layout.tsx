@@ -112,7 +112,7 @@ export default function DashboardLayout({
 
               {/* logout button */}
 
-              <DropdownMenuItem className="cursor-pointer transition text-destructive focus:bg-red-600/40 hover:text-white focus:text-white">
+              <DropdownMenuItem className="cursor-pointer transition text-red-600 focus:bg-red-600/10 focus:text-red-600 dark:focus:bg-red-600/20">
                 <LogoutButton />
               </DropdownMenuItem>
             </DropdownMenuContent>
