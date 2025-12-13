@@ -78,6 +78,13 @@ export default function DashboardLayout({
               sideOffset={6}
               className="w-44 bg-white dark:bg-neutral-800 border dark:border-neutral-700 shadow-md rounded-md"
             >
+              {/* account requests */}
+              <DropdownMenuItem className="cursor-pointer focus:bg-[#326EA6] focus:text-white">
+                <Link href="/dashboard/account-requests">
+                  Demande de compte
+                </Link>
+              </DropdownMenuItem>
+
               <DropdownMenuItem
                 onClick={() => console.log("Add Task")}
                 className="cursor-pointer focus:bg-[#326EA6] focus:text-white"
