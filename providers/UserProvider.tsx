@@ -42,6 +42,11 @@ export function UserProvider({ children, initialUser }: UserProviderProps) {
       }
     );
 
+    // ensure loading ends even if session already exists
+    supabase.auth.getSession().then(() => {
+      setLoading(false);
+    });
+
     return () => {
       listener.subscription.unsubscribe();
     };

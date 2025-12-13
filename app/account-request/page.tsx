@@ -1,34 +1,76 @@
 "use client";
 
-import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Search } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { Search } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { useState } from "react";
 
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
 
-import { Stepper } from "@/components/account-request/Stepper";
-import { PersonalInformationStep } from "@/components/account-request/PersonalInformationStep";
-import { IdentificationStep } from "@/components/account-request/IdentificationStep";
-import { FinancialStep } from "@/components/account-request/FinancialStep";
-import { OccupationStep } from "@/components/account-request/OccupationStep";
+import { createAccountRequest } from "@/app/actions/createAccountRequest";
 import { ComplianceStep } from "@/components/account-request/ComplianceStep";
-import { ReviewStep } from "@/components/account-request/ReviewStep";
 import { ConfirmationStep } from "@/components/account-request/ConfirmationStep";
+import { FinancialStep } from "@/components/account-request/FinancialStep";
+import { IdentificationStep } from "@/components/account-request/IdentificationStep";
+import { OccupationStep } from "@/components/account-request/OccupationStep";
+import { PersonalInformationStep } from "@/components/account-request/PersonalInformationStep";
+import { ReviewStep } from "@/components/account-request/ReviewStep";
+import { Stepper } from "@/components/account-request/Stepper";
 import {
   AccountRequestFormData,
   initialFormData,
 } from "@/components/account-request/types";
-import { createAccountRequest } from "@/app/actions/createAccountRequest";
+
+import { createClient } from "@/lib/supabase/client";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect } from "react";
+
+const supabase = createClient();
 
 const AccountRequestPage = () => {
   const [isStarted, setIsStarted] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] =
     useState<AccountRequestFormData>(initialFormData);
+
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  useEffect(() => {
+    const checkAccess = async () => {
+      const accessToken = searchParams.get("access_token");
+
+      if (!accessToken) {
+        router.replace("/not-invited");
+        return;
+      }
+      // 1 Try session first (covers reload / revisit)
+      const { data } = await supabase.auth.getUser(accessToken);
+      const user = data?.user;
+
+      // 2️ If no session and no access token → not invited
+      if (!user) {
+        router.replace("/not-invited");
+        return;
+      }
+
+      // 3 Approved user check
+      const { data: approvedUser } = await supabase
+        .from("users")
+        .select("id")
+        .eq("id", user.id)
+        .maybeSingle();
+
+      if (approvedUser) {
+        router.replace("/dashboard");
+      }
+    };
+
+    checkAccess();
+  }, [searchParams, router]);
 
   const updateFormData = (updates: Partial<AccountRequestFormData>) => {
     setFormData((prev) => ({ ...prev, ...updates }));
