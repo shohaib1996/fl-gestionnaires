@@ -53,7 +53,7 @@ export default function DashboardPage() {
     status: TAB_TO_STATUS[activeTab],
     page,
     pageSize: PAGE_SIZE,
-    ...debouncedFilters, // 🔥 filters applied here
+    ...debouncedFilters,
   });
 
   /* --------------------------------
