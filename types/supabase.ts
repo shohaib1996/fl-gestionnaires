@@ -1,0 +1,541 @@
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[]
+
+export type Database = {
+  // Allows to automatically instantiate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
+  __InternalSupabase: {
+    PostgrestVersion: "13.0.5"
+  }
+  public: {
+    Tables: {
+      account_requests: {
+        Row: {
+          address: string
+          birth_date: string
+          created_at: string | null
+          email: string
+          employer_address: string | null
+          employer_name: string | null
+          first_name: string
+          funds_source_confirmed: boolean | null
+          id: string
+          id_back_image: string | null
+          id_front_image: string | null
+          id_number: string | null
+          id_type: string[]
+          income_sources: string[]
+          last_name: string
+          occupation: string
+          other_id_type: string | null
+          other_income_source: string | null
+          phone_number: string
+          postnom: string | null
+          privacy_accepted: boolean | null
+          signature_url: string | null
+          signer_name: string | null
+          status: string | null
+          terms_accepted: boolean | null
+          updated_at: string | null
+        }
+        Insert: {
+          address: string
+          birth_date: string
+          created_at?: string | null
+          email: string
+          employer_address?: string | null
+          employer_name?: string | null
+          first_name: string
+          funds_source_confirmed?: boolean | null
+          id?: string
+          id_back_image?: string | null
+          id_front_image?: string | null
+          id_number?: string | null
+          id_type: string[]
+          income_sources: string[]
+          last_name: string
+          occupation: string
+          other_id_type?: string | null
+          other_income_source?: string | null
+          phone_number: string
+          postnom?: string | null
+          privacy_accepted?: boolean | null
+          signature_url?: string | null
+          signer_name?: string | null
+          status?: string | null
+          terms_accepted?: boolean | null
+          updated_at?: string | null
+        }
+        Update: {
+          address?: string
+          birth_date?: string
+          created_at?: string | null
+          email?: string
+          employer_address?: string | null
+          employer_name?: string | null
+          first_name?: string
+          funds_source_confirmed?: boolean | null
+          id?: string
+          id_back_image?: string | null
+          id_front_image?: string | null
+          id_number?: string | null
+          id_type?: string[]
+          income_sources?: string[]
+          last_name?: string
+          occupation?: string
+          other_id_type?: string | null
+          other_income_source?: string | null
+          phone_number?: string
+          postnom?: string | null
+          privacy_accepted?: boolean | null
+          signature_url?: string | null
+          signer_name?: string | null
+          status?: string | null
+          terms_accepted?: boolean | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      contacts: {
+        Row: {
+          bio: string | null
+          city: string | null
+          created_at: string | null
+          email: string
+          id: string
+          image_path: string | null
+          image_url: string | null
+          name: string
+          phone: string | null
+          skills: string | null
+          title: string | null
+        }
+        Insert: {
+          bio?: string | null
+          city?: string | null
+          created_at?: string | null
+          email: string
+          id?: string
+          image_path?: string | null
+          image_url?: string | null
+          name: string
+          phone?: string | null
+          skills?: string | null
+          title?: string | null
+        }
+        Update: {
+          bio?: string | null
+          city?: string | null
+          created_at?: string | null
+          email?: string
+          id?: string
+          image_path?: string | null
+          image_url?: string | null
+          name?: string
+          phone?: string | null
+          skills?: string | null
+          title?: string | null
+        }
+        Relationships: []
+      }
+      documents: {
+        Row: {
+          category: string
+          created_at: string | null
+          description: string | null
+          file_format: string
+          file_path: string | null
+          file_url: string | null
+          id: string
+          name: string
+          project_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          category: string
+          created_at?: string | null
+          description?: string | null
+          file_format: string
+          file_path?: string | null
+          file_url?: string | null
+          id?: string
+          name: string
+          project_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          category?: string
+          created_at?: string | null
+          description?: string | null
+          file_format?: string
+          file_path?: string | null
+          file_url?: string | null
+          id?: string
+          name?: string
+          project_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      milestones: {
+        Row: {
+          createdAt: string | null
+          id: string | null
+          name: string | null
+        }
+        Insert: {
+          createdAt?: string | null
+          id?: string | null
+          name?: string | null
+        }
+        Update: {
+          createdAt?: string | null
+          id?: string | null
+          name?: string | null
+        }
+        Relationships: []
+      }
+      project_members: {
+        Row: {
+          createdAt: string | null
+          id: string | null
+          name: string | null
+        }
+        Insert: {
+          createdAt?: string | null
+          id?: string | null
+          name?: string | null
+        }
+        Update: {
+          createdAt?: string | null
+          id?: string | null
+          name?: string | null
+        }
+        Relationships: []
+      }
+      projects: {
+        Row: {
+          approved_at: string | null
+          assigned_at: string | null
+          categories: string[] | null
+          claimed: number | null
+          collaborators: Json | null
+          created_at: string | null
+          description: string | null
+          email: string | null
+          first_name: string | null
+          id: string
+          last_name: string | null
+          links: string[] | null
+          logo_urls: string[] | null
+          parent_name: string | null
+          phase: string | null
+          phone: string | null
+          project_city: string | null
+          project_id: string
+          province: string | null
+          residence_city: string | null
+          signature: string | null
+          signer_name: string | null
+          status: Database["public"]["Enums"]["project_status"] | null
+          title: string
+        }
+        Insert: {
+          approved_at?: string | null
+          assigned_at?: string | null
+          categories?: string[] | null
+          claimed?: number | null
+          collaborators?: Json | null
+          created_at?: string | null
+          description?: string | null
+          email?: string | null
+          first_name?: string | null
+          id?: string
+          last_name?: string | null
+          links?: string[] | null
+          logo_urls?: string[] | null
+          parent_name?: string | null
+          phase?: string | null
+          phone?: string | null
+          project_city?: string | null
+          project_id: string
+          province?: string | null
+          residence_city?: string | null
+          signature?: string | null
+          signer_name?: string | null
+          status?: Database["public"]["Enums"]["project_status"] | null
+          title: string
+        }
+        Update: {
+          approved_at?: string | null
+          assigned_at?: string | null
+          categories?: string[] | null
+          claimed?: number | null
+          collaborators?: Json | null
+          created_at?: string | null
+          description?: string | null
+          email?: string | null
+          first_name?: string | null
+          id?: string
+          last_name?: string | null
+          links?: string[] | null
+          logo_urls?: string[] | null
+          parent_name?: string | null
+          phase?: string | null
+          phone?: string | null
+          project_city?: string | null
+          project_id?: string
+          province?: string | null
+          residence_city?: string | null
+          signature?: string | null
+          signer_name?: string | null
+          status?: Database["public"]["Enums"]["project_status"] | null
+          title?: string
+        }
+        Relationships: []
+      }
+      task_assignments: {
+        Row: {
+          createdAt: string | null
+          id: string | null
+          name: string | null
+        }
+        Insert: {
+          createdAt?: string | null
+          id?: string | null
+          name?: string | null
+        }
+        Update: {
+          createdAt?: string | null
+          id?: string | null
+          name?: string | null
+        }
+        Relationships: []
+      }
+      tasks: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          end_date: string | null
+          end_time: string | null
+          id: string
+          location: string | null
+          participants: Json
+          start_date: string | null
+          start_time: string | null
+          title: string
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          end_date?: string | null
+          end_time?: string | null
+          id?: string
+          location?: string | null
+          participants?: Json
+          start_date?: string | null
+          start_time?: string | null
+          title: string
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          end_date?: string | null
+          end_time?: string | null
+          id?: string
+          location?: string | null
+          participants?: Json
+          start_date?: string | null
+          start_time?: string | null
+          title?: string
+        }
+        Relationships: []
+      }
+      users: {
+        Row: {
+          avatarURL: string | null
+          createdAt: string | null
+          email: string | null
+          fullName: string | null
+          id: string
+          role: Database["public"]["Enums"]["roles"] | null
+        }
+        Insert: {
+          avatarURL?: string | null
+          createdAt?: string | null
+          email?: string | null
+          fullName?: string | null
+          id: string
+          role?: Database["public"]["Enums"]["roles"] | null
+        }
+        Update: {
+          avatarURL?: string | null
+          createdAt?: string | null
+          email?: string | null
+          fullName?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["roles"] | null
+        }
+        Relationships: []
+      }
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      increment_claim: { Args: { project_pk: string }; Returns: undefined }
+      is_admin_or_manager: { Args: never; Returns: boolean }
+    }
+    Enums: {
+      project_status:
+        | "reserved"
+        | "claimed"
+        | "receipt"
+        | "in_progress"
+        | "declined"
+        | "completed"
+      roles: "admin" | "super_admin" | "onterpeoner"
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
+}
+
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
+
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
+
+export type Tables<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+      Row: infer R
+    }
+    ? R
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+        Row: infer R
+      }
+      ? R
+      : never
+    : never
+
+export type TablesInsert<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Insert: infer I
+    }
+    ? I
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Insert: infer I
+      }
+      ? I
+      : never
+    : never
+
+export type TablesUpdate<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Update: infer U
+    }
+    ? U
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Update: infer U
+      }
+      ? U
+      : never
+    : never
+
+export type Enums<
+  DefaultSchemaEnumNameOrOptions extends
+    | keyof DefaultSchema["Enums"]
+    | { schema: keyof DatabaseWithoutInternals },
+  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    : never = never,
+> = DefaultSchemaEnumNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
+    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+    : never
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof DefaultSchema["CompositeTypes"]
+    | { schema: keyof DatabaseWithoutInternals },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
+> = PublicCompositeTypeNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+    : never
+
+export const Constants = {
+  public: {
+    Enums: {
+      project_status: [
+        "reserved",
+        "claimed",
+        "receipt",
+        "in_progress",
+        "declined",
+        "completed",
+      ],
+      roles: ["admin", "super_admin", "onterpeoner"],
+    },
+  },
+} as const

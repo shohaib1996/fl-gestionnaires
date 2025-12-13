@@ -2,7 +2,7 @@ import { createServerClient } from "@supabase/ssr";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const response = NextResponse.next({
     request: {
       headers: request.headers,
@@ -44,7 +44,7 @@ export async function middleware(request: NextRequest) {
   // ------------------------------------------
   // 2) User IS logged in → Prevent access to login page
   // ------------------------------------------
-  if (user && pathname === "/login") {
+  if ((user && pathname === "/login") || pathname === "/") {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
@@ -52,5 +52,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/login"],
+  matcher: ["/dashboard/:path*", "/login", "/"],
 };
