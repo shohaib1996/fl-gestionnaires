@@ -3,7 +3,33 @@ import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 
 export default async function AccountRequestsPage() {
-  const requests = await getAccountRequests();
+  const result = await getAccountRequests();
+
+  /* -------------------------
+     Error state
+  -------------------------- */
+  if (!result.ok) {
+    return (
+      <div className="p-6">
+        <div className="mt-10">
+          <h1 className="text-2xl font-bold text-foreground">
+            Account Requests
+          </h1>
+          <p className="text-sm text-muted-foreground">
+            Liste des demandes de création de compte
+          </p>
+        </div>
+
+        <div className="mt-10 bg-card border border-border rounded-xs p-8 text-center">
+          <p className="text-sm text-red-600">
+            {result.error ?? "Une erreur est survenue lors du chargement."}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  const requests = result.data ?? [];
 
   return (
     <div className="p-6 space-y-6">

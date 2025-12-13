@@ -12,8 +12,14 @@ export async function getAccountRequestById(id: string) {
     .single();
 
   if (error || !data) {
-    throw new Error("Account request not found");
+    return {
+      ok: false,
+      error: "Account request not found",
+    };
   }
 
-  return data;
+  return {
+    ok: true,
+    data,
+  };
 }

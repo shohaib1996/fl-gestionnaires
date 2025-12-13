@@ -42,6 +42,7 @@ export type Database = {
           status: string | null
           terms_accepted: boolean | null
           updated_at: string | null
+          user_id: string
         }
         Insert: {
           address: string
@@ -70,6 +71,7 @@ export type Database = {
           status?: string | null
           terms_accepted?: boolean | null
           updated_at?: string | null
+          user_id?: string
         }
         Update: {
           address?: string
@@ -98,6 +100,7 @@ export type Database = {
           status?: string | null
           terms_accepted?: boolean | null
           updated_at?: string | null
+          user_id?: string
         }
         Relationships: []
       }
@@ -363,7 +366,7 @@ export type Database = {
           email: string | null
           fullName: string | null
           id: string
-          role: Database["public"]["Enums"]["roles"] | null
+          role: Database["public"]["Enums"]["roles"]
         }
         Insert: {
           avatarURL?: string | null
@@ -371,7 +374,7 @@ export type Database = {
           email?: string | null
           fullName?: string | null
           id: string
-          role?: Database["public"]["Enums"]["roles"] | null
+          role?: Database["public"]["Enums"]["roles"]
         }
         Update: {
           avatarURL?: string | null
@@ -379,7 +382,7 @@ export type Database = {
           email?: string | null
           fullName?: string | null
           id?: string
-          role?: Database["public"]["Enums"]["roles"] | null
+          role?: Database["public"]["Enums"]["roles"]
         }
         Relationships: []
       }

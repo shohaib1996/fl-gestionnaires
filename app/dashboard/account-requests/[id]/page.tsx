@@ -1,4 +1,5 @@
 import { getAccountRequestById } from "@/app/actions/admin/getAccountRequestById";
+import { AccountRequestActions } from "@/components/dashboard/account-request/AccountRequestActions";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Undo2 } from "lucide-react";
@@ -10,7 +11,40 @@ interface PageProps {
 
 export default async function AccountRequestDetailPage({ params }: PageProps) {
   const { id } = await params;
-  const request = await getAccountRequestById(id);
+  const result = await getAccountRequestById(id);
+
+  /* -------------------------
+     Error state
+  -------------------------- */
+  if (!result.ok) {
+    return (
+      <div className="p-10 text-center">
+        <h2 className="text-xl font-semibold text-foreground mb-2">
+          Demande introuvable
+        </h2>
+        <p className="text-sm text-muted-foreground mb-6">
+          {result.error ?? "Cette demande n’existe pas ou a été supprimée."}
+        </p>
+
+        <Link href="/dashboard/account-requests">
+          <Button className="rounded-none">Retour à la liste</Button>
+        </Link>
+      </div>
+    );
+  }
+
+  const request = result.data;
+
+  if (!request) {
+    return (
+      <div className="p-10 text-center">
+        <h2 className="text-xl font-semibold">Demande introuvable</h2>
+        <Link href="/dashboard/account-requests">
+          <Button className="mt-4 rounded-none">Retour à la liste</Button>
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div className="h-[calc(100vh-120px)] flex flex-col">
@@ -124,12 +158,7 @@ export default async function AccountRequestDetailPage({ params }: PageProps) {
 
         {/* ===== Admin Actions ===== */}
         <div className="px-11 py-8 flex gap-4 border-t border-border">
-          <Button className="bg-[#63a053] hover:bg-[#528a45] text-white rounded-none">
-            Approuver
-          </Button>
-          <Button variant="destructive" className="rounded-none">
-            Rejeter
-          </Button>
+          <AccountRequestActions id={request.id} />
         </div>
       </div>
     </div>

@@ -22,8 +22,14 @@ export async function getAccountRequests() {
     .order("created_at", { ascending: false });
 
   if (error) {
-    throw new Error("Failed to fetch account requests");
+    return {
+      ok: false,
+      error: "Failed to fetch account requests",
+    };
   }
 
-  return data;
+  return {
+    ok: true,
+    data,
+  };
 }
