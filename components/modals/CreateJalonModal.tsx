@@ -1,49 +1,91 @@
 "use client";
 
-import React, { useState } from "react";
+import { useCreateMilestone } from "@/hooks/useCreateMilestone";
+import { useState } from "react";
+
+import { Calendar } from "@/components/ui/calendar";
 import {
   Dialog,
   DialogContent,
-  DialogTitle,
   DialogHeader,
+  DialogTitle,
 } from "@/components/ui/dialog";
 import {
-  CalendarIcon,
-  Clock,
-  User,
-  FileText,
-  PlaySquare,
-  Image as ImageIcon,
-  Plus,
-  ChevronDown,
-} from "lucide-react";
-import {
   Popover,
-  PopoverTrigger,
   PopoverContent,
+  PopoverTrigger,
 } from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
+import {
+  CalendarIcon,
+  ChevronDown,
+  Clock,
+  FileText,
+  Image as ImageIcon,
+  PlaySquare,
+  Plus,
+  User,
+} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import AddDocumentModal from "./AddDocumentModal";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
+import AddDocumentModal from "./AddDocumentModal";
+
+import {
+  createMilestoneSchema,
+  type CreateMilestoneFormValues,
+} from "@/schemas/milestone.schema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Controller, useForm } from "react-hook-form";
 
 interface Props {
   open: boolean;
   onClose: () => void;
+  projectId: string;
 }
 
-export default function CreateJalonModal({ open, onClose }: Props) {
-  const [startDate, setStartDate] = useState<Date | undefined>();
-  const [endDate, setEndDate] = useState<Date | undefined>();
+export default function CreateJalonModal({ open, onClose, projectId }: Props) {
   const [addDocumentModalOpen, setAddDocumentModalOpen] = useState(false);
+
+  const { mutate, isPending } = useCreateMilestone(projectId);
+
+  const form = useForm<CreateMilestoneFormValues>({
+    resolver: zodResolver(createMilestoneSchema),
+    defaultValues: {
+      priority: "normal",
+    },
+  });
+
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = form;
+
+  const onSubmit = (values: CreateMilestoneFormValues) => {
+    const data = createMilestoneSchema.parse(values);
+
+    mutate({
+      projectId,
+      title: data.title,
+      description: data.description,
+      startDate: data.startDate,
+      endDate: data.endDate,
+      startTime: data.startTime,
+      endTime: data.endTime,
+      priority: data.priority,
+      managerId: data.managerId,
+    });
+
+    onClose();
+  };
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -57,7 +99,7 @@ export default function CreateJalonModal({ open, onClose }: Props) {
         </DialogHeader>
 
         {/* Body */}
-        <div className="p-6 space-y-8">
+        <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-8">
           {/* Row 1 */}
           <div className="grid grid-cols-12 gap-6 items-start">
             {/* Name */}
@@ -66,10 +108,15 @@ export default function CreateJalonModal({ open, onClose }: Props) {
                 Nom
               </label>
               <Input
-                type="text"
+                {...register("title")}
                 placeholder="Nommer le jalon"
-                className="w-full border rounded px-3 py-2 mt-1 bg-gray-50 dark:bg-neutral-800 border-gray-200 dark:border-neutral-700 text-sm text-gray-800 dark:text-gray-200 placeholder:text-gray-400 dark:placeholder:text-gray-500"
+                className="w-full border rounded px-3 py-2 mt-1"
               />
+              {errors.title && (
+                <p className="text-xs text-red-500 mt-1">
+                  {errors.title.message}
+                </p>
+              )}
             </div>
 
             {/* Start Date */}
@@ -77,27 +124,36 @@ export default function CreateJalonModal({ open, onClose }: Props) {
               <label className="block text-sm text-gray-700 dark:text-gray-300">
                 Date de début
               </label>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <button className="w-full mt-1 flex items-center gap-2 border rounded px-3 py-2 bg-gray-50 dark:bg-neutral-800 border-gray-200 dark:border-neutral-700 text-sm text-gray-700 dark:text-gray-200">
-                    <CalendarIcon className="w-4 h-4 text-gray-500 dark:text-gray-400" />
-                    <span className="flex-1 text-left">
-                      {startDate
-                        ? format(startDate, "dd/MM/yyyy")
-                        : "JJ/MM/AAAA"}
-                    </span>
-                  </button>
-                </PopoverTrigger>
-                <PopoverContent className=" bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-700">
-                  <Calendar
-                    mode="single"
-                    selected={startDate}
-                    onSelect={setStartDate}
-                    locale={fr}
-                    className="dark:bg-neutral-900 dark:text-gray-100"
-                  />
-                </PopoverContent>
-              </Popover>
+              <Controller
+                control={control}
+                name="startDate"
+                render={({ field }) => (
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <button className="w-full mt-1 flex items-center gap-2 border rounded px-3 py-2 bg-gray-50 dark:bg-neutral-800">
+                        <CalendarIcon className="w-4 h-4 text-gray-500" />
+                        <span className="flex-1 text-left">
+                          {field.value
+                            ? format(new Date(field.value), "dd/MM/yyyy")
+                            : "JJ/MM/AAAA"}
+                        </span>
+                      </button>
+                    </PopoverTrigger>
+                    <PopoverContent>
+                      <Calendar
+                        mode="single"
+                        selected={
+                          field.value ? new Date(field.value) : undefined
+                        }
+                        onSelect={(date) =>
+                          field.onChange(date ? date.toISOString() : undefined)
+                        }
+                        locale={fr}
+                      />
+                    </PopoverContent>
+                  </Popover>
+                )}
+              />
             </div>
 
             {/* End Date */}
@@ -105,25 +161,41 @@ export default function CreateJalonModal({ open, onClose }: Props) {
               <label className="block text-sm text-gray-700 dark:text-gray-300">
                 Date butoir
               </label>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <button className="w-full mt-1 flex items-center gap-2 border rounded px-3 py-2 bg-gray-50 dark:bg-neutral-800 border-gray-200 dark:border-neutral-700 text-sm text-gray-700 dark:text-gray-200">
-                    <CalendarIcon className="w-4 h-4 text-gray-500 dark:text-gray-400" />
-                    <span className="flex-1 text-left">
-                      {endDate ? format(endDate, "dd/MM/yyyy") : "JJ/MM/AAAA"}
-                    </span>
-                  </button>
-                </PopoverTrigger>
-                <PopoverContent className=" bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-700">
-                  <Calendar
-                    mode="single"
-                    selected={endDate}
-                    onSelect={setEndDate}
-                    locale={fr}
-                    className="dark:bg-neutral-900 dark:text-gray-100"
-                  />
-                </PopoverContent>
-              </Popover>
+              <Controller
+                control={control}
+                name="endDate"
+                render={({ field }) => (
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <button className="w-full mt-1 flex items-center gap-2 border rounded px-3 py-2 bg-gray-50 dark:bg-neutral-800">
+                        <CalendarIcon className="w-4 h-4 text-gray-500" />
+                        <span className="flex-1 text-left">
+                          {field.value
+                            ? format(new Date(field.value), "dd/MM/yyyy")
+                            : "JJ/MM/AAAA"}
+                        </span>
+                      </button>
+                    </PopoverTrigger>
+                    <PopoverContent>
+                      <Calendar
+                        mode="single"
+                        selected={
+                          field.value ? new Date(field.value) : undefined
+                        }
+                        onSelect={(date) =>
+                          field.onChange(date ? date.toISOString() : undefined)
+                        }
+                        locale={fr}
+                      />
+                    </PopoverContent>
+                  </Popover>
+                )}
+              />
+              {errors.endDate && (
+                <p className="text-xs text-red-500 mt-1">
+                  {errors.endDate.message}
+                </p>
+              )}
             </div>
 
             {/* Priority */}
@@ -131,21 +203,39 @@ export default function CreateJalonModal({ open, onClose }: Props) {
               <label className="block text-sm text-gray-700 dark:text-gray-300">
                 Priorités
               </label>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <button className="w-full mt-1 flex items-center justify-between border rounded px-3 py-2 bg-gray-50 dark:bg-neutral-800 border-gray-200 dark:border-neutral-700 text-sm text-gray-700 dark:text-gray-200">
-                    <span>Normale</span>
-                    <ChevronDown className="w-4 h-4 text-gray-500 dark:text-gray-400" />
-                  </button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-full bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-700">
-                  <DropdownMenuItem className="text-sm">
-                    Normale
-                  </DropdownMenuItem>
-                  <DropdownMenuItem className="text-sm">Haute</DropdownMenuItem>
-                  <DropdownMenuItem className="text-sm">Basse</DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <Controller
+                name="priority"
+                control={control}
+                render={({ field }) => (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <button className="w-full mt-1 flex items-center justify-between border rounded px-3 py-2 bg-gray-50 dark:bg-neutral-800">
+                        <span>
+                          {field.value === "high"
+                            ? "Haute"
+                            : field.value === "low"
+                            ? "Basse"
+                            : "Normale"}
+                        </span>
+                        <ChevronDown className="w-4 h-4 text-gray-500" />
+                      </button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                      <DropdownMenuItem
+                        onClick={() => field.onChange("normal")}
+                      >
+                        Normale
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => field.onChange("high")}>
+                        Haute
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => field.onChange("low")}>
+                        Basse
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                )}
+              />
             </div>
           </div>
 
@@ -157,8 +247,9 @@ export default function CreateJalonModal({ open, onClose }: Props) {
                 Brève description
               </label>
               <Textarea
+                {...register("description")}
                 placeholder="Brève description"
-                className="w-full mt-1 border rounded px-3 py-2 bg-gray-50 dark:bg-neutral-800 border-gray-200 dark:border-neutral-700 text-sm h-24 text-gray-800 dark:text-gray-200 placeholder:text-gray-400 dark:placeholder:text-gray-500"
+                className="w-full mt-1 h-24"
               />
             </div>
 
@@ -167,12 +258,12 @@ export default function CreateJalonModal({ open, onClose }: Props) {
               <label className="block text-sm text-gray-700 dark:text-gray-300">
                 Heure de début
               </label>
-              <div className="w-full mt-1 flex items-center gap-2 border rounded px-3 py-2 bg-gray-50 dark:bg-neutral-800 border-gray-200 dark:border-neutral-700 text-sm text-gray-700 dark:text-gray-200">
-                <Clock className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+              <div className="w-full mt-1 flex items-center gap-2 border rounded px-3 py-2 bg-gray-50 dark:bg-neutral-800">
+                <Clock className="w-4 h-4 text-gray-500" />
                 <input
                   type="time"
-                  placeholder="HH:MM"
-                  className="w-full bg-transparent outline-none text-gray-800 dark:text-gray-200"
+                  {...register("startTime")}
+                  className="w-full bg-transparent outline-none"
                 />
               </div>
             </div>
@@ -182,110 +273,85 @@ export default function CreateJalonModal({ open, onClose }: Props) {
               <label className="block text-sm text-gray-700 dark:text-gray-300">
                 Heure de fin
               </label>
-              <div className="w-full mt-1 flex items-center gap-2 border rounded px-3 py-2 bg-gray-50 dark:bg-neutral-800 border-gray-200 dark:border-neutral-700 text-sm text-gray-700 dark:text-gray-200">
-                <Clock className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+              <div className="w-full mt-1 flex items-center gap-2 border rounded px-3 py-2 bg-gray-50 dark:bg-neutral-800">
+                <Clock className="w-4 h-4 text-gray-500" />
                 <input
-                  type="text"
-                  placeholder="HH:MM"
-                  className="w-full bg-transparent outline-none text-gray-800 dark:text-gray-200"
+                  type="time"
+                  {...register("endTime")}
+                  className="w-full bg-transparent outline-none"
                 />
               </div>
             </div>
 
-            {/* Responsable Dropdown */}
+            {/* Responsable */}
             <div className="col-span-2">
               <label className="block text-sm text-gray-700 dark:text-gray-300">
                 Responsable du jalon
               </label>
-              <div className="w-full mt-1">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <button className="w-full flex items-center justify-between border rounded px-3 py-2 bg-gray-50 dark:bg-neutral-800 border-gray-200 dark:border-neutral-700 text-sm text-gray-700 dark:text-gray-200">
-                      <span className="flex items-center gap-2">
-                        <User className="w-5 h-5 text-gray-500 dark:text-gray-300" />
-                        <span>Chercher</span>
-                      </span>
-                      <ChevronDown className="w-4 h-4 text-gray-500 dark:text-gray-400" />
-                    </button>
-                  </DropdownMenuTrigger>
-
-                  <DropdownMenuContent className="w-full bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-700">
-                    <DropdownMenuItem className="text-sm">
-                      Jean Dupont
-                    </DropdownMenuItem>
-                    <DropdownMenuItem className="text-sm">
-                      Marie Durand
-                    </DropdownMenuItem>
-                    <DropdownMenuItem className="text-sm">
-                      Antoine Bernard
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="w-full mt-1 flex items-center justify-between border rounded px-3 py-2 bg-gray-50 dark:bg-neutral-800">
+                    <span className="flex items-center gap-2">
+                      <User className="w-5 h-5 text-gray-500" />
+                      Chercher
+                    </span>
+                    <ChevronDown className="w-4 h-4 text-gray-500" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuItem>Jean Dupont</DropdownMenuItem>
+                  <DropdownMenuItem>Marie Durand</DropdownMenuItem>
+                  <DropdownMenuItem>Antoine Bernard</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
 
-          {/* Deliverables Section */}
-          <div className="mt-4 pt-4 border-t border-gray-200 dark:border-neutral-700">
-            <div className="flex justify-start gap-3 items-center mb-4">
-              <p className="text-sm italic text-gray-600 dark:text-gray-400">
+          {/* Deliverables */}
+          <div className="mt-4 pt-4 border-t">
+            <div className="flex items-center gap-3 mb-4">
+              <p className="text-sm italic text-gray-600">
                 Créer une liste des livrables à compléter durant ce jalon
               </p>
               <button
+                type="button"
                 onClick={() => setAddDocumentModalOpen(true)}
-                className="px-3 py-1.5 bg-[#63A053] dark:bg-[#4e8742] text-white rounded-xs flex items-center gap-2 cursor-pointer"
+                className="px-3 py-1.5 bg-[#63A053] text-white rounded-xs flex items-center gap-2"
               >
                 <Plus className="w-4 h-4" />
               </button>
             </div>
 
             <div className="grid grid-cols-3 gap-8">
-              {[0, 1].map((col) => (
-                <div key={col} className="space-y-3 mb-5">
-                  {[FileText, PlaySquare, ImageIcon].map((Icon, idx) => (
-                    <div key={idx}>
-                      <hr className="border-[#989898]/30 dark:border-[#ffffff]/10" />
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded flex items-center justify-center">
-                          <Icon className="w-7 h-7 text-[#326EA6] dark:text-[#7fb5df]" />
-                        </div>
-                        <div className="flex gap-5 items-center">
-                          <p className="text-sm font-medium text-[#343E47] dark:text-gray-100">
-                            Permit document 2025
-                          </p>
-                          <p className="text-xs text-gray-500 dark:text-gray-400">
-                            Document légal
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+              {[FileText, PlaySquare, ImageIcon].map((Icon, idx) => (
+                <div key={idx} className="flex items-center gap-3">
+                  <Icon className="w-7 h-7 text-[#326EA6]" />
+                  <p className="text-sm">Permit document 2025</p>
                 </div>
               ))}
-
-              {/* Empty Column */}
-              {/* <div className="space-y-3">
-                <div className="h-16"></div>
-                <div className="h-16"></div>
-                <div className="h-16"></div>
-              </div> */}
             </div>
           </div>
 
           {/* Footer */}
           <div className="flex justify-center gap-4">
             <button
+              type="button"
               onClick={onClose}
-              className="px-6 py-2 bg-gray-200 dark:bg-neutral-700 text-gray-800 dark:text-gray-100 rounded hover:bg-gray-300 dark:hover:bg-neutral-600"
+              className="px-6 py-2 bg-gray-200 rounded"
             >
               Annuler
             </button>
 
-            <button className="px-6 py-2 bg-[#63A053] dark:bg-[#4e8742] text-white rounded hover:bg-[#528a45] dark:hover:bg-[#3b6c34]">
-              Sauvegarder
+            <button
+              type="submit"
+              disabled={isPending}
+              className="px-6 py-2 bg-[#63A053] text-white rounded"
+            >
+              {isPending ? "Création..." : "Sauvegarder"}
             </button>
           </div>
-        </div>
+        </form>
+
         <AddDocumentModal
           open={addDocumentModalOpen}
           onClose={() => setAddDocumentModalOpen(false)}

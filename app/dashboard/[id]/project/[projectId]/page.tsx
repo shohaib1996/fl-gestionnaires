@@ -1,24 +1,24 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Image from "next/image";
+import AddDocumentModal from "@/components/modals/AddDocumentModal";
+import CreateJalonModal from "@/components/modals/CreateJalonModal";
+import EditDocumentModal from "@/components/modals/EditDocumentModal";
+import JalonDetailsModal from "@/components/modals/JalonDetailsModal";
 import {
-  FileText,
-  PlaySquare,
-  Globe,
-  FolderPlus,
-  ImageDown,
   ArrowLeft,
-  Ellipsis,
   Download,
-  Printer,
+  Ellipsis,
+  FileText,
+  FolderPlus,
   Fullscreen,
+  Globe,
+  ImageDown,
+  PlaySquare,
+  Printer,
   X,
 } from "lucide-react";
-import JalonDetailsModal from "@/components/modals/JalonDetailsModal";
-import CreateJalonModal from "@/components/modals/CreateJalonModal";
-import AddDocumentModal from "@/components/modals/AddDocumentModal";
-import EditDocumentModal from "@/components/modals/EditDocumentModal";
+import Image from "next/image";
+import { useEffect, useState } from "react";
 
 interface Phase {
   step: number;
@@ -409,6 +409,7 @@ const ProjectDetails = () => {
       <CreateJalonModal
         open={jalonModalOpen}
         onClose={() => setJalonModalOpen(false)}
+        projectId={project.id}
       />
       {selectedPhase && (
         <JalonDetailsModal

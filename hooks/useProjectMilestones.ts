@@ -1,10 +1,6 @@
 import { getProjectMilestones } from "@/app/actions/projects/milestones/getProjectMilestones";
+import { milestoneKeys } from "@/lib/queryKeys";
 import { useQuery } from "@tanstack/react-query";
-
-export const milestoneKeys = {
-  all: ["milestones"] as const,
-  project: (projectId: string) => [...milestoneKeys.all, projectId] as const,
-};
 
 export function useProjectMilestones(projectId: string) {
   return useQuery({
