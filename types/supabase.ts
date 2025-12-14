@@ -104,6 +104,48 @@ export type Database = {
         }
         Relationships: []
       }
+      claims: {
+        Row: {
+          claimed_at: string
+          claimed_by: string
+          id: string
+          project_id: string
+          released_at: string | null
+          status: string
+        }
+        Insert: {
+          claimed_at?: string
+          claimed_by: string
+          id?: string
+          project_id: string
+          released_at?: string | null
+          status?: string
+        }
+        Update: {
+          claimed_at?: string
+          claimed_by?: string
+          id?: string
+          project_id?: string
+          released_at?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "claims_claimed_by_fkey"
+            columns: ["claimed_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "claims_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       contacts: {
         Row: {
           bio: string | null
@@ -226,6 +268,7 @@ export type Database = {
           approved_at: string | null
           assigned_at: string | null
           categories: string[] | null
+          claim_id: string | null
           claimed: number | null
           collaborators: Json | null
           created_at: string | null
@@ -252,6 +295,7 @@ export type Database = {
           approved_at?: string | null
           assigned_at?: string | null
           categories?: string[] | null
+          claim_id?: string | null
           claimed?: number | null
           collaborators?: Json | null
           created_at?: string | null
@@ -278,6 +322,7 @@ export type Database = {
           approved_at?: string | null
           assigned_at?: string | null
           categories?: string[] | null
+          claim_id?: string | null
           claimed?: number | null
           collaborators?: Json | null
           created_at?: string | null
@@ -300,7 +345,15 @@ export type Database = {
           status?: Database["public"]["Enums"]["project_status"] | null
           title?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "projects_claim_id_fkey"
+            columns: ["claim_id"]
+            isOneToOne: false
+            referencedRelation: "claims"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       task_assignments: {
         Row: {

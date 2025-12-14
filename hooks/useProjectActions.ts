@@ -10,46 +10,33 @@ import {
   inviteUser,
 } from "@/lib/api/projectActions";
 
-import {
-  ActionError,
-  ActionResult,
-  ActionVariable,
-  Project,
-} from "@/types/actions";
-
 export function useProjectActions() {
   const queryClient = useQueryClient();
 
-  // ---------------------------
-  // CLAIM
-  // ---------------------------
-  const claim = useMutation<ActionResult<Project>, ActionError, ActionVariable>(
-    {
-      mutationFn: claimProjectSimple,
+  /* ---------------------------
+     CLAIM
+  ---------------------------- */
+  const claim = useMutation({
+    mutationFn: claimProjectSimple,
 
-      onSuccess: (result) => {
-        if (result.success) {
-          queryClient.invalidateQueries({ queryKey: ["projects"] });
-          toast.success("Project claimed successfully!");
-        } else {
-          toast.error(result.message);
-        }
-      },
+    onSuccess: (result) => {
+      if (result.success) {
+        queryClient.invalidateQueries({ queryKey: ["projects"] });
+        toast.success("Project claimed successfully!");
+      } else {
+        toast.error(result.message ?? "Project already claimed.");
+      }
+    },
 
-      onError: (error) => {
-        toast.error(error.message ?? "Error claiming project.");
-      },
-    }
-  );
+    onError: () => {
+      toast.error("Error claiming project.");
+    },
+  });
 
-  // ---------------------------
-  // APPROVE
-  // ---------------------------
-  const approve = useMutation<
-    ActionResult<Project>,
-    ActionError,
-    ActionVariable
-  >({
+  /* ---------------------------
+     APPROVE
+  ---------------------------- */
+  const approve = useMutation({
     mutationFn: approveProject,
 
     onSuccess: (result) => {
@@ -61,19 +48,15 @@ export function useProjectActions() {
       }
     },
 
-    onError: (error) => {
-      toast.error(error.message ?? "Error approving project.");
+    onError: () => {
+      toast.error("Error approving project.");
     },
   });
 
-  // ---------------------------
-  // DECLINE
-  // ---------------------------
-  const decline = useMutation<
-    ActionResult<Project>,
-    ActionError,
-    ActionVariable
-  >({
+  /* ---------------------------
+     DECLINE
+  ---------------------------- */
+  const decline = useMutation({
     mutationFn: declineProject,
 
     onSuccess: (result) => {
@@ -85,19 +68,15 @@ export function useProjectActions() {
       }
     },
 
-    onError: (error) => {
-      toast.error(error.message ?? "Error declining project.");
+    onError: () => {
+      toast.error("Error declining project.");
     },
   });
 
-  // ---------------------------
-  // INVITE
-  // ---------------------------
-  const invite = useMutation<
-    ActionResult<{ email: string }>,
-    ActionError,
-    ActionVariable
-  >({
+  /* ---------------------------
+     INVITE
+  ---------------------------- */
+  const invite = useMutation({
     mutationFn: inviteUser,
 
     onSuccess: (result) => {
@@ -108,13 +87,19 @@ export function useProjectActions() {
       }
     },
 
-    onError: (error) => {
-      toast.error(error.message ?? "Error sending invitation.");
+    onError: () => {
+      toast.error("Error sending invitation.");
     },
   });
 
   return {
-    claim: (id: string) => claim.mutate(id),
+    claim: ({
+      project_id,
+      claimed_by,
+    }: {
+      project_id: string;
+      claimed_by: string;
+    }) => claim.mutate({ projectId: project_id, userId: claimed_by }),
     approve: (id: string) => approve.mutate(id),
     decline: (id: string) => decline.mutate(id),
     invite: (email: string) => invite.mutate(email),

@@ -6,10 +6,17 @@ const supabase = createClient();
 // ---------------------------
 // CLAIM PROJECT
 // ---------------------------
-export async function claimProjectSimple(
-  id: string
-): Promise<ActionResult<Project>> {
-  const { error } = await supabase.rpc("increment_claim", { project_pk: id });
+export async function claimProjectSimple({
+  projectId,
+  userId,
+}: {
+  projectId: string;
+  userId: string;
+}) {
+  const { error } = await supabase.from("claims").insert({
+    project_id: projectId,
+    claimed_by: userId,
+  });
 
   if (error) {
     return {
@@ -20,25 +27,8 @@ export async function claimProjectSimple(
     };
   }
 
-  // fetch the updated row
-  const { data, error: fetchError } = await supabase
-    .from("projects")
-    .select("*")
-    .eq("id", id)
-    .single();
-
-  if (fetchError) {
-    return {
-      success: false,
-      message: fetchError.message,
-      code: fetchError.code,
-      details: fetchError.details,
-    };
-  }
-
   return {
     success: true,
-    data,
   };
 }
 

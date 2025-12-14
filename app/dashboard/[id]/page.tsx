@@ -1,10 +1,12 @@
 "use client";
 
 import { getProjectById } from "@/app/actions";
+import ClaimerSection from "@/components/dashboard/ClaimerSection";
 import ProjectActionsMenu from "@/components/dashboard/ProjectActions";
 import ImageGallery from "@/components/Gallery/ImageGallery";
 import { Button } from "@/components/ui/button";
 import { useProjectActions } from "@/hooks/useProjectActions";
+import { useUser } from "@/providers/UserProvider";
 import { Undo2 } from "lucide-react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
@@ -43,6 +45,7 @@ const ProjectDetails = () => {
   const params = useParams();
   const id = params?.id as string;
   const { claim, approve, decline, invite } = useProjectActions();
+  const { user, loading: userLoading } = useUser();
 
   useEffect(() => {
     async function fetchProject() {
@@ -64,7 +67,7 @@ const ProjectDetails = () => {
     fetchProject();
   }, [id]);
 
-  if (loading) {
+  if (loading || userLoading) {
     return (
       <div className="flex h-full items-center justify-center text-gray-600 dark:text-gray-300">
         Loading project details...
@@ -127,12 +130,16 @@ const ProjectDetails = () => {
             </Link>
             <span className="text-sm font-medium text-gray-600 dark:text-gray-300 flex items-center gap-7">
               ID: {project.project_id}
-              <ProjectActionsMenu
-                onInvite={() => invite(project.email)}
-                onClaim={() => claim(id)}
-                onApprove={() => approve(id)}
-                onDecline={() => decline(id)}
-              />
+              {user && (
+                <ProjectActionsMenu
+                  onInvite={() => invite(project.email)}
+                  onClaim={() =>
+                    claim({ project_id: project.id, claimed_by: user.id })
+                  }
+                  onApprove={() => approve(id)}
+                  onDecline={() => decline(id)}
+                />
+              )}
             </span>
           </div>
           <div className="px-11 py-5 space-y-6">
@@ -297,6 +304,11 @@ const ProjectDetails = () => {
             </div>
           </div>
         </section>
+
+        {/* ===== Claimers ===== */}
+        {project.status === "claimed" && (
+          <ClaimerSection projectId={project.id} />
+        )}
       </div>
     </div>
   );
