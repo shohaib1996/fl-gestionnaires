@@ -110,24 +110,18 @@ export type Database = {
           claimed_by: string
           id: string
           project_id: string
-          released_at: string | null
-          status: string
         }
         Insert: {
           claimed_at?: string
           claimed_by: string
           id?: string
           project_id: string
-          released_at?: string | null
-          status?: string
         }
         Update: {
           claimed_at?: string
           claimed_by?: string
           id?: string
           project_id?: string
-          released_at?: string | null
-          status?: string
         }
         Relationships: [
           {
@@ -245,6 +239,58 @@ export type Database = {
         }
         Relationships: []
       }
+      project_assignments: {
+        Row: {
+          assigned_at: string
+          assigned_by: string | null
+          created_at: string
+          id: string
+          is_active: boolean
+          project_id: string
+          user_id: string
+        }
+        Insert: {
+          assigned_at?: string
+          assigned_by?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          project_id: string
+          user_id: string
+        }
+        Update: {
+          assigned_at?: string
+          assigned_by?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          project_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_assignments_assigned_by_fkey"
+            columns: ["assigned_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "project_assignments_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "project_assignments_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       project_members: {
         Row: {
           createdAt: string | null
@@ -268,8 +314,8 @@ export type Database = {
           approved_at: string | null
           assigned_at: string | null
           categories: string[] | null
-          claim_id: string | null
-          claimed: number | null
+          claim_count: number | null
+          claim_id: string
           collaborators: Json | null
           created_at: string | null
           description: string | null
@@ -295,8 +341,8 @@ export type Database = {
           approved_at?: string | null
           assigned_at?: string | null
           categories?: string[] | null
-          claim_id?: string | null
-          claimed?: number | null
+          claim_count?: number | null
+          claim_id?: string
           collaborators?: Json | null
           created_at?: string | null
           description?: string | null
@@ -322,8 +368,8 @@ export type Database = {
           approved_at?: string | null
           assigned_at?: string | null
           categories?: string[] | null
-          claim_id?: string | null
-          claimed?: number | null
+          claim_count?: number | null
+          claim_id?: string
           collaborators?: Json | null
           created_at?: string | null
           description?: string | null
@@ -345,15 +391,7 @@ export type Database = {
           status?: Database["public"]["Enums"]["project_status"] | null
           title?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "projects_claim_id_fkey"
-            columns: ["claim_id"]
-            isOneToOne: false
-            referencedRelation: "claims"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       task_assignments: {
         Row: {
@@ -444,8 +482,16 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      increment_claim: { Args: { project_pk: string }; Returns: undefined }
+      assign_project: {
+        Args: {
+          p_assigned_by?: string
+          p_project_id: string
+          p_user_id: string
+        }
+        Returns: undefined
+      }
       is_admin_or_manager: { Args: never; Returns: boolean }
+      release_project: { Args: { p_project_id: string }; Returns: undefined }
     }
     Enums: {
       project_status:
