@@ -2,11 +2,11 @@
 import {
   getProjectClaimers,
   ProjectClaimer,
-} from "@/app/actions/admin/getProjectClaimers";
+} from "@/app/actions/projects/getProjectClaimers";
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 
-import { assignProjectToUser } from "@/app/actions/admin/projectAssignment";
+import { assignProjectToUser } from "@/app/actions/projects/projectAssignment";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import ConfirmDialog from "../common/ConfirmDialog";

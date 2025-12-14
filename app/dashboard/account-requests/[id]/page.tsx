@@ -1,4 +1,4 @@
-import { getAccountRequestById } from "@/app/actions/admin/getAccountRequestById";
+import { getAccountRequestById } from "@/app/actions/projects/getAccountRequestById";
 import { AccountRequestActions } from "@/components/dashboard/account-request/AccountRequestActions";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";

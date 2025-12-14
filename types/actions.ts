@@ -2,9 +2,10 @@
 export interface ActionSuccess<T = unknown> {
   success: true;
   data: T;
+  message?: string;
 }
 
-// Generic Error Response (compatible with Supabase errors)
+// Generic Error Response (Supabase-compatible)
 export interface ActionError {
   success: false;
   message: string;
@@ -12,17 +13,8 @@ export interface ActionError {
   details?: string;
 }
 
-// Reusable generic mutation result type
+// Unified Action Result
 export type ActionResult<T = unknown> = ActionSuccess<T> | ActionError;
 
 // Mutation Variable Type (id, email, etc.)
 export type ActionVariable = string;
-
-// Project Type
-export interface Project {
-  id: string;
-  title: string;
-  status: string;
-  claim: number;
-  created_at: string;
-}

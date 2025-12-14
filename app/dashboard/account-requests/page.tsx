@@ -1,4 +1,4 @@
-import { getAccountRequests } from "@/app/actions/admin/getAccountRequests";
+import { getAccountRequests } from "@/app/actions/projects/getAccountRequests";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 

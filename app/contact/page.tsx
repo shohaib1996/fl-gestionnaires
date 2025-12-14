@@ -1,20 +1,20 @@
 "use client";
 
-import { useState } from "react";
-import Image from "next/image";
+import Header from "@/components/Header/Header";
+import AddContactModal from "@/components/modals/AddContactModal";
+import { BorderBeam } from "@/components/ui/border-beam";
+import { Input } from "@/components/ui/input";
 import {
   ChevronDown,
   LayoutGrid,
   List,
-  Plus,
-  MoreHorizontal,
   MapPin,
+  MoreHorizontal,
+  Plus,
 } from "lucide-react";
-import Header from "@/components/Header/Header";
-import { Input } from "@/components/ui/input";
-import { BorderBeam } from "@/components/ui/border-beam";
+import Image from "next/image";
 import Link from "next/link";
-import AddContactModal from "@/components/modals/AddContactModal";
+import { useState } from "react";
 
 const dummyPeople = [
   {
@@ -171,7 +171,7 @@ const Contact = () => {
               <div
                 key={person.id}
                 className="
-                  bg-white border rounded p-8 shadow-sm relative cursor-pointer
+                  bg-white border rounded p-8 shadow-sm relative 
                   dark:bg-[#0D1514] dark:border-[#1F2A27] dark:shadow-none
 
                   transition-all duration-300 ease-[cubic-bezier(.22,.61,.36,1)]

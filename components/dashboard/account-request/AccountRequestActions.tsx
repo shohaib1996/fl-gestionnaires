@@ -3,7 +3,7 @@
 import {
   approveAccountRequest,
   rejectAccountRequest,
-} from "@/app/actions/admin/accountRequestActions";
+} from "@/app/actions/projects/accountRequestActions";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";

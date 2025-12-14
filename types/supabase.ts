@@ -223,21 +223,69 @@ export type Database = {
       }
       milestones: {
         Row: {
-          createdAt: string | null
-          id: string | null
-          name: string | null
+          completed_at: string | null
+          created_at: string
+          description: string | null
+          end_date: string | null
+          end_time: string | null
+          id: string
+          manager_id: string | null
+          order_index: number
+          priority: Database["public"]["Enums"]["milestone_priority"]
+          project_id: string
+          start_date: string | null
+          start_time: string | null
+          status: Database["public"]["Enums"]["milestone_status"]
+          title: string
         }
         Insert: {
-          createdAt?: string | null
-          id?: string | null
-          name?: string | null
+          completed_at?: string | null
+          created_at?: string
+          description?: string | null
+          end_date?: string | null
+          end_time?: string | null
+          id?: string
+          manager_id?: string | null
+          order_index: number
+          priority?: Database["public"]["Enums"]["milestone_priority"]
+          project_id: string
+          start_date?: string | null
+          start_time?: string | null
+          status?: Database["public"]["Enums"]["milestone_status"]
+          title: string
         }
         Update: {
-          createdAt?: string | null
-          id?: string | null
-          name?: string | null
+          completed_at?: string | null
+          created_at?: string
+          description?: string | null
+          end_date?: string | null
+          end_time?: string | null
+          id?: string
+          manager_id?: string | null
+          order_index?: number
+          priority?: Database["public"]["Enums"]["milestone_priority"]
+          project_id?: string
+          start_date?: string | null
+          start_time?: string | null
+          status?: Database["public"]["Enums"]["milestone_status"]
+          title?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "milestones_manager_id_fkey"
+            columns: ["manager_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "milestones_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       project_assignments: {
         Row: {
@@ -482,6 +530,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      activate_milestone: {
+        Args: { p_milestone_id: string }
+        Returns: undefined
+      }
       assign_project: {
         Args: {
           p_assigned_by?: string
@@ -490,10 +542,30 @@ export type Database = {
         }
         Returns: undefined
       }
+      complete_milestone: {
+        Args: { p_milestone_id: string }
+        Returns: undefined
+      }
+      create_milestone: {
+        Args: {
+          p_description?: string
+          p_end_date?: string
+          p_end_time?: string
+          p_manager_id?: string
+          p_priority?: Database["public"]["Enums"]["milestone_priority"]
+          p_project_id: string
+          p_start_date?: string
+          p_start_time?: string
+          p_title: string
+        }
+        Returns: undefined
+      }
       is_admin_or_manager: { Args: never; Returns: boolean }
       release_project: { Args: { p_project_id: string }; Returns: undefined }
     }
     Enums: {
+      milestone_priority: "low" | "normal" | "high"
+      milestone_status: "pending" | "active" | "completed"
       project_status:
         | "reserved"
         | "claimed"
@@ -629,6 +701,8 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      milestone_priority: ["low", "normal", "high"],
+      milestone_status: ["pending", "active", "completed"],
       project_status: [
         "reserved",
         "claimed",
