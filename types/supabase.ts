@@ -184,42 +184,50 @@ export type Database = {
       }
       documents: {
         Row: {
-          category: string
-          created_at: string | null
+          category: string | null
+          created_at: string
           description: string | null
-          file_format: string
-          file_path: string | null
-          file_url: string | null
+          file_format: string | null
+          file_path: string
           id: string
           name: string
-          project_id: string | null
-          updated_at: string | null
+          status: string | null
+          task_id: string
+          type: string | null
         }
         Insert: {
-          category: string
-          created_at?: string | null
+          category?: string | null
+          created_at?: string
           description?: string | null
-          file_format: string
-          file_path?: string | null
-          file_url?: string | null
+          file_format?: string | null
+          file_path: string
           id?: string
           name: string
-          project_id?: string | null
-          updated_at?: string | null
+          status?: string | null
+          task_id: string
+          type?: string | null
         }
         Update: {
-          category?: string
-          created_at?: string | null
+          category?: string | null
+          created_at?: string
           description?: string | null
-          file_format?: string
-          file_path?: string | null
-          file_url?: string | null
+          file_format?: string | null
+          file_path?: string
           id?: string
           name?: string
-          project_id?: string | null
-          updated_at?: string | null
+          status?: string | null
+          task_id?: string
+          type?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "documents_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "tasks"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       milestones: {
         Row: {
@@ -461,42 +469,44 @@ export type Database = {
       }
       tasks: {
         Row: {
-          created_at: string | null
+          category: string | null
+          created_at: string
           description: string | null
-          end_date: string | null
-          end_time: string | null
           id: string
-          location: string | null
-          participants: Json
-          start_date: string | null
-          start_time: string | null
+          milestone_id: string
+          order_index: number
+          status: Database["public"]["Enums"]["task_status"]
           title: string
         }
         Insert: {
-          created_at?: string | null
+          category?: string | null
+          created_at?: string
           description?: string | null
-          end_date?: string | null
-          end_time?: string | null
           id?: string
-          location?: string | null
-          participants?: Json
-          start_date?: string | null
-          start_time?: string | null
+          milestone_id: string
+          order_index?: number
+          status?: Database["public"]["Enums"]["task_status"]
           title: string
         }
         Update: {
-          created_at?: string | null
+          category?: string | null
+          created_at?: string
           description?: string | null
-          end_date?: string | null
-          end_time?: string | null
           id?: string
-          location?: string | null
-          participants?: Json
-          start_date?: string | null
-          start_time?: string | null
+          milestone_id?: string
+          order_index?: number
+          status?: Database["public"]["Enums"]["task_status"]
           title?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "tasks_milestone_id_fkey"
+            columns: ["milestone_id"]
+            isOneToOne: false
+            referencedRelation: "milestones"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       users: {
         Row: {
@@ -574,6 +584,7 @@ export type Database = {
         | "declined"
         | "completed"
       roles: "admin" | "super_admin" | "onterpeoner"
+      task_status: "todo" | "in_progress" | "completed"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -712,6 +723,7 @@ export const Constants = {
         "completed",
       ],
       roles: ["admin", "super_admin", "onterpeoner"],
+      task_status: ["todo", "in_progress", "completed"],
     },
   },
 } as const

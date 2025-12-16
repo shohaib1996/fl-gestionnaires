@@ -18,13 +18,7 @@ import {
   X,
 } from "lucide-react";
 import Image from "next/image";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
-
-import { useAssignedProjectDetails } from "@/hooks/useAssignedProjectDetails";
-import { useTasksByMilestone } from "@/hooks/useTasksByMilestone";
-import { MilestoneTabs } from "./MilestoneTabas";
-import TaskLists from "./TaskLists";
+import { useEffect, useState } from "react";
 
 interface Phase {
   step: number;
@@ -54,6 +48,13 @@ interface ProjectData {
   };
 }
 
+const iconMap: Record<string, any> = {
+  file: FileText,
+  video: PlaySquare,
+  web: Globe,
+  folder: FolderPlus,
+};
+
 const ProjectDetails = () => {
   const [data, setData] = useState<ProjectData | null>(null);
   const [fullscreenOpen, setFullscreenOpen] = useState(false); // FULLSCREEN MODAL STATE
@@ -71,39 +72,6 @@ const ProjectDetails = () => {
   const [jalonDetailsModalOpen, setJalonDetailsModalOpen] = useState(false);
   const [selectedPhase, setSelectedPhase] = useState<Phase | null>(null);
 
-  const { projectId } = useParams() as { projectId: string };
-
-  const router = useRouter();
-  const searchParams = useSearchParams();
-
-  const milestoneFromUrl = searchParams.get("milestone");
-
-  const { data: project, isLoading } = useAssignedProjectDetails(projectId);
-
-  const activeMilestoneId = useMemo(() => {
-    if (!project?.milestones?.length) return null;
-
-    const milestoneIds = project.milestones.map((m) => m.id);
-
-    if (milestoneFromUrl && milestoneIds.includes(milestoneFromUrl)) {
-      return milestoneFromUrl;
-    }
-
-    return project.milestones[0].id;
-  }, [project, milestoneFromUrl]);
-
-  useEffect(() => {
-    if (!activeMilestoneId) return;
-
-    if (milestoneFromUrl !== activeMilestoneId) {
-      router.replace(`?milestone=${activeMilestoneId}`, { scroll: false });
-    }
-  }, [activeMilestoneId, milestoneFromUrl, router]);
-
-  // ✅ Tasks fetch only when milestone resolved
-  const { data: tasks, isLoading: tasksLoading } = useTasksByMilestone(
-    activeMilestoneId ?? ""
-  );
   const handlePhaseClick = (phase: Phase) => {
     setSelectedPhase(phase);
     setJalonDetailsModalOpen(true);
@@ -118,12 +86,9 @@ const ProjectDetails = () => {
     fetchData();
   }, []);
 
-  console.log("data", project, tasks);
+  if (!data) return <div className="p-6 text-gray-500">Loading project...</div>;
 
-  if (!project || isLoading)
-    return <div className="p-6 text-gray-500">Loading project...</div>;
-
-  // const project = data.project;
+  const project = data.project;
   const handleDownload = async (url: string, filename = "file") => {
     try {
       const res = await fetch(url);
@@ -227,22 +192,29 @@ const ProjectDetails = () => {
             {project.name}
           </h1>
           <span className="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-5">
-            {project.project_id}
+            {project.id}
             <Ellipsis />
           </span>
         </div>
 
         {/* Phases */}
         <div className="flex flex-wrap gap-2 mb-4 px-3">
-          <MilestoneTabs
-            activeMilestoneId={activeMilestoneId}
-            milestones={project.milestones}
-            onChange={(milestoneId) => {
-              router.push(
-                `/dashboard/${projectId}/project/${projectId}?milestone=${milestoneId}`
-              );
-            }}
-          />
+          {project.phases.map((phase) => (
+            <button
+              key={phase.step}
+              onClick={() => handlePhaseClick(phase)}
+              className={`rounded-xs text-sm font-medium py-2 cursor-pointer ${
+                phase.status === "active"
+                  ? "bg-[#63A053] text-white"
+                  : "bg-[#A2CF96] text-gray-800 dark:text-gray-200"
+              }`}
+            >
+              <span className="bg-[#A2CF96] p-2.5 border-r text-white">
+                {phase.step}.
+              </span>
+              <span className="px-2.5 text-white">{phase.title}</span>
+            </button>
+          ))}
           <button
             onClick={() => setJalonModalOpen(true)}
             className="ml-auto bg-[#63A053] text-white px-3 py-1 text-sm font-medium rounded-xs cursor-pointer"
@@ -262,40 +234,86 @@ const ProjectDetails = () => {
           <div className="flex items-center gap-2">
             <Image
               src="/images/profile.jpeg"
-              alt={project.manager.name || "Project Lead"}
+              alt={project.lead.name}
               width={40}
               height={40}
               className="rounded-full object-cover h-10"
             />
             <div>
               <p className="text-sm font-semibold text-gray-800 dark:text-gray-100">
-                {project.manager.name || "Project Lead"}
+                {project.lead.role}
               </p>
-              <p className="text-xs text-gray-500">{project.manager.role}</p>
+              <p className="text-xs text-gray-500">{project.lead.name}</p>
             </div>
           </div>
         </div>
 
         {/* Table + Preview */}
-
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 px-6 pb-6">
-          {/* Documents Table */}
           {/* Table */}
           <div className="lg:col-span-2 flex flex-col">
             <div className="px-3">
-              <div className="border-t max-h-[48vh] min-h-[48vh] overflow-y-auto hide-scrollbar">
-                {tasksLoading ? (
-                  <p className="p-6 text-gray-500">Loading tasks…</p>
-                ) : null}
-                {!tasksLoading && tasks?.length === 0 ? (
-                  <p className="p-6 text-gray-500">
-                    No tasks for this milestone.
-                  </p>
-                ) : null}
+              <div className="border-t max-h-[48vh] overflow-y-auto hide-scrollbar">
+                <table className="w-full text-sm">
+                  <thead className="bg-gray-50 dark:bg-neutral-700 text-gray-700 dark:text-gray-200 sticky top-0">
+                    <tr>
+                      <th className="text-left px-4 py-2">Date</th>
+                      <th className="text-left px-4 py-2"></th>
+                      <th className="text-left px-4 py-2">Description</th>
+                      <th className="text-left px-4 py-2">Catégorie</th>
+                      <th className="text-left px-4 py-2">Progression</th>
+                    </tr>
+                  </thead>
 
-                {!tasksLoading && tasks?.length ? (
-                  <TaskLists tasks={tasks} />
-                ) : null}
+                  <tbody>
+                    {project.documents.map((doc, i) => {
+                      const Icon = iconMap[doc.type];
+                      return (
+                        <tr
+                          key={i}
+                          className={`border-t dark:border-neutral-700 hover:bg-blue-50 dark:hover:bg-neutral-700/50 transition ${
+                            i === 1 ? "bg-blue-50 dark:bg-neutral-700/50" : ""
+                          } h-[7vh]`}
+                        >
+                          <td className="px-4 py-2 text-gray-600 dark:text-gray-300">
+                            {new Date(doc.date).toLocaleString("en-US", {
+                              month: "short",
+                              day: "2-digit",
+                            })}
+                          </td>
+
+                          <td className="px-4 py-2 gap-2 text-gray-700 dark:text-gray-200">
+                            <Icon
+                              className="w-6 h-6 text-[#326EA6] cursor-pointer"
+                              onClick={() => {
+                                setSelectedDocument({
+                                  id: "4d2c3652-1431-48fd-8db7-f2b48709c640",
+                                  name: doc.name,
+                                  category: doc.category,
+                                  description: doc.description,
+                                  file_format: doc.file_format,
+                                  file_path: doc.file_path || null,
+                                });
+                                setOpenEditDoc(true);
+                              }}
+                            />
+                          </td>
+                          <td className="px-4 py-2 gap-2 text-gray-700 dark:text-gray-200">
+                            {doc.description}
+                          </td>
+
+                          <td className="px-4 py-2 text-gray-600 dark:text-gray-300">
+                            {doc.category}
+                          </td>
+
+                          <td className="px-4 py-2 text-gray-700 dark:text-gray-100">
+                            {doc.status}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
               </div>
             </div>
 
@@ -318,7 +336,7 @@ const ProjectDetails = () => {
           {/* Preview card */}
           <div className="border border-gray-200 dark:border-neutral-700 rounded-md p-3 flex flex-col items-center">
             <Image
-              src={project.preview?.image || ""}
+              src={project.preview.image}
               alt="Preview"
               width={400}
               height={500}
@@ -392,7 +410,6 @@ const ProjectDetails = () => {
         open={jalonModalOpen}
         onClose={() => setJalonModalOpen(false)}
         projectId={project.id}
-        manager={project.manager}
       />
       {selectedPhase && (
         <JalonDetailsModal
