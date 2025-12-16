@@ -17,16 +17,7 @@ import {
 } from "@/components/ui/popover";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
-import {
-  CalendarIcon,
-  ChevronDown,
-  Clock,
-  FileText,
-  Image as ImageIcon,
-  PlaySquare,
-  Plus,
-  User,
-} from "lucide-react";
+import { CalendarIcon, ChevronDown, Clock, Plus, User } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -37,12 +28,16 @@ import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import AddDocumentModal from "./AddDocumentModal";
 
+import { createTask } from "@/app/actions/projects/milestones/tasks/createTask";
 import {
   createMilestoneSchema,
   type CreateMilestoneFormValues,
 } from "@/schemas/milestone.schema";
+import { AddDocumentPayload } from "@/types/task";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { iconMap } from "../common/FileIconMap";
 
 interface Props {
   open: boolean;
@@ -61,8 +56,9 @@ export default function CreateJalonModal({
   manager,
 }: Props) {
   const [addDocumentModalOpen, setAddDocumentModalOpen] = useState(false);
+  const [tasks, setTasks] = useState<AddDocumentPayload[]>([]);
 
-  const { mutate, isPending } = useCreateMilestone(projectId);
+  const { mutateAsync, isPending } = useCreateMilestone(projectId);
 
   const form = useForm<CreateMilestoneFormValues>({
     resolver: zodResolver(createMilestoneSchema),
@@ -78,22 +74,47 @@ export default function CreateJalonModal({
     formState: { errors },
   } = form;
 
-  const onSubmit = (values: CreateMilestoneFormValues) => {
-    const data = createMilestoneSchema.parse(values);
+  const onSubmit = async (values: CreateMilestoneFormValues) => {
+    try {
+      const data = createMilestoneSchema.parse(values);
 
-    mutate({
-      projectId,
-      title: data.title,
-      description: data.description,
-      startDate: data.startDate,
-      endDate: data.endDate,
-      startTime: data.startTime,
-      endTime: data.endTime,
-      priority: data.priority,
-      managerId: manager?.id,
-    });
+      // 1. Create milestone
+      const milestone = await mutateAsync({
+        projectId,
+        title: data.title,
+        description: data.description,
+        startDate: data.startDate,
+        endDate: data.endDate,
+        startTime: data.startTime,
+        endTime: data.endTime,
+        priority: data.priority,
+        managerId: manager.id,
+      });
 
-    onClose();
+      // 2. Create tasks linked to milestone
+      if (tasks.length > 0) {
+        await Promise.all(
+          tasks.map((task) =>
+            createTask({
+              milestoneId: milestone.id,
+              title: task.name,
+              description: task.description,
+              category: task.category,
+              file_format: task.file_format,
+            })
+          )
+        );
+      }
+
+      // 3. Success feedback
+      toast.success("Jalon et tâches créés avec succès");
+
+      onClose();
+    } catch (error) {
+      console.error(error);
+
+      toast.error("Une erreur est survenue lors de la création du jalon");
+    }
   };
 
   return (
@@ -327,12 +348,15 @@ export default function CreateJalonModal({
             </div>
 
             <div className="grid grid-cols-3 gap-8">
-              {[FileText, PlaySquare, ImageIcon].map((Icon, idx) => (
-                <div key={idx} className="flex items-center gap-3">
-                  <Icon className="w-7 h-7 text-[#326EA6]" />
-                  <p className="text-sm">Permit document 2025</p>
-                </div>
-              ))}
+              {tasks.map((task, idx) => {
+                const Icon = iconMap[task.file_format];
+                return (
+                  <div key={idx} className="flex items-center gap-3">
+                    <Icon className="w-7 h-7 text-[#326EA6]" />
+                    <p className="text-sm">{task.name}</p>
+                  </div>
+                );
+              })}
             </div>
           </div>
 
@@ -359,6 +383,9 @@ export default function CreateJalonModal({
         <AddDocumentModal
           open={addDocumentModalOpen}
           onClose={() => setAddDocumentModalOpen(false)}
+          onSubmit={(data) => {
+            setTasks([...tasks, data]);
+          }}
         />
       </DialogContent>
     </Dialog>

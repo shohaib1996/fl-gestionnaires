@@ -3,29 +3,26 @@
 import { createClient } from "@/lib/supabase/server";
 import type { ActionResult } from "@/types/actions";
 
-// -----------------------------
-// Raw DB result types
-// -----------------------------
-interface TaskRow {
+// ⬅️ query result type
+interface TaskWithDocumentRow {
   id: string;
   title: string;
   description: string | null;
-  category: string | null;
-  status: string;
-  order_index: number;
-
-  documents: DocumentRow[] | null;
-}
-
-interface DocumentRow {
-  id: string;
-  name: string;
   category: string;
   status: string;
-  type: string;
+  order_index: number | null;
+  created_at: Date;
   file_format: string;
-  file_path: string | null;
-  created_at: string;
+  document: {
+    id: string;
+    name: string;
+    category: string | null;
+    status: string | null;
+    type: string | null;
+    file_format: string | null;
+    file_path: string | null;
+    created_at: Date | null;
+  } | null;
 }
 
 // -----------------------------
@@ -34,25 +31,32 @@ interface DocumentRow {
 export interface TasksByMilestone {
   id: string;
   goal: string;
-
-  documents?: {
+  created_at: Date;
+  file_format: string;
+  status: string;
+  category: string;
+  description: string | null;
+  document?: {
     id: string;
     name: string;
-    date: string;
+    created_at: Date;
     description?: string;
-    category: string;
-    status: string;
-    type: string;
-    file_format: string;
+    category?: string | null;
+    status?: string | null;
+    type?: string | null;
+    file_format?: string | null;
     file_path?: string | null;
-  }[];
+  };
 
-  preview: {
+  preview?: {
     image: string;
     type: string;
   };
 }
 
+// -----------------------------
+// Action
+// -----------------------------
 export async function getTasksByMilestone(
   milestoneId: string
 ): Promise<ActionResult<TasksByMilestone[]>> {
@@ -62,23 +66,28 @@ export async function getTasksByMilestone(
     .from("tasks")
     .select(
       `
-      id,
-      title,
-      description,
-      category,
-      status,
-      order_index,
-      documents (
         id,
-        name,
+        title,
+        description,
         category,
         status,
-        type,
+        order_index,
+        created_at,
         file_format,
-        file_path,
-        created_at
-      )
-    `
+        category,
+        status,
+
+        document:documents (
+          id,
+          name,
+          category,
+          status,
+          type,
+          file_format,
+          file_path,
+          created_at
+        )
+      `
     )
     .eq("milestone_id", milestoneId)
     .order("order_index", { ascending: true });
@@ -91,26 +100,37 @@ export async function getTasksByMilestone(
     };
   }
 
-  const shaped: TasksByMilestone[] = (data as TaskRow[]).map((task) => ({
-    id: task.id,
-    goal: task.title,
+  const shaped: TasksByMilestone[] = (data as TaskWithDocumentRow[]).map(
+    (task) => {
+      const doc = task.document;
 
-    documents: task.documents?.map((doc) => ({
-      id: doc.id,
-      name: doc.name,
-      date: doc.created_at,
-      category: doc.category,
-      status: doc.status,
-      type: doc.type,
-      file_format: doc.file_format,
-      file_path: doc.file_path ?? null,
-    })),
+      return {
+        id: task.id,
+        goal: task.title,
+        created_at: task.created_at,
+        file_format: task.file_format,
+        status: task.status,
+        category: task.category,
+        description: task.description,
+        document: doc
+          ? {
+              id: doc.id,
+              name: doc.name,
+              created_at: doc.created_at,
+              description: task.description,
+              category: doc.category,
+              status: doc.status,
+              type: doc.type,
+              file_format: doc.file_format,
+              file_path: doc.file_path,
+            }
+          : null,
 
-    preview: {
-      image: "",
-      type: "",
-    },
-  }));
+        // optional – add real logic later
+        preview: null,
+      };
+    }
+  );
 
   return {
     success: true,

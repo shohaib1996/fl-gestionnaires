@@ -185,10 +185,10 @@ export type Database = {
       documents: {
         Row: {
           category: string | null
-          created_at: string
+          created_at: string | null
           description: string | null
           file_format: string | null
-          file_path: string
+          file_path: string | null
           id: string
           name: string
           status: string | null
@@ -197,10 +197,10 @@ export type Database = {
         }
         Insert: {
           category?: string | null
-          created_at?: string
+          created_at?: string | null
           description?: string | null
           file_format?: string | null
-          file_path: string
+          file_path?: string | null
           id?: string
           name: string
           status?: string | null
@@ -209,10 +209,10 @@ export type Database = {
         }
         Update: {
           category?: string | null
-          created_at?: string
+          created_at?: string | null
           description?: string | null
           file_format?: string | null
-          file_path?: string
+          file_path?: string | null
           id?: string
           name?: string
           status?: string | null
@@ -223,7 +223,7 @@ export type Database = {
           {
             foreignKeyName: "documents_task_id_fkey"
             columns: ["task_id"]
-            isOneToOne: false
+            isOneToOne: true
             referencedRelation: "tasks"
             referencedColumns: ["id"]
           },
@@ -470,43 +470,41 @@ export type Database = {
       tasks: {
         Row: {
           category: string | null
-          created_at: string
+          created_at: string | null
           description: string | null
+          file_format: string
           id: string
-          milestone_id: string
-          order_index: number
-          status: Database["public"]["Enums"]["task_status"]
+          milestone_id: string | null
+          order_index: number | null
+          status: string | null
           title: string
+          updated_at: string | null
         }
         Insert: {
           category?: string | null
-          created_at?: string
+          created_at?: string | null
           description?: string | null
+          file_format: string
           id?: string
-          milestone_id: string
-          order_index?: number
-          status?: Database["public"]["Enums"]["task_status"]
+          milestone_id?: string | null
+          order_index?: number | null
+          status?: string | null
           title: string
+          updated_at?: string | null
         }
         Update: {
           category?: string | null
-          created_at?: string
+          created_at?: string | null
           description?: string | null
+          file_format?: string
           id?: string
-          milestone_id?: string
-          order_index?: number
-          status?: Database["public"]["Enums"]["task_status"]
+          milestone_id?: string | null
+          order_index?: number | null
+          status?: string | null
           title?: string
+          updated_at?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "tasks_milestone_id_fkey"
-            columns: ["milestone_id"]
-            isOneToOne: false
-            referencedRelation: "milestones"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       users: {
         Row: {

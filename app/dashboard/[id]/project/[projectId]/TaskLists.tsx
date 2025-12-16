@@ -1,12 +1,5 @@
 import { TasksByMilestone } from "@/app/actions/projects/milestones/tasks/getTasksByMilestone";
-import { FileText, FolderPlus, Globe, PlaySquare } from "lucide-react";
-
-const iconMap: Record<string, any> = {
-  file: FileText,
-  video: PlaySquare,
-  web: Globe,
-  folder: FolderPlus,
-};
+import { iconMap } from "@/components/common/FileIconMap";
 
 export default function TaskLists({ tasks }: { tasks: TasksByMilestone[] }) {
   const handleDownload = async (url: string, filename = "file") => {
@@ -98,8 +91,8 @@ export default function TaskLists({ tasks }: { tasks: TasksByMilestone[] }) {
       </thead>
 
       <tbody>
-        {tasks.map((doc, i) => {
-          const Icon = iconMap[doc.type];
+        {tasks.map((task, i) => {
+          const Icon = iconMap[task.file_format];
           return (
             <tr
               key={i}
@@ -108,38 +101,25 @@ export default function TaskLists({ tasks }: { tasks: TasksByMilestone[] }) {
               } h-[7vh]`}
             >
               <td className="px-4 py-2 text-gray-600 dark:text-gray-300">
-                {new Date(doc.date).toLocaleString("en-US", {
+                {new Date(task.created_at).toLocaleString("en-US", {
                   month: "short",
                   day: "2-digit",
                 })}
               </td>
 
               <td className="px-4 py-2 gap-2 text-gray-700 dark:text-gray-200">
-                <Icon
-                  className="w-6 h-6 text-[#326EA6] cursor-pointer"
-                  onClick={() => {
-                    //   setSelectedDocument({
-                    //     id: "4d2c3652-1431-48fd-8db7-f2b48709c640",
-                    //     name: doc.name,
-                    //     category: doc.category,
-                    //     description: doc.description,
-                    //     file_format: doc.file_format,
-                    //     file_path: doc.file_path || null,
-                    //   });
-                    //   setOpenEditDoc(true);
-                  }}
-                />
+                <Icon className="w-6 h-6 text-[#326EA6] cursor-pointer" />
               </td>
               <td className="px-4 py-2 gap-2 text-gray-700 dark:text-gray-200">
-                {doc.description}
+                {task.description}
               </td>
 
               <td className="px-4 py-2 text-gray-600 dark:text-gray-300">
-                {doc.category}
+                {task.category}
               </td>
 
-              <td className="px-4 py-2 text-gray-700 dark:text-gray-100">
-                {doc.status}
+              <td className="px-4 py-2 text-gray-700 dark:text-gray-100 capitalize">
+                {task.status}
               </td>
             </tr>
           );

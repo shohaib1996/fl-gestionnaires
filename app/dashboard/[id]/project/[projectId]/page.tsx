@@ -22,7 +22,10 @@ import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
 import { useAssignedProjectDetails } from "@/hooks/useAssignedProjectDetails";
+import { useCreateTask } from "@/hooks/useCreateTaks";
 import { useTasksByMilestone } from "@/hooks/useTasksByMilestone";
+import { AddDocumentPayload } from "@/types/task";
+import { toast } from "sonner";
 import { MilestoneTabs } from "./MilestoneTabas";
 import TaskLists from "./TaskLists";
 
@@ -104,6 +107,9 @@ const ProjectDetails = () => {
   const { data: tasks, isLoading: tasksLoading } = useTasksByMilestone(
     activeMilestoneId ?? ""
   );
+
+  const { mutateAsync } = useCreateTask();
+
   const handlePhaseClick = (phase: Phase) => {
     setSelectedPhase(phase);
     setJalonDetailsModalOpen(true);
@@ -122,6 +128,17 @@ const ProjectDetails = () => {
 
   if (!project || isLoading)
     return <div className="p-6 text-gray-500">Loading project...</div>;
+
+  const handleTaskAdd = async (task: AddDocumentPayload) => {
+    try {
+      await mutateAsync({ ...task, milestoneId: activeMilestoneId ?? "" });
+      setOpenAddDoc(false);
+      toast.success("Task added successfully");
+    } catch (error) {
+      console.error("Error adding task:", error);
+      toast.error("Error adding task");
+    }
+  };
 
   // const project = data.project;
   const handleDownload = async (url: string, filename = "file") => {
@@ -317,13 +334,15 @@ const ProjectDetails = () => {
 
           {/* Preview card */}
           <div className="border border-gray-200 dark:border-neutral-700 rounded-md p-3 flex flex-col items-center">
-            <Image
-              src={project.preview?.image || ""}
-              alt="Preview"
-              width={400}
-              height={500}
-              className="rounded-md object-contain max-h-[44vh] min-w-[35vw]"
-            />
+            {project?.preview && (
+              <Image
+                src={project.preview?.image || ""}
+                alt="Preview"
+                width={400}
+                height={500}
+                className="rounded-md object-contain max-h-[44vh] min-w-[35vw]"
+              />
+            )}
 
             <div className="flex justify-center gap-3 mt-3">
               <button
@@ -404,6 +423,7 @@ const ProjectDetails = () => {
       <AddDocumentModal
         open={openAddDoc}
         onClose={() => setOpenAddDoc(false)}
+        onSubmit={handleTaskAdd}
       />
       {selectedDocument && (
         <EditDocumentModal
