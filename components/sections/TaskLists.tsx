@@ -1,5 +1,8 @@
 import { TasksByMilestone } from "@/app/actions/projects/milestones/tasks/getTasksByMilestone";
 import { iconMap } from "@/components/common/FileIconMap";
+import { useEffect, useState } from "react";
+
+const LS_KEY = "active_task_row";
 
 export default function TaskLists({
   tasks,
@@ -10,6 +13,27 @@ export default function TaskLists({
   setSelectedTask: (task: TasksByMilestone) => void;
   setOpenEditDoc: (open: boolean) => void;
 }) {
+  const [activeIndex, setActiveIndex] = useState<number>(() => {
+    if (typeof window === "undefined") return 0;
+
+    const saved = localStorage.getItem(LS_KEY);
+    return saved !== null ? Number(saved) : 0;
+  });
+
+  useEffect(() => {
+    if (!tasks.length) return;
+
+    const index = activeIndex < tasks.length ? activeIndex : 0;
+
+    setSelectedTask(tasks[index]);
+  }, [tasks, activeIndex, setSelectedTask]);
+
+  const handleRowClick = (task: TasksByMilestone, index: number) => {
+    setActiveIndex(index);
+    setSelectedTask(task);
+    localStorage.setItem(LS_KEY, String(index));
+  };
+
   return (
     <table className="w-full text-sm">
       <thead className="bg-gray-50 dark:bg-neutral-700 text-gray-700 dark:text-gray-200 sticky top-0">
@@ -28,9 +52,10 @@ export default function TaskLists({
           return (
             <tr
               key={i}
+              onClick={() => handleRowClick(task, i)}
               className={`border-t dark:border-neutral-700 hover:bg-blue-50 dark:hover:bg-neutral-700/50 transition ${
-                i === 1 ? "bg-blue-50 dark:bg-neutral-700/50" : ""
-              } h-[7vh]`}
+                i === activeIndex ? "bg-blue-50 dark:bg-neutral-700/50" : ""
+              } h-[7vh] cursor-pointer`}
             >
               <td className="px-4 py-2 text-gray-600 dark:text-gray-300">
                 {new Date(task.created_at).toLocaleString("en-US", {
@@ -41,7 +66,8 @@ export default function TaskLists({
 
               <td className="px-4 py-2 gap-2 text-gray-700 dark:text-gray-200">
                 <button
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.stopPropagation();
                     setSelectedTask(task);
                     setOpenEditDoc(true);
                   }}

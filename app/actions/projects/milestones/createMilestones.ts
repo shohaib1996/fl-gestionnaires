@@ -16,16 +16,18 @@ export async function createMilestone(input: {
 }): Promise<ActionResult> {
   const supabase = createClient();
 
-  const { error } = await supabase.rpc("create_milestone", {
+  console.log(input);
+
+  const { data, error } = await supabase.rpc("create_milestone", {
     p_project_id: input.projectId,
     p_title: input.title,
-    p_description: input.description ?? undefined,
-    p_start_date: input.startDate ?? undefined,
-    p_end_date: input.endDate ?? undefined,
-    p_start_time: input.startTime ?? undefined,
-    p_end_time: input.endTime ?? undefined,
+    p_description: input.description,
+    p_start_date: input.startDate,
+    p_end_date: input.endDate,
+    p_start_time: input.startTime,
+    p_end_time: input.endTime,
     p_priority: input.priority ?? "normal",
-    p_manager_id: input.managerId ?? undefined,
+    p_manager_id: input.managerId,
   });
 
   if (error) {
@@ -40,6 +42,6 @@ export async function createMilestone(input: {
   return {
     success: true,
     message: "Jalon créé avec succès",
-    data: null,
+    data,
   };
 }

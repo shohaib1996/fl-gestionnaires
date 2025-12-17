@@ -28,7 +28,6 @@ import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import AddDocumentModal from "./AddDocumentModal";
 
-import { createTask } from "@/app/actions/projects/milestones/tasks/createTask";
 import {
   createMilestoneSchema,
   type CreateMilestoneFormValues,
@@ -58,7 +57,7 @@ export default function CreateJalonModal({
   const [addDocumentModalOpen, setAddDocumentModalOpen] = useState(false);
   const [tasks, setTasks] = useState<AddDocumentPayload[]>([]);
 
-  const { mutateAsync, isPending } = useCreateMilestone(projectId);
+  const { mutateAsync, isPending } = useCreateMilestone();
 
   const form = useForm<CreateMilestoneFormValues>({
     resolver: zodResolver(createMilestoneSchema),
@@ -90,21 +89,21 @@ export default function CreateJalonModal({
         priority: data.priority,
         managerId: manager.id,
       });
-
+      console.log(milestone);
       // 2. Create tasks linked to milestone
-      if (tasks.length > 0) {
-        await Promise.all(
-          tasks.map((task) =>
-            createTask({
-              milestoneId: milestone.id,
-              title: task.name,
-              description: task.description,
-              category: task.category,
-              file_format: task.file_format,
-            })
-          )
-        );
-      }
+      // if (tasks.length > 0) {
+      //   await Promise.all(
+      //     tasks.map((task) =>
+      //       createTask({
+      //         milestoneId: milestone.,
+      //         title: task.name,
+      //         description: task.description,
+      //         category: task.category,
+      //         file_format: task.file_format,
+      //       })
+      //     )
+      //   );
+      // }
 
       // 3. Success feedback
       toast.success("Jalon et tâches créés avec succès");

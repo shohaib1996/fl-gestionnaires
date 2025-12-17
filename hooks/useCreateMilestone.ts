@@ -1,24 +1,22 @@
 import { createMilestone } from "@/app/actions/projects/milestones/createMilestones";
-import { milestoneKeys } from "@/lib/queryKeys";
+import { assignedProjectKeys } from "@/lib/queryKeys";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-export function useCreateMilestone(projectId: string) {
+export function useCreateMilestone() {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: createMilestone,
 
-    onSuccess: (res) => {
+    onSuccess: (res, { projectId }) => {
       if (!res.success) {
         toast.error(res.message);
         return;
       }
 
-      toast.success(res.message ?? "Milestone created");
-
       queryClient.invalidateQueries({
-        queryKey: milestoneKeys.project(projectId),
+        queryKey: assignedProjectKeys.details(projectId),
       });
     },
   });

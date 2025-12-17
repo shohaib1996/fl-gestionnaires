@@ -6,15 +6,12 @@ import EditDocumentModal from "@/components/modals/EditDocumentModal";
 import JalonDetailsModal from "@/components/modals/JalonDetailsModal";
 import {
   ArrowLeft,
-  Download,
   Ellipsis,
   FileText,
   FolderPlus,
-  Fullscreen,
   Globe,
   ImageDown,
   PlaySquare,
-  Printer,
   X,
 } from "lucide-react";
 import Image from "next/image";
@@ -29,6 +26,7 @@ import { AddDocumentPayload } from "@/types/task";
 import { toast } from "sonner";
 import TaskLists from "../../../../../components/sections/TaskLists";
 import { MilestoneTabs } from "./MilestoneTabas";
+import PreviewCard from "./PreviewCard";
 
 interface Phase {
   step: number;
@@ -327,55 +325,12 @@ const ProjectDetails = () => {
           </div>
 
           {/* Preview card */}
-          <div className="border border-gray-200 dark:border-neutral-700 rounded-md p-3 flex flex-col items-center">
-            {project?.preview ? (
-              <>
-                <Image
-                  src={project.preview?.image || ""}
-                  alt="Preview"
-                  width={400}
-                  height={500}
-                  className="rounded-md object-contain max-h-[44vh] min-w-[35vw]"
-                />
-                <div className="flex justify-center gap-3 mt-3">
-                  <button
-                    onClick={() =>
-                      handleDownload(
-                        project?.preview?.image || "",
-                        "preview-download"
-                      )
-                    }
-                    className="bg-[#E0EFFF] dark:bg-[#275883] p-2 rounded-full hover:bg-gray-200 transition cursor-pointer"
-                    title="Download"
-                  >
-                    <Download className="w-5 h-5" />
-                  </button>
-
-                  <button
-                    onClick={() =>
-                      handlePrint(project?.preview?.image || "", "image")
-                    }
-                    className="bg-[#E0EFFF] dark:bg-[#275883] p-2 rounded-full hover:bg-gray-200 transition cursor-pointer"
-                    title="Print"
-                  >
-                    <Printer className="w-5 h-5" />
-                  </button>
-
-                  {/* FULLSCREEN CLICK */}
-                  <button
-                    onClick={() => setFullscreenOpen(true)}
-                    className="bg-[#E0EFFF] dark:bg-[#275883] p-2 rounded-full hover:bg-gray-200 transition cursor-pointer"
-                  >
-                    <Fullscreen className="h-5 w-5" />
-                  </button>
-                </div>
-              </>
-            ) : (
-              <div className="flex justify-center items-center h-full">
-                <p className="p-6 text-gray-500">No preview available.</p>
-              </div>
-            )}
-          </div>
+          <PreviewCard
+            handleDownload={handleDownload}
+            handlePrint={handlePrint}
+            setFullscreenOpen={setFullscreenOpen}
+            previewURL={selectedTask?.document?.file_path || null}
+          />
         </div>
       </div>
 
