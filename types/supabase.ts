@@ -474,7 +474,7 @@ export type Database = {
           description: string | null
           file_format: string
           id: string
-          milestone_id: string | null
+          milestone_id: string
           order_index: number | null
           status: string | null
           title: string
@@ -486,7 +486,7 @@ export type Database = {
           description?: string | null
           file_format: string
           id?: string
-          milestone_id?: string | null
+          milestone_id: string
           order_index?: number | null
           status?: string | null
           title: string
@@ -498,7 +498,7 @@ export type Database = {
           description?: string | null
           file_format?: string
           id?: string
-          milestone_id?: string | null
+          milestone_id?: string
           order_index?: number | null
           status?: string | null
           title?: string

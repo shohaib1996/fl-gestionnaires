@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
+import { editTaskWithDocument } from "@/app/actions/projects/milestones/tasks/editTaskWithDocument";
 import {
   Dialog,
   DialogContent,
@@ -7,19 +9,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Scale,
-  Landmark,
-  Building2,
-  FileText,
-  Image as ImageIcon,
-  PlaySquare,
-  Music,
-  Globe2,
-  Link,
-  UploadCloud,
-} from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -27,49 +16,119 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useState } from "react";
-import { editDocument } from "@/app/actions/edit-document";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Building2,
+  FileText,
+  Globe2,
+  Image as ImageIcon,
+  Landmark,
+  Link,
+  Music,
+  PlaySquare,
+  Scale,
+  UploadCloud,
+} from "lucide-react";
+import { useEffect, useState } from "react";
 
 interface DocumentType {
   id: string;
-  name: string;
   category: string;
-  description: string;
+  description: string | null;
   file_format: string;
   file_path?: string | null;
+  goal: string;
+  document?: {
+    id: string;
+    name: string;
+    created_at: string;
+    description?: string | null;
+    category?: string | null;
+    status?: string | null;
+    type?: string | null;
+    file_format?: string | null;
+    file_path?: string | null;
+  } | null;
 }
 
 interface Props {
   open: boolean;
   onClose: () => void;
   doc: DocumentType;
+  milestoneId: string;
 }
 
-export default function EditDocumentModal({ open, onClose, doc }: Props) {
-  const [name, setName] = useState(doc.name);
-  const [category, setCategory] = useState(doc.category);
-  const [description, setDescription] = useState(doc.description);
-  const [fileFormat, setFileFormat] = useState(doc.file_format);
+const FILE_ACCEPT_MAP: Record<string, string> = {
+  document: ".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt",
+  image: "image/*",
+  video: "video/*",
+  audio: "audio/*",
+  web: ".html,.htm",
+  external: "*/*",
+};
+
+export default function EditDocumentModal({
+  open,
+  onClose,
+  doc,
+  milestoneId,
+}: Props) {
+  const [name, setName] = useState(doc?.goal);
+  const [category, setCategory] = useState(doc?.category);
+  const [description, setDescription] = useState(doc?.description);
+  const [fileFormat, setFileFormat] = useState(doc?.file_format);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-  const handleSave = async () => {
-    const updates = {
-      name,
-      category,
-      description,
-      file_format: fileFormat,
-      old_file_path: doc.file_path || null,
-    };
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
 
-    const res = await editDocument(doc.id, updates, selectedFile || undefined);
+  const MAX_FILE_SIZE_MB = 20;
+  const acceptedTypes = FILE_ACCEPT_MAP[fileFormat ?? "external"];
 
-    if (res.error) {
-      alert("❌ Failed to update document");
-      return;
+  function validateFile(file: File) {
+    if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
+      return "File size must be under 20MB";
     }
 
-    alert("✅ Document updated successfully");
-    onClose();
+    return null;
+  }
+
+  useEffect(() => {
+    setSelectedFile(null);
+  }, [fileFormat]);
+
+  const handleSave = async () => {
+    try {
+      setIsUploading(true);
+      setUploadError(null);
+
+      if (!name || !fileFormat) {
+        setUploadError("Nom et format du fichier sont obligatoires");
+        return;
+      }
+
+      const payload = {
+        taskId: doc.id,
+        milestoneId: milestoneId, // server action uses this only for storage path
+        name,
+        description: description ?? null,
+        category: category ?? null,
+        file_format: fileFormat ?? null,
+        file: selectedFile || undefined, // ✅ FIX HERE
+      };
+
+      const res = await editTaskWithDocument(payload);
+
+      if (!res.success) {
+        throw new Error(res.message ?? "Update failed");
+      }
+
+      onClose();
+    } catch (err: any) {
+      setUploadError(err.message || "Upload failed");
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   return (
@@ -141,7 +200,7 @@ export default function EditDocumentModal({ open, onClose, doc }: Props) {
               </label>
               <Textarea
                 placeholder="Brève description"
-                value={description}
+                value={description ?? ""}
                 onChange={(e) => setDescription(e.target.value)}
                 className="mt-1 bg-gray-50 dark:bg-neutral-800 border-gray-300 dark:border-neutral-700 h-24 rounded-xs"
               />
@@ -197,14 +256,27 @@ export default function EditDocumentModal({ open, onClose, doc }: Props) {
 
               {/* Upload Field */}
               <div>
-                <label className="block text-sm font-medium mb-1">
-                  Télécharger un fichier
-                </label>
-                <div className="flex items-center justify-center w-full">
-                  <label
-                    htmlFor="dropzone-file"
-                    className="flex flex-col items-center justify-center w-full h-24 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-neutral-800 hover:bg-gray-100 dark:border-neutral-700 dark:hover:border-neutral-500 dark:hover:bg-neutral-700"
-                  >
+                <label
+                  htmlFor="dropzone-file"
+                  className="flex flex-col items-center justify-center w-full h-24 border-2 border-dashed rounded-lg cursor-pointer
+             border-gray-300 bg-gray-50 hover:bg-gray-100
+             dark:bg-neutral-800 dark:border-neutral-700 dark:hover:bg-neutral-700"
+                >
+                  {selectedFile ? (
+                    // ✅ File selected state
+                    <div className="text-center px-4 overflow-hidden max-w-60">
+                      <UploadCloud className="w-6 h-6 mb-2 text-green-600 mx-auto" />
+
+                      <p className="text-sm font-medium text-green-700 dark:text-green-400 truncate ">
+                        {selectedFile.name}
+                      </p>
+
+                      <p className="text-xs text-gray-500 mt-1">
+                        Cliquez pour changer le fichier
+                      </p>
+                    </div>
+                  ) : (
+                    // ⬆️ Default state
                     <div className="flex flex-col items-center justify-center pt-5 pb-6">
                       <UploadCloud className="w-6 h-6 mb-2 text-gray-500 dark:text-gray-400" />
                       <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
@@ -214,16 +286,38 @@ export default function EditDocumentModal({ open, onClose, doc }: Props) {
                         ou glisser-déposer
                       </p>
                     </div>
-                    <input
-                      id="dropzone-file"
-                      type="file"
-                      className="hidden"
-                      onChange={(e) =>
-                        setSelectedFile(e.target.files?.[0] || null)
+                  )}
+
+                  <input
+                    id="dropzone-file"
+                    type="file"
+                    className="hidden"
+                    accept={acceptedTypes}
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (!file) return;
+
+                      const error = validateFile(file);
+                      if (error) {
+                        setUploadError(error);
+                        return;
                       }
-                    />
-                  </label>
-                </div>
+
+                      setUploadError(null);
+                      setSelectedFile(file);
+                    }}
+                  />
+                </label>
+                {
+                  // Error message
+                  uploadError ? (
+                    <p className="text-xs text-red-500 mt-1">{uploadError}</p>
+                  ) : (
+                    <p className="text-xs text-gray-400 mt-1">
+                      Formats acceptés: {acceptedTypes}
+                    </p>
+                  )
+                }
               </div>
             </div>
           </div>

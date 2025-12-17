@@ -4,15 +4,21 @@
 import { createClient } from "@/lib/supabase/server";
 import type { ActionResult } from "@/types/actions";
 
+/**
+ * UI-focused shape for Assigned Project
+ * (Header + manager + milestones only)
+ */
 export interface AssignedProjectDetails {
   id: string;
   name: string;
   status: string | null;
   project_id: string;
+
   manager: {
     id: string;
     name: string | null;
     role: string;
+    avatarURL?: string | null;
   };
 
   milestones: {
@@ -20,24 +26,20 @@ export interface AssignedProjectDetails {
     title: string;
     status: string;
   }[];
-  documents?: {
-    id: string;
-    name: string;
-    date: string;
-    description: string;
-    category: string;
-    status: string;
+
+  /**
+   * Optional – used only in detailed views
+   */
+  goal?: string;
+  preview?: {
+    image: string;
     type: string;
-    file_format: string;
-    file_path?: string | null;
-  }[];
-  goal: string;
-  preview: { image: string; type: string };
+  };
 }
 
 export async function getAssignedProjectDetails(
   projectId: string
-): Promise<ActionResult> {
+): Promise<ActionResult<AssignedProjectDetails>> {
   const supabase = await createClient();
 
   try {
@@ -45,34 +47,33 @@ export async function getAssignedProjectDetails(
       .from("project_assignments")
       .select(
         `
-    id,
-    is_active,
-    assigned_at,
-
-    project:projects (
-      id,
-      title,
-      status,
-      project_id,
-      milestones (
         id,
-        title,
-        status
-      )
-    ),
+        is_active,
+        assigned_at,
 
-    user:users!project_assignments_user_id_fkey (
-      id,
-      fullName,
-      role
-    )
-    `
+        project:projects (
+          id,
+          title,
+          status,
+          project_id,
+          milestones (
+            id,
+            title,
+            status
+          )
+        ),
+
+        user:users!project_assignments_user_id_fkey (
+          id,
+          fullName,
+          role,
+          avatarURL
+        )
+      `
       )
       .eq("project_id", projectId)
       .eq("is_active", true)
       .single();
-
-    console.log("🛠️ getAssignedProjectDetails data:", data, "error:", error);
 
     if (error) {
       return {
@@ -82,24 +83,29 @@ export async function getAssignedProjectDetails(
       };
     }
 
-    if (!data || !data.project) {
+    if (!data?.project || !data.user) {
       return {
         success: false,
         message: "Active project assignment not found",
       };
     }
 
-    // 🔹 Shape for UI
+    /**
+     * 🔹 Final shaped response (Type-safe)
+     */
     const shaped: AssignedProjectDetails = {
       id: data.project.id,
       name: data.project.title,
       status: data.project.status,
       project_id: data.project.project_id,
+
       manager: {
         id: data.user.id,
         name: data.user.fullName,
         role: data.user.role,
+        avatarURL: data.user.avatarURL,
       },
+
       milestones: data.project.milestones ?? [],
     };
 

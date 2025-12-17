@@ -21,13 +21,14 @@ import Image from "next/image";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
+import { TasksByMilestone } from "@/app/actions/projects/milestones/tasks/getTasksByMilestone";
 import { useAssignedProjectDetails } from "@/hooks/useAssignedProjectDetails";
 import { useCreateTask } from "@/hooks/useCreateTaks";
 import { useTasksByMilestone } from "@/hooks/useTasksByMilestone";
 import { AddDocumentPayload } from "@/types/task";
 import { toast } from "sonner";
+import TaskLists from "../../../../../components/sections/TaskLists";
 import { MilestoneTabs } from "./MilestoneTabas";
-import TaskLists from "./TaskLists";
 
 interface Phase {
   step: number;
@@ -58,19 +59,13 @@ interface ProjectData {
 }
 
 const ProjectDetails = () => {
-  const [data, setData] = useState<ProjectData | null>(null);
   const [fullscreenOpen, setFullscreenOpen] = useState(false); // FULLSCREEN MODAL STATE
   const [jalonModalOpen, setJalonModalOpen] = useState(false);
   const [openAddDoc, setOpenAddDoc] = useState(false);
   const [openEditDoc, setOpenEditDoc] = useState(false);
-  const [selectedDocument, setSelectedDocument] = useState<{
-    id: string;
-    name: string;
-    category: string;
-    description: string;
-    file_format: string;
-    file_path?: string | null;
-  } | null>(null);
+  const [selectedTask, setSelectedTask] = useState<TasksByMilestone | null>(
+    null
+  );
   const [jalonDetailsModalOpen, setJalonDetailsModalOpen] = useState(false);
   const [selectedPhase, setSelectedPhase] = useState<Phase | null>(null);
 
@@ -95,6 +90,8 @@ const ProjectDetails = () => {
     return project.milestones[0].id;
   }, [project, milestoneFromUrl]);
 
+  console.log("seelctedTask", selectedTask);
+
   useEffect(() => {
     if (!activeMilestoneId) return;
 
@@ -114,15 +111,6 @@ const ProjectDetails = () => {
     setSelectedPhase(phase);
     setJalonDetailsModalOpen(true);
   };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const res = await fetch("/data/projectDetails.json");
-      const json = await res.json();
-      setData(json);
-    };
-    fetchData();
-  }, []);
 
   console.log("data", project, tasks);
 
@@ -278,17 +266,19 @@ const ProjectDetails = () => {
           </div>
           <div className="flex items-center gap-2">
             <Image
-              src="/images/profile.jpeg"
-              alt={project.manager.name || "Project Lead"}
+              src={project.manager?.avatarURL || "/images/profile.jpeg"}
+              alt={project.manager.name || "Manager"}
               width={40}
               height={40}
               className="rounded-full object-cover h-10"
             />
             <div>
               <p className="text-sm font-semibold text-gray-800 dark:text-gray-100">
-                {project.manager.name || "Project Lead"}
+                {project.manager.role}
               </p>
-              <p className="text-xs text-gray-500">{project.manager.role}</p>
+              <p className="text-xs text-gray-500">
+                {project.manager.name || "Manager"}
+              </p>
             </div>
           </div>
         </div>
@@ -311,7 +301,11 @@ const ProjectDetails = () => {
                 ) : null}
 
                 {!tasksLoading && tasks?.length ? (
-                  <TaskLists tasks={tasks} />
+                  <TaskLists
+                    tasks={tasks}
+                    setSelectedTask={setSelectedTask}
+                    setOpenEditDoc={setOpenEditDoc}
+                  />
                 ) : null}
               </div>
             </div>
@@ -334,43 +328,53 @@ const ProjectDetails = () => {
 
           {/* Preview card */}
           <div className="border border-gray-200 dark:border-neutral-700 rounded-md p-3 flex flex-col items-center">
-            {project?.preview && (
-              <Image
-                src={project.preview?.image || ""}
-                alt="Preview"
-                width={400}
-                height={500}
-                className="rounded-md object-contain max-h-[44vh] min-w-[35vw]"
-              />
+            {project?.preview ? (
+              <>
+                <Image
+                  src={project.preview?.image || ""}
+                  alt="Preview"
+                  width={400}
+                  height={500}
+                  className="rounded-md object-contain max-h-[44vh] min-w-[35vw]"
+                />
+                <div className="flex justify-center gap-3 mt-3">
+                  <button
+                    onClick={() =>
+                      handleDownload(
+                        project?.preview?.image || "",
+                        "preview-download"
+                      )
+                    }
+                    className="bg-[#E0EFFF] dark:bg-[#275883] p-2 rounded-full hover:bg-gray-200 transition cursor-pointer"
+                    title="Download"
+                  >
+                    <Download className="w-5 h-5" />
+                  </button>
+
+                  <button
+                    onClick={() =>
+                      handlePrint(project?.preview?.image || "", "image")
+                    }
+                    className="bg-[#E0EFFF] dark:bg-[#275883] p-2 rounded-full hover:bg-gray-200 transition cursor-pointer"
+                    title="Print"
+                  >
+                    <Printer className="w-5 h-5" />
+                  </button>
+
+                  {/* FULLSCREEN CLICK */}
+                  <button
+                    onClick={() => setFullscreenOpen(true)}
+                    className="bg-[#E0EFFF] dark:bg-[#275883] p-2 rounded-full hover:bg-gray-200 transition cursor-pointer"
+                  >
+                    <Fullscreen className="h-5 w-5" />
+                  </button>
+                </div>
+              </>
+            ) : (
+              <div className="flex justify-center items-center h-full">
+                <p className="p-6 text-gray-500">No preview available.</p>
+              </div>
             )}
-
-            <div className="flex justify-center gap-3 mt-3">
-              <button
-                onClick={() =>
-                  handleDownload(project.preview.image, "preview-download")
-                }
-                className="bg-[#E0EFFF] dark:bg-[#275883] p-2 rounded-full hover:bg-gray-200 transition cursor-pointer"
-                title="Download"
-              >
-                <Download className="w-5 h-5" />
-              </button>
-
-              <button
-                onClick={() => handlePrint(project.preview.image, "image")}
-                className="bg-[#E0EFFF] dark:bg-[#275883] p-2 rounded-full hover:bg-gray-200 transition cursor-pointer"
-                title="Print"
-              >
-                <Printer className="w-5 h-5" />
-              </button>
-
-              {/* FULLSCREEN CLICK */}
-              <button
-                onClick={() => setFullscreenOpen(true)}
-                className="bg-[#E0EFFF] dark:bg-[#275883] p-2 rounded-full hover:bg-gray-200 transition cursor-pointer"
-              >
-                <Fullscreen className="h-5 w-5" />
-              </button>
-            </div>
           </div>
         </div>
       </div>
@@ -391,7 +395,7 @@ const ProjectDetails = () => {
             {/* Viewer (supports future types) */}
 
             <Image
-              src={project.preview.image}
+              src={project?.preview?.image || ""}
               alt="Fullscreen preview"
               width={1400}
               height={1400}
@@ -425,11 +429,12 @@ const ProjectDetails = () => {
         onClose={() => setOpenAddDoc(false)}
         onSubmit={handleTaskAdd}
       />
-      {selectedDocument && (
+      {selectedTask && (
         <EditDocumentModal
           open={openEditDoc}
           onClose={() => setOpenEditDoc(false)}
-          doc={selectedDocument}
+          doc={selectedTask}
+          milestoneId={activeMilestoneId ?? ""}
         />
       )}
     </div>

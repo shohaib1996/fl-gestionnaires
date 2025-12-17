@@ -1,7 +1,11 @@
-import { TasksByMilestone } from "@/app/actions/projects/milestones/tasks/getTasksByMilestone";
-import { iconMap } from "@/components/common/FileIconMap";
+import { Download, Fullscreen, Printer } from "lucide-react";
+import Image from "next/image";
 
-export default function TaskLists({ tasks }: { tasks: TasksByMilestone[] }) {
+export default function PreviewSection({
+  project,
+
+  setFullscreenOpen,
+}: any) {
   const handleDownload = async (url: string, filename = "file") => {
     try {
       const res = await fetch(url);
@@ -75,56 +79,50 @@ export default function TaskLists({ tasks }: { tasks: TasksByMilestone[] }) {
       alert("Unable to print file.");
     }
   };
-
-  if (tasks.length < 0) return <div></div>;
-
   return (
-    <table className="w-full text-sm">
-      <thead className="bg-gray-50 dark:bg-neutral-700 text-gray-700 dark:text-gray-200 sticky top-0">
-        <tr>
-          <th className="text-left px-4 py-2">Date</th>
-          <th className="text-left px-4 py-2"></th>
-          <th className="text-left px-4 py-2">Description</th>
-          <th className="text-left px-4 py-2">Catégorie</th>
-          <th className="text-left px-4 py-2">Progression</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        {tasks.map((task, i) => {
-          const Icon = iconMap[task.file_format];
-          return (
-            <tr
-              key={i}
-              className={`border-t dark:border-neutral-700 hover:bg-blue-50 dark:hover:bg-neutral-700/50 transition ${
-                i === 1 ? "bg-blue-50 dark:bg-neutral-700/50" : ""
-              } h-[7vh]`}
+    <div className="border border-gray-200 dark:border-neutral-700 rounded-md p-3 flex flex-col items-center">
+      {project?.preview ? (
+        <>
+          <Image
+            src={project.preview?.image || ""}
+            alt="Preview"
+            width={400}
+            height={500}
+            className="rounded-md object-contain max-h-[44vh] min-w-[35vw]"
+          />
+          <div className="flex justify-center gap-3 mt-3">
+            <button
+              onClick={() =>
+                handleDownload(project.preview.image, "preview-download")
+              }
+              className="bg-[#E0EFFF] dark:bg-[#275883] p-2 rounded-full hover:bg-gray-200 transition cursor-pointer"
+              title="Download"
             >
-              <td className="px-4 py-2 text-gray-600 dark:text-gray-300">
-                {new Date(task.created_at).toLocaleString("en-US", {
-                  month: "short",
-                  day: "2-digit",
-                })}
-              </td>
+              <Download className="w-5 h-5" />
+            </button>
 
-              <td className="px-4 py-2 gap-2 text-gray-700 dark:text-gray-200">
-                <Icon className="w-6 h-6 text-[#326EA6] cursor-pointer" />
-              </td>
-              <td className="px-4 py-2 gap-2 text-gray-700 dark:text-gray-200">
-                {task.description}
-              </td>
+            <button
+              onClick={() => handlePrint(project.preview.image, "image")}
+              className="bg-[#E0EFFF] dark:bg-[#275883] p-2 rounded-full hover:bg-gray-200 transition cursor-pointer"
+              title="Print"
+            >
+              <Printer className="w-5 h-5" />
+            </button>
 
-              <td className="px-4 py-2 text-gray-600 dark:text-gray-300">
-                {task.category}
-              </td>
-
-              <td className="px-4 py-2 text-gray-700 dark:text-gray-100 capitalize">
-                {task.status}
-              </td>
-            </tr>
-          );
-        })}
-      </tbody>
-    </table>
+            {/* FULLSCREEN CLICK */}
+            <button
+              onClick={() => setFullscreenOpen(true)}
+              className="bg-[#E0EFFF] dark:bg-[#275883] p-2 rounded-full hover:bg-gray-200 transition cursor-pointer"
+            >
+              <Fullscreen className="h-5 w-5" />
+            </button>
+          </div>
+        </>
+      ) : (
+        <div className="flex justify-center items-center h-full">
+          <p className="p-6 text-gray-500">No preview available.</p>
+        </div>
+      )}
+    </div>
   );
 }
