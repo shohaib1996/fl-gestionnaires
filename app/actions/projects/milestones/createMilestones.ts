@@ -1,7 +1,10 @@
 "use server";
 
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from "@/lib/supabase/server";
 import { ActionResult } from "@/types/actions";
+import type { Database } from "@/types/supabase";
+
+type MilestoneRow = Database["public"]["Tables"]["milestones"]["Row"];
 
 export async function createMilestone(input: {
   projectId: string;
@@ -13,10 +16,8 @@ export async function createMilestone(input: {
   endTime?: string;
   priority?: "low" | "normal" | "high";
   managerId?: string;
-}): Promise<ActionResult> {
-  const supabase = createClient();
-
-  console.log(input);
+}): Promise<ActionResult<MilestoneRow>> {
+  const supabase = await createClient();
 
   const { data, error } = await supabase.rpc("create_milestone", {
     p_project_id: input.projectId,
@@ -31,8 +32,13 @@ export async function createMilestone(input: {
   });
 
   if (error) {
-    console.error("createMilestone error:", error);
+    return {
+      success: false,
+      message: "Impossible de créer le jalon",
+    };
+  }
 
+  if (!data) {
     return {
       success: false,
       message: "Impossible de créer le jalon",

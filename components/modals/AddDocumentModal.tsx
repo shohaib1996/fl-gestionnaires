@@ -8,7 +8,6 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { AddDocumentPayload } from "@/types/task";
 import {
   Building2,
   FileText,
@@ -28,6 +27,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+
+interface AddDocumentPayload {
+  name: string;
+  category: string | null;
+  description: string;
+  file_format: string;
+}
 
 interface Props {
   open: boolean;
@@ -49,11 +55,10 @@ export default function AddDocumentModal({ open, onClose, onSubmit }: Props) {
       file_format: fileFormat,
     });
 
-    // optional: reset locally
+    // reset locally
     setName("");
     setCategory(null);
     setDescription("");
-    setFileFormat("");
   };
 
   return (

@@ -4,7 +4,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import {
-  approveProject,
   claimProjectSimple,
   declineProject,
   inviteUser,
@@ -36,22 +35,22 @@ export function useProjectActions() {
   /* ---------------------------
      APPROVE
   ---------------------------- */
-  const approve = useMutation({
-    mutationFn: approveProject,
+  // const approve = useMutation({
+  //   mutationFn: approveProject,
 
-    onSuccess: (result) => {
-      if (result.success) {
-        queryClient.invalidateQueries({ queryKey: ["projects"] });
-        toast.success("Project approved!");
-      } else {
-        toast.error(result.message);
-      }
-    },
+  //   onSuccess: (result) => {
+  //     if (result.success) {
+  //       queryClient.invalidateQueries({ queryKey: ["projects"] });
+  //       toast.success("Project approved!");
+  //     } else {
+  //       toast.error(result.message);
+  //     }
+  //   },
 
-    onError: () => {
-      toast.error("Error approving project.");
-    },
-  });
+  //   onError: () => {
+  //     toast.error("Error approving project.");
+  //   },
+  // });
 
   /* ---------------------------
      DECLINE
@@ -100,13 +99,11 @@ export function useProjectActions() {
       project_id: string;
       claimed_by: string;
     }) => claim.mutate({ projectId: project_id, userId: claimed_by }),
-    approve: (id: string) => approve.mutate(id),
     decline: (id: string) => decline.mutate(id),
     invite: (email: string) => invite.mutate(email),
 
     loading: {
       claim: claim.isPending,
-      approve: approve.isPending,
       decline: decline.isPending,
       invite: invite.isPending,
     },

@@ -1,8 +1,6 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import type { ActionResult } from "@/types/actions";
-import { AddDocumentPayload } from "@/types/task";
 
 export interface CreateTaskInput {
   milestoneId: string;
@@ -12,8 +10,20 @@ export interface CreateTaskInput {
   file_format?: string;
 }
 
+export type ActionResult<T = void> =
+  | {
+      success: true;
+      message?: string;
+      data: T;
+    }
+  | {
+      success: false;
+      message: string;
+      code?: string;
+    };
+
 export async function createTask(
-  input: AddDocumentPayload
+  input: CreateTaskInput
 ): Promise<ActionResult<{ id: string }>> {
   const supabase = await createClient();
 
@@ -21,18 +31,24 @@ export async function createTask(
     .from("tasks")
     .insert({
       milestone_id: input.milestoneId,
-      title: input.name,
-      description: input.description,
-      category: input.category,
-      file_format: input.file_format,
+      title: input.title,
+      description: input.description ?? null,
+      category: input.category ?? null,
+      file_format: input.file_format ?? "",
     })
     .select("id")
     .single();
-  console.log("🚀 Created Task:", data, error);
 
   if (error) {
-    return { success: false, message: error.message, code: error.code };
+    return {
+      success: false,
+      message: error.message,
+      code: error.code,
+    };
   }
 
-  return { success: true, data: { id: data.id } };
+  return {
+    success: true,
+    data: { id: data.id },
+  };
 }

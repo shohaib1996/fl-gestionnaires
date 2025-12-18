@@ -22,7 +22,6 @@ import { TasksByMilestone } from "@/app/actions/projects/milestones/tasks/getTas
 import { useAssignedProjectDetails } from "@/hooks/useAssignedProjectDetails";
 import { useCreateTask } from "@/hooks/useCreateTaks";
 import { useTasksByMilestone } from "@/hooks/useTasksByMilestone";
-import { AddDocumentPayload } from "@/types/task";
 import { toast } from "sonner";
 import TaskLists from "../../../../../components/sections/TaskLists";
 import { MilestoneTabs } from "./MilestoneTabas";
@@ -32,6 +31,13 @@ interface Phase {
   step: number;
   title: string;
   status: string;
+}
+
+interface AddDocumentPayload {
+  name: string;
+  category: string | null;
+  description: string;
+  file_format: string;
 }
 
 const ProjectDetails = () => {
@@ -96,14 +102,26 @@ const ProjectDetails = () => {
     return <div className="p-6 text-gray-500">Loading project...</div>;
 
   const handleTaskAdd = async (task: AddDocumentPayload) => {
-    try {
-      await mutateAsync({ ...task, milestoneId: activeMilestoneId ?? "" });
-      setOpenAddDoc(false);
-      toast.success("Task added successfully");
-    } catch (error) {
-      console.error("Error adding task:", error);
-      toast.error("Error adding task");
+    if (!activeMilestoneId) {
+      toast.error("No active milestone selected");
+      return;
     }
+
+    const res = await mutateAsync({
+      milestoneId: activeMilestoneId,
+      title: task.name,
+      description: task.description ?? undefined,
+      category: task.category,
+      file_format: task.file_format,
+    });
+
+    if (!res.success) {
+      toast.error(res.message);
+      return;
+    }
+
+    setOpenAddDoc(false);
+    toast.success("Task added successfully");
   };
 
   // const project = data.project;

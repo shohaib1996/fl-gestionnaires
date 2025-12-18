@@ -28,15 +28,22 @@ import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import AddDocumentModal from "./AddDocumentModal";
 
+import { createTask } from "@/app/actions/projects/milestones/tasks/createTask";
 import {
   createMilestoneSchema,
   type CreateMilestoneFormValues,
 } from "@/schemas/milestone.schema";
-import { AddDocumentPayload } from "@/types/task";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { iconMap } from "../common/FileIconMap";
+
+interface AddDocumentPayload {
+  name: string;
+  category: string | null;
+  description: string;
+  file_format: string;
+}
 
 interface Props {
   open: boolean;
@@ -89,21 +96,26 @@ export default function CreateJalonModal({
         priority: data.priority,
         managerId: manager.id,
       });
-      console.log(milestone);
+      if (!milestone.success) {
+        toast.error(milestone.message);
+        return;
+      }
       // 2. Create tasks linked to milestone
-      // if (tasks.length > 0) {
-      //   await Promise.all(
-      //     tasks.map((task) =>
-      //       createTask({
-      //         milestoneId: milestone.,
-      //         title: task.name,
-      //         description: task.description,
-      //         category: task.category,
-      //         file_format: task.file_format,
-      //       })
-      //     )
-      //   );
-      // }
+      if (milestone.success) {
+        const milestoneId = milestone.data.id;
+
+        await Promise.all(
+          tasks.map((task) =>
+            createTask({
+              milestoneId,
+              title: task.name,
+              description: task.description,
+              category: task.category,
+              file_format: task.file_format,
+            })
+          )
+        );
+      }
 
       // 3. Success feedback
       toast.success("Jalon et tâches créés avec succès");

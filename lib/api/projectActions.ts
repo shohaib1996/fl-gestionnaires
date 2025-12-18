@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/client";
-import { ActionResult, Project } from "@/types/actions";
+import { ActionResult } from "@/types/actions";
 
 const supabase = createClient();
 
@@ -35,37 +35,35 @@ export async function claimProjectSimple({
 // ---------------------------
 // APPROVE PROJECT
 // ---------------------------
-export async function approveProject(
-  id: string
-): Promise<ActionResult<Project>> {
-  const { data, error } = await supabase
-    .from("projects")
-    .update({ status: "approved" })
-    .eq("id", id)
-    .select()
-    .single();
+// export async function approveProject(
+//   id: string
+// ): Promise<ActionResult> {
+//   const { data, error } = await supabase
+//     .from("projects")
+//     .update({ status: "approved" })
+//     .eq("id", id)
+//     .select()
+//     .single();
 
-  if (error) {
-    return {
-      success: false,
-      message: error.message,
-      code: error.code,
-      details: error.details,
-    };
-  }
+//   if (error) {
+//     return {
+//       success: false,
+//       message: error.message,
+//       code: error.code,
+//       details: error.details,
+//     };
+//   }
 
-  return {
-    success: true,
-    data,
-  };
-}
+//   return {
+//     success: true,
+//     data,
+//   };
+// }
 
 // ---------------------------
 // DECLINE PROJECT
 // ---------------------------
-export async function declineProject(
-  id: string
-): Promise<ActionResult<Project>> {
+export async function declineProject(id: string): Promise<ActionResult> {
   const { data, error } = await supabase
     .from("projects")
     .update({ status: "declined" })

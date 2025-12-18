@@ -17,13 +17,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useState } from "react";
 
-import {
-  CheckCircle,
-  Ellipsis,
-  Send,
-  ShieldCheck,
-  XCircle,
-} from "lucide-react";
+import { Ellipsis, Send, ShieldCheck, XCircle } from "lucide-react";
 
 // -------------------------------------
 // TYPES
@@ -33,7 +27,6 @@ export type ProjectAction = "invite" | "claim" | "approve" | "decline";
 interface ProjectActionsMenuProps {
   onInvite: () => Promise<void> | void;
   onClaim: () => Promise<void> | void;
-  onApprove: () => Promise<void> | void;
   onDecline: () => Promise<void> | void;
 }
 
@@ -43,7 +36,6 @@ interface ProjectActionsMenuProps {
 export default function ProjectActionsMenu({
   onInvite,
   onClaim,
-  onApprove,
   onDecline,
 }: ProjectActionsMenuProps) {
   const [dialog, setDialog] = useState<ProjectAction | null>(null);
@@ -56,9 +48,7 @@ export default function ProjectActionsMenu({
       case "claim":
         await onClaim();
         break;
-      case "approve":
-        await onApprove();
-        break;
+
       case "decline":
         await onDecline();
         break;
@@ -96,14 +86,6 @@ export default function ProjectActionsMenu({
           >
             <ShieldCheck className="h-4 w-4 focus:bg-[#326EA6] dark:focus:bg-[#0C4A6E] focus:text-white" />
             Revendiquer
-          </DropdownMenuItem>
-
-          <DropdownMenuItem
-            onClick={() => setDialog("approve")}
-            className="flex gap-2 focus:bg-[#326EA6] dark:focus:bg-[#0C4A6E] focus:text-white"
-          >
-            <CheckCircle className="h-4 w-4 focus:bg-[#326EA6] dark:focus:bg-[#0C4A6E] focus:text-white" />
-            Approuver
           </DropdownMenuItem>
 
           <DropdownMenuItem

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { editTaskWithDocument } from "@/app/actions/projects/milestones/tasks/editTaskWithDocument";
@@ -109,12 +108,12 @@ export default function EditDocumentModal({
 
       const payload = {
         taskId: doc.id,
-        milestoneId: milestoneId, // server action uses this only for storage path
+        milestoneId: milestoneId,
         name,
         description: description ?? null,
         category: category ?? null,
         file_format: fileFormat ?? null,
-        file: selectedFile || undefined, // ✅ FIX HERE
+        file: selectedFile || undefined,
       };
 
       const res = await editTaskWithDocument(payload);

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { getProjectById } from "@/app/actions/projects/projects.action";
@@ -45,7 +44,7 @@ const ProjectDetails = () => {
   const router = useRouter();
   const params = useParams();
   const id = params?.id as string;
-  const { claim, approve, decline, invite } = useProjectActions();
+  const { claim, decline, invite } = useProjectActions();
   const { user, loading: userLoading } = useUser();
 
   useEffect(() => {
@@ -170,7 +169,6 @@ const ProjectDetails = () => {
                   onClaim={() =>
                     claim({ project_id: project.id, claimed_by: user.id })
                   }
-                  onApprove={() => approve(id)}
                   onDecline={() => decline(id)}
                 />
               )}

@@ -26,7 +26,6 @@ import { Textarea } from "@/components/ui/textarea";
 
 import { Calendar } from "@/components/ui/calendar";
 
-import { createTask } from "@/app/actions/projects/milestones/tasks/createTask";
 import { Calendar1, Check, ChevronDown, MapPin, User2, X } from "lucide-react";
 
 export default function AddTaskDialog({
@@ -117,14 +116,14 @@ export default function AddTaskDialog({
 
     console.log("📝 NEW TASK:", task);
 
-    const result = await createTask(task);
+    // const result = await createTask(task);
 
-    if (result.error) {
-      alert("❌ Failed to create task");
-      return;
-    }
+    // if (result.error) {
+    //   alert("❌ Failed to create task");
+    //   return;
+    // }
 
-    console.log("✅ Task created:", result.data);
+    // console.log("✅ Task created:", result.data);
 
     // ⭐ Reset everything
     resetForm();
