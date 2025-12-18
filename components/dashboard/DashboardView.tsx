@@ -1,7 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 
+import { useUser } from "@/providers/UserProvider";
 import DashboardFilters from "./DashboardFilters";
 import DashboardPagination from "./DashboardPagination";
 import DashboardTabs from "./DashboardTabs";
@@ -28,6 +28,9 @@ export default function DashboardView({
   onPageChange,
   onFiltersChange,
 }: Props) {
+  const { user, loading: userLoading } = useUser();
+  if (userLoading || !user) return null;
+  console.log(user);
   return (
     <>
       {/* Mobile */}
@@ -38,7 +41,13 @@ export default function DashboardView({
       {/* Desktop */}
       <div className="hidden lg:block">
         <div className="flex flex-col max-h-[71vh]">
-          <DashboardTabs activeTab={activeTab} onChange={onTabChange} />
+          {/* Tabs */}
+
+          <DashboardTabs
+            activeTab={activeTab}
+            onChange={onTabChange}
+            role={user.role}
+          />
 
           <DashboardFilters values={filters} onChange={onFiltersChange} />
 

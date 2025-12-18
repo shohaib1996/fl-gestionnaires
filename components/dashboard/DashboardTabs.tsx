@@ -1,21 +1,58 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
+import type { UserRole } from "@/types/role";
 
-const TABS = [
-  { key: "recu", label: "Reçus" },
-  { key: "mes-projets", label: "Mes projets" },
-  { key: "encours", label: "En cours" },
-];
+// -----------------------------
+// Types
+// -----------------------------
+export interface DashboardTab {
+  key: string;
+  label: string;
+}
 
-export default function DashboardTabs({
-  activeTab,
-  onChange,
-}: {
+interface DashboardTabsProps {
+  role: UserRole;
   activeTab: string;
   onChange: (key: string) => void;
-}) {
+}
+
+// -----------------------------
+// Role → Tabs mapping
+// -----------------------------
+export const DASHBOARD_TABS_BY_ROLE: Record<UserRole, DashboardTab[]> = {
+  admin: [
+    { key: "recu", label: "Reçus" },
+    { key: "mes-projets", label: "Mes projets" },
+    { key: "encours", label: "En cours" },
+  ],
+
+  super_admin: [
+    { key: "recu", label: "Reçus" },
+    { key: "mes-projets", label: "Mes projets" },
+    { key: "encours", label: "En cours" },
+    { key: "reserve", label: "Réservé" },
+  ],
+
+  user: [],
+};
+
+// -----------------------------
+// Component
+// -----------------------------
+export default function DashboardTabs({
+  role,
+  activeTab,
+  onChange,
+}: DashboardTabsProps) {
+  const tabs = DASHBOARD_TABS_BY_ROLE[role];
+
+  // optional guard
+  if (tabs.length === 0) return null;
+
   return (
     <div className="flex gap-3 py-6 shrink-0">
-      {TABS.map(({ key, label }) => (
+      {tabs.map(({ key, label }) => (
         <Button
           key={key}
           onClick={() => onChange(key)}

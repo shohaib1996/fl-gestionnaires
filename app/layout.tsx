@@ -48,7 +48,7 @@ export default async function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <UserProvider initialUser={data?.user}>
+            <UserProvider initialAuthUser={data?.user}>
               <main className="bg-[#ebebeb] dark:bg-card min-h-screen">
                 <Toaster />
                 {children}
