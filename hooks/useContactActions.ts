@@ -1,6 +1,13 @@
-// hooks/useContactActions.ts
-import { toggleMyContact } from "@/app/actions/contact/contact.actions";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+"use client";
+
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+
+import {
+  ContactListItem,
+  getContacts,
+  toggleMyContact,
+} from "@/app/actions/contact/contact.actions";
 
 interface UseContactActionsOptions {
   onlyMine: boolean;
@@ -9,23 +16,44 @@ interface UseContactActionsOptions {
 export function useContactActions({ onlyMine }: UseContactActionsOptions) {
   const queryClient = useQueryClient();
 
-  const toggleMyContactMutation = useMutation({
+  /* ---------------------------
+     GET CONTACTS (QUERY)
+  ---------------------------- */
+  const contactsQuery = useQuery<ContactListItem[]>({
+    queryKey: ["contacts", { onlyMine }],
+    queryFn: () => getContacts({ onlyMine }),
+  });
+
+  /* ---------------------------
+     TOGGLE MY CONTACT (MUTATION)
+  ---------------------------- */
+  const toggle = useMutation({
     mutationFn: (contactId: string) => toggleMyContact(contactId),
 
     onSuccess: () => {
-      // invalidate both views safely
-      queryClient.invalidateQueries({
-        queryKey: ["contacts", { onlyMine }],
-      });
-
+      // invalidate both views to stay consistent
+      queryClient.invalidateQueries({ queryKey: ["contacts", { onlyMine }] });
       queryClient.invalidateQueries({
         queryKey: ["contacts", { onlyMine: !onlyMine }],
       });
     },
+
+    onError: () => {
+      toast.error("Unable to update contact.");
+    },
   });
 
   return {
-    toggleMyContact: toggleMyContactMutation.mutate,
-    isTogglingMyContact: toggleMyContactMutation.isPending,
+    /* -------- DATA -------- */
+    contacts: contactsQuery.data ?? [],
+
+    /* -------- ACTIONS -------- */
+    toggleMyContact: (contactId: string) => toggle.mutate(contactId),
+
+    /* -------- LOADING STATES -------- */
+    loading: {
+      list: contactsQuery.isLoading || contactsQuery.isFetching,
+      toggle: toggle.isPending,
+    },
   };
 }

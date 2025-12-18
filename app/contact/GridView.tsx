@@ -1,6 +1,12 @@
 "use client";
 
 import { BorderBeam } from "@/components/ui/border-beam";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { MapPin, MoreHorizontal } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -8,9 +14,15 @@ import { ContactListItem } from "../actions/contact/contact.actions";
 
 interface Props {
   contacts: ContactListItem[];
+  onToggleMyContact: (contactId: string) => void;
+  isToggling?: boolean;
 }
 
-export default function GridView({ contacts }: Props) {
+export default function GridView({
+  contacts,
+  onToggleMyContact,
+  isToggling,
+}: Props) {
   return (
     /* === GRID VIEW === */
     <div className="grid grid-cols-5 gap-4 transition-all">
@@ -33,9 +45,31 @@ export default function GridView({ contacts }: Props) {
                 "
         >
           {/* Card menu */}
-          <button className="absolute top-4 right-4 text-gray-400 dark:text-gray-300">
-            <MoreHorizontal className="w-5 h-5" />
-          </button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button
+                className="absolute top-4 right-4 text-gray-400 dark:text-gray-300
+                 hover:text-black dark:hover:text-white transition"
+              >
+                <MoreHorizontal className="w-5 h-5" />
+              </button>
+            </DropdownMenuTrigger>
+
+            <DropdownMenuContent align="end" className="w-44">
+              <DropdownMenuItem
+                onClick={() => onToggleMyContact(person.id)}
+                disabled={isToggling}
+                className="cursor-pointer"
+              >
+                {person.is_my_contact
+                  ? "Retirer de mes contacts"
+                  : "Ajouter à mes contacts"}
+              </DropdownMenuItem>
+
+              {/* future safe placeholder */}
+              <DropdownMenuItem disabled>Envoyer un message</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
 
           {/* Avatar */}
           <div className="flex justify-center mb-4">

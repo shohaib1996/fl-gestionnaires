@@ -82,7 +82,6 @@ const dummyPeople = [
 import { ContactGridSkeleton } from "@/components/common/skeletons/contactGridSkeleton";
 import { ContactListSkeleton } from "@/components/common/skeletons/ContactListSkeleton";
 import { useContactActions } from "@/hooks/useContactActions";
-import { useContacts } from "@/hooks/useContacts";
 import GridView from "./GridView";
 import ListView from "./ListView";
 
@@ -91,9 +90,7 @@ const Contact = () => {
   const [openAddContact, setOpenAddContact] = useState(false);
   const [onlyMine, setOnlyMine] = useState(false);
 
-  const { data: contacts = [], isLoading, isFetching } = useContacts(onlyMine);
-
-  const { toggleMyContact, isTogglingMyContact } = useContactActions({
+  const { contacts, toggleMyContact, loading } = useContactActions({
     onlyMine,
   });
 
@@ -180,22 +177,34 @@ const Contact = () => {
 
         {/* === CONTENT === */}
         {view === "grid" &&
-          (isLoading || isFetching ? (
+          (loading.list ? (
             <div className="grid grid-cols-5 gap-4">
               {Array.from({ length: 5 }).map((_, i) => (
                 <ContactGridSkeleton key={i} />
               ))}
             </div>
+          ) : !loading.list && contacts.length === 0 ? (
+            <div className="flex justify-center items-center gap-4 mt-10 text-gray-500 dark:text-gray-400">
+              <span>0 contact</span>
+            </div>
           ) : (
-            <GridView contacts={contacts} />
+            <GridView
+              contacts={contacts}
+              onToggleMyContact={toggleMyContact}
+              isToggling={loading.toggle}
+            />
           ))}
 
         {view === "list" &&
-          (isLoading || isFetching ? (
+          (loading.list ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
               {Array.from({ length: 8 }).map((_, i) => (
                 <ContactListSkeleton key={i} />
               ))}
+            </div>
+          ) : !loading.list && contacts.length === 0 ? (
+            <div className="flex justify-center items-center gap-4 mt-10 text-gray-500 dark:text-gray-400">
+              <span>0 contact</span>
             </div>
           ) : (
             <ListView contacts={contacts} />
