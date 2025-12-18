@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import { createContact } from "@/app/actions/contact/contact.actions";
+import { uploadLogo } from "@/app/actions/upload-logo";
 import {
   Dialog,
   DialogContent,
@@ -9,17 +10,16 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { uploadLogo } from "@/app/actions/upload-logo";
-import { createContact } from "@/app/actions/createContact";
+import { useState } from "react";
 
 import {
+  Award,
+  Briefcase,
+  Mail,
+  MapPin,
+  Phone,
   UploadCloud,
   User,
-  Briefcase,
-  MapPin,
-  Mail,
-  Award,
-  Phone,
 } from "lucide-react";
 
 interface Props {

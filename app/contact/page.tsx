@@ -2,18 +2,8 @@
 
 import Header from "@/components/Header/Header";
 import AddContactModal from "@/components/modals/AddContactModal";
-import { BorderBeam } from "@/components/ui/border-beam";
 import { Input } from "@/components/ui/input";
-import {
-  ChevronDown,
-  LayoutGrid,
-  List,
-  MapPin,
-  MoreHorizontal,
-  Plus,
-} from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
+import { ChevronDown, LayoutGrid, List, Plus } from "lucide-react";
 import { useState } from "react";
 
 const dummyPeople = [
@@ -89,9 +79,27 @@ const dummyPeople = [
   },
 ];
 
+import { ContactGridSkeleton } from "@/components/common/skeletons/contactGridSkeleton";
+import { ContactListSkeleton } from "@/components/common/skeletons/ContactListSkeleton";
+import { useContactActions } from "@/hooks/useContactActions";
+import { useContacts } from "@/hooks/useContacts";
+import GridView from "./GridView";
+import ListView from "./ListView";
+
 const Contact = () => {
   const [view, setView] = useState<"grid" | "list">("grid");
   const [openAddContact, setOpenAddContact] = useState(false);
+  const [onlyMine, setOnlyMine] = useState(false);
+
+  const { data: contacts = [], isLoading, isFetching } = useContacts(onlyMine);
+
+  const { toggleMyContact, isTogglingMyContact } = useContactActions({
+    onlyMine,
+  });
+
+  // useEffect(() => {
+  //   getContacts({ onlyMine }).then(setContacts);
+  // }, [onlyMine]);
 
   return (
     <div>
@@ -159,149 +167,39 @@ const Contact = () => {
               </div>
             </div>
 
-            <button className="mes-contacts-css">Mes contacts</button>
+            <button
+              className={`mes-contacts-css ${
+                onlyMine ? "bg-[#63A053] text-white" : ""
+              }`}
+              onClick={() => setOnlyMine((prev) => !prev)}
+            >
+              {onlyMine ? "Tous les contacts" : "Mes contacts"}
+            </button>
           </div>
         </div>
 
         {/* === CONTENT === */}
-        {view === "grid" ? (
-          /* === GRID VIEW === */
-          <div className="grid grid-cols-5 gap-4 transition-all">
-            {dummyPeople.map((person) => (
-              <div
-                key={person.id}
-                className="
-                  bg-white border rounded p-8 shadow-sm relative 
-                  dark:bg-[#0D1514] dark:border-[#1F2A27] dark:shadow-none
+        {view === "grid" &&
+          (isLoading || isFetching ? (
+            <div className="grid grid-cols-5 gap-4">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <ContactGridSkeleton key={i} />
+              ))}
+            </div>
+          ) : (
+            <GridView contacts={contacts} />
+          ))}
 
-                  transition-all duration-300 ease-[cubic-bezier(.22,.61,.36,1)]
-                  hover:-translate-y-1.5
-                  hover:shadow-[0_8px_20px_rgba(0,0,0,0.08)]
-                  hover:border-[#63A053]/50
-                  hover:bg-[#FAFAFA]
-
-                  dark:hover:border-[#63A053]/40
-                  dark:hover:shadow-[0_0_22px_rgba(99,160,83,0.12)]
-                  dark:hover:bg-[#121c1a]
-                "
-              >
-                {/* Card menu */}
-                <button className="absolute top-4 right-4 text-gray-400 dark:text-gray-300">
-                  <MoreHorizontal className="w-5 h-5" />
-                </button>
-
-                {/* Avatar */}
-                <div className="flex justify-center mb-4">
-                  <div className="relative p-1 rounded-full">
-                    <BorderBeam className="absolute inset-0 rounded-full pointer-events-none" />
-
-                    <div className="w-20 h-20 rounded-full border-4 border-[#A9C5A1] dark:border-[#4F6D47] overflow-hidden">
-                      <Image
-                        src={person.img}
-                        alt={person.name}
-                        width={80}
-                        height={80}
-                        className="rounded-full"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Name */}
-                <p className="text-center font-semibold pb-2 text-gray-900 dark:text-white">
-                  {person.name}
-                </p>
-
-                {/* Role */}
-                <p className="text-center text-sm text-gray-500 border-t py-2 dark:text-gray-300 dark:border-[#263430]">
-                  {person.title}
-                </p>
-
-                {/* Location */}
-                <div className="flex flex-col items-center gap-1 mt-3 text-sm text-gray-500 dark:text-gray-300">
-                  <MapPin className="w-5 h-5 text-black dark:text-white" />
-                  {person.city}
-                </div>
-
-                {/* Segmented Profile/Message */}
-                <div className="flex justify-center mt-5">
-                  <div className="flex rounded-full overflow-hidden">
-                    <Link href={`/contact/123456`}>
-                      <button className="px-6 cursor-pointer py-1.5 text-sm font-medium dark:bg-[#326EA6] bg-[#63A053] text-white rounded-l-full">
-                        Profil
-                      </button>
-                    </Link>
-
-                    <div className="w-px bg-[#4C7B40]/20"></div>
-
-                    <button className="px-6 py-1.5 text-sm font-medium dark:bg-[#326EA6]/30 bg-[#E3EDDF] dark:text-white/60 rounded-r-full">
-                      Message
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          /* === LIST VIEW (super minimal) === */
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5 transition-all">
-            {dummyPeople.map((person) => (
-              <Link href={`/contact/123456`}>
-                <div
-                  key={person.id}
-                  className="
-       flex items-center justify-between gap-4 bg-white border rounded px-4 py-1.5
-    dark:bg-[#0D1514] dark:border-[#1F2A27]
-    transition-all duration-300 ease-[cubic-bezier(.22,.61,.36,1)]
-    hover:-translate-y-1 hover:shadow-[0_8px_20px_rgba(0,0,0,0.06)]
-    hover:bg-[#FBFBFB] hover:border-[#63A053]/30 cursor-pointer
-      "
-                >
-                  {/* LEFT SIDE: Avatar + Info */}
-                  <div className="flex items-center gap-4 min-w-0">
-                    {/* Avatar */}
-                    <div className="relative p-1 rounded-full shrink-0">
-                      <BorderBeam className="absolute inset-0 rounded-full pointer-events-none" />
-                      <div className="w-12 h-12 rounded-full border-4 border-[#A9C5A1] dark:border-[#4F6D47] overflow-hidden">
-                        <Image
-                          src={person.img}
-                          alt={person.name}
-                          width={48}
-                          height={48}
-                          className="rounded-full object-cover"
-                        />
-                      </div>
-                    </div>
-
-                    {/* Name / Role / City inline */}
-                    <div className="flex items-center gap-3 text-sm text-gray-700 dark:text-gray-200 flex-wrap">
-                      <span className="font-semibold whitespace-nowrap">
-                        {person.name}
-                      </span>
-
-                      <span className="text-gray-400 dark:text-gray-500">
-                        |
-                      </span>
-
-                      <span className="whitespace-nowrap">{person.title}</span>
-
-                      <span className="text-gray-400 dark:text-gray-500">
-                        |
-                      </span>
-
-                      <span className="whitespace-nowrap">{person.city}</span>
-                    </div>
-                  </div>
-
-                  {/* THREE DOTS */}
-                  <button className="text-gray-400 dark:text-gray-300 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-[#0F1A18] transition shrink-0">
-                    <MoreHorizontal className="w-5 h-5" />
-                  </button>
-                </div>
-              </Link>
-            ))}
-          </div>
-        )}
+        {view === "list" &&
+          (isLoading || isFetching ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <ContactListSkeleton key={i} />
+              ))}
+            </div>
+          ) : (
+            <ListView contacts={contacts} />
+          ))}
 
         {/* Pagination */}
         <div className="flex justify-center items-center gap-4 mt-10 text-gray-500 dark:text-gray-400">
