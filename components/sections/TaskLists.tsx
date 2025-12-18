@@ -8,10 +8,12 @@ export default function TaskLists({
   tasks,
   setSelectedTask,
   setOpenEditDoc,
+  setDoc,
 }: {
   tasks: TasksByMilestone[];
   setSelectedTask: (task: TasksByMilestone) => void;
   setOpenEditDoc: (open: boolean) => void;
+  setDoc: (doc: TasksByMilestone) => void;
 }) {
   const [activeIndex, setActiveIndex] = useState<number>(() => {
     if (typeof window === "undefined") return 0;
@@ -68,7 +70,7 @@ export default function TaskLists({
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    setSelectedTask(task);
+                    setDoc(task);
                     setOpenEditDoc(true);
                   }}
                 >

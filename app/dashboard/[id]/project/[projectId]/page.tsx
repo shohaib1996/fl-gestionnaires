@@ -34,36 +34,16 @@ interface Phase {
   status: string;
 }
 
-interface ProjectData {
-  project: {
-    id: string;
-    name: string;
-    lead: { name: string; role: string };
-    goal: string;
-    phases: Phase[];
-    documents: {
-      id: string;
-      name: string;
-      date: string;
-      description: string;
-      category: string;
-      status: string;
-      type: string;
-      file_format: string;
-      file_path?: string | null;
-    }[];
-    preview: { image: string; type: string };
-  };
-}
-
 const ProjectDetails = () => {
   const [fullscreenOpen, setFullscreenOpen] = useState(false); // FULLSCREEN MODAL STATE
   const [jalonModalOpen, setJalonModalOpen] = useState(false);
   const [openAddDoc, setOpenAddDoc] = useState(false);
   const [openEditDoc, setOpenEditDoc] = useState(false);
+  const [doc, setDoc] = useState<TasksByMilestone | null>(null);
   const [selectedTask, setSelectedTask] = useState<TasksByMilestone | null>(
     null
   );
+
   const [jalonDetailsModalOpen, setJalonDetailsModalOpen] = useState(false);
   const [selectedPhase, setSelectedPhase] = useState<Phase | null>(null);
 
@@ -303,6 +283,7 @@ const ProjectDetails = () => {
                     tasks={tasks}
                     setSelectedTask={setSelectedTask}
                     setOpenEditDoc={setOpenEditDoc}
+                    setDoc={setDoc}
                   />
                 ) : null}
               </div>
@@ -384,11 +365,14 @@ const ProjectDetails = () => {
         onClose={() => setOpenAddDoc(false)}
         onSubmit={handleTaskAdd}
       />
-      {selectedTask && (
+      {doc && (
         <EditDocumentModal
           open={openEditDoc}
-          onClose={() => setOpenEditDoc(false)}
-          doc={selectedTask}
+          onClose={() => {
+            setOpenEditDoc(false);
+            setDoc(null);
+          }}
+          doc={doc}
           milestoneId={activeMilestoneId ?? ""}
         />
       )}

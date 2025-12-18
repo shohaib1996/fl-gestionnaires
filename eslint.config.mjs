@@ -5,10 +5,16 @@ import { defineConfig, globalIgnores } from "eslint/config";
 const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
-  // Override default ignores of eslint-config-next.
+
+  // ✅ Your custom rule overrides
+  {
+    rules: {
+      "@typescript-eslint/no-explicit-any": "off",
+    },
+  },
+
+  // ✅ Ignore paths
   globalIgnores([
-    // Default ignores of eslint-config-next:
-    
     ".next/**",
     "out/**",
     "build/**",

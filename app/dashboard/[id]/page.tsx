@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { getProjectById } from "@/app/actions";
+import { getProjectById } from "@/app/actions/projects/projects.action";
 import ClaimerSection from "@/components/dashboard/ClaimerSection";
 import ProjectActionsMenu from "@/components/dashboard/ProjectActions";
 import ImageGallery from "@/components/Gallery/ImageGallery";
@@ -12,7 +13,7 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-interface Project {
+export interface Project {
   id: string;
   first_name: string;
   last_name: string;
@@ -30,9 +31,9 @@ interface Project {
   links: string[];
   signature: string;
   signer_name: string;
-  logo_url: string;
-  logo_urls: string[]; // Array of logo image URLs
+  logo_urls: string[];
   claimed: number;
+  claimers: any[];
   status: string;
   created_at: string;
   project_id: string;
@@ -53,14 +54,47 @@ const ProjectDetails = () => {
 
       const { data, error } = await getProjectById(id);
 
-      if (error) {
+      if (error || !data) {
         console.error("Error fetching project:", error);
         setLoading(false);
         return;
       }
 
-      console.log("📋 Project details:", data);
-      setProject(data);
+      const mappedProject: Project = {
+        id: data.id,
+        project_id: data.project_id,
+
+        first_name: data.first_name ?? "",
+        last_name: data.last_name ?? "",
+        parent_name: data.parent_name ?? "",
+        phone: data.phone ?? "",
+        email: data.email ?? "",
+
+        project_city: data.project_city ?? "",
+        residence_city: data.residence_city ?? "",
+        province: data.province ?? "",
+
+        collaborators: data.collaborators ?? null,
+
+        title: data.title ?? "",
+        description: data.description ?? "",
+
+        categories: data.categories ?? [],
+        links: data.links ?? [],
+
+        phase: data.phase ?? "",
+        signature: data.signature ?? "",
+        signer_name: data.signer_name ?? "",
+
+        logo_urls: data.logo_urls ?? [],
+
+        claimed: data.claim_count ?? 0,
+        claimers: data.claimers ?? [],
+        status: data.status ?? "",
+        created_at: data.created_at ?? "",
+      };
+
+      setProject(mappedProject);
       setLoading(false);
     }
 
@@ -306,8 +340,8 @@ const ProjectDetails = () => {
         </section>
 
         {/* ===== Claimers ===== */}
-        {project.status === "claimed" && (
-          <ClaimerSection projectId={project.id} />
+        {project.status === "claimed" && project.claimers.length > 0 && (
+          <ClaimerSection project={project} />
         )}
       </div>
     </div>

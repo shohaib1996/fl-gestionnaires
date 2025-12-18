@@ -1,18 +1,15 @@
 "use client";
-import {
-  getProjectClaimers,
-  ProjectClaimer,
-} from "@/app/actions/projects/getProjectClaimers";
-import { useEffect, useState } from "react";
+import { ProjectClaimer } from "@/app/actions/projects/getProjectClaimers";
+import { useState } from "react";
 import { Button } from "../ui/button";
 
 import { assignProjectToUser } from "@/app/actions/projects/projectAssignment";
+import { Project } from "@/app/dashboard/[id]/page";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import ConfirmDialog from "../common/ConfirmDialog";
 
-export default function ClaimerSection({ projectId }: { projectId: string }) {
-  const [claimers, setClaimers] = useState<ProjectClaimer[]>([]);
+export default function ClaimerSection({ project }: { project: Project }) {
   const [claimersLoading, setClaimersLoading] = useState(true);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [selectedClaimer, setSelectedClaimer] = useState<ProjectClaimer | null>(
@@ -21,28 +18,6 @@ export default function ClaimerSection({ projectId }: { projectId: string }) {
   const [assigning, setAssigning] = useState(false);
 
   const router = useRouter();
-
-  useEffect(() => {
-    async function fetchClaimers() {
-      if (!projectId) return;
-
-      setClaimersLoading(true);
-
-      const result = await getProjectClaimers(projectId);
-
-      if (!result.ok) {
-        console.error(result.error);
-        setClaimers([]);
-        setClaimersLoading(false);
-        return;
-      }
-
-      setClaimers(result.data ?? []);
-      setClaimersLoading(false);
-    }
-
-    fetchClaimers();
-  }, [projectId]);
 
   const openAssignConfirm = (claimer: ProjectClaimer) => {
     setSelectedClaimer(claimer);
@@ -55,7 +30,7 @@ export default function ClaimerSection({ projectId }: { projectId: string }) {
     setAssigning(true);
 
     const res = await assignProjectToUser(
-      projectId,
+      project.id,
       selectedClaimer.user.id,
       selectedClaimer.user.id
     );
@@ -71,6 +46,8 @@ export default function ClaimerSection({ projectId }: { projectId: string }) {
     toast.success(res.message);
     router.refresh();
   };
+
+  const claimers = project.claimers ?? [];
 
   return (
     <>
