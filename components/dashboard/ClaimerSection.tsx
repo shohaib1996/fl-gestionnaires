@@ -10,7 +10,6 @@ import { toast } from "sonner";
 import ConfirmDialog from "../common/ConfirmDialog";
 
 export default function ClaimerSection({ project }: { project: Project }) {
-  const [claimersLoading, setClaimersLoading] = useState(true);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [selectedClaimer, setSelectedClaimer] = useState<ProjectClaimer | null>(
     null
@@ -25,14 +24,15 @@ export default function ClaimerSection({ project }: { project: Project }) {
   };
 
   const confirmAssign = async () => {
-    if (!selectedClaimer) return;
+    console.log("selectedClaimer", selectedClaimer?.id, project.id);
+    if (!selectedClaimer?.id || !project.id) return;
 
     setAssigning(true);
 
     const res = await assignProjectToUser(
       project.id,
-      selectedClaimer.user.id,
-      selectedClaimer.user.id
+      selectedClaimer.id,
+      selectedClaimer.id
     );
 
     setAssigning(false);
@@ -44,6 +44,7 @@ export default function ClaimerSection({ project }: { project: Project }) {
     }
 
     toast.success(res.message);
+
     router.refresh();
   };
 
@@ -60,11 +61,7 @@ export default function ClaimerSection({ project }: { project: Project }) {
           </div>
         </div>
         <div className="px-11  space-y-4">
-          {claimersLoading ? (
-            <p className="text-gray-600 dark:text-gray-300">
-              Loading claimers...
-            </p>
-          ) : claimers.length === 0 ? (
+          {claimers.length === 0 ? (
             <p className="text-gray-600 dark:text-gray-300">
               No claimers found.
             </p>
@@ -73,19 +70,19 @@ export default function ClaimerSection({ project }: { project: Project }) {
               Aucun utilisateur n’a encore réclamé ce projet.
             </p>
           ) : (
-            claimers.map((claimer) => (
+            claimers.map((claimer, ind) => (
               <div
-                key={claimer.id}
+                key={ind}
                 className="flex items-center justify-between bg-white dark:bg-neutral-800 border border-border rounded-xs px-4 py-3"
               >
                 {/* Claimer info */}
                 <div className="space-y-1">
                   <p className="font-medium text-gray-800 dark:text-white">
-                    {claimer.user.fullName ?? "Unnamed User"}
+                    {claimer.fullName ?? "Unnamed User"}
                   </p>
 
                   <p className="text-sm text-gray-500 dark:text-gray-400">
-                    {claimer.user.email}
+                    {claimer.email}
                   </p>
 
                   <p className="text-xs text-gray-400">
@@ -115,7 +112,7 @@ export default function ClaimerSection({ project }: { project: Project }) {
           <>
             Vous êtes sur le point d’assigner ce projet à{" "}
             <span className="font-semibold">
-              {selectedClaimer?.user.fullName ?? "cet utilisateur"}
+              {selectedClaimer?.user?.fullName ?? "cet utilisateur"}
             </span>
             .
           </>

@@ -40,6 +40,7 @@ export async function getProjectById(
         claims (
           claimed_at,
           user:users (
+            id,
             fullName,
             email,
             avatarURL
@@ -69,11 +70,12 @@ export async function getProjectById(
   const claimers: Claimer[] | null =
     data.claims && data.claims.length > 0
       ? (data.claims
-          .map((c) => {
+          .map((c: any) => {
             if (!c.user) return null;
 
             return {
-              fullName: c.user.fullName ?? "Unknown",
+              id: c.user.id,
+              fullName: c.user.fullName ?? "",
               email: c.user.email ?? "",
               avatarURL: c.user.avatarURL ?? null,
             };

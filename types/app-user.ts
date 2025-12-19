@@ -4,4 +4,5 @@ export interface AppUser {
   email: string;
   role: UserRole;
   fullName?: string | null;
+  avatarURL?: string | null;
 }

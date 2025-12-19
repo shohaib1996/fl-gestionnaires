@@ -2,6 +2,7 @@
 
 import { getProjectById } from "@/app/actions/projects/projects.action";
 import ClaimerSection from "@/components/dashboard/ClaimerSection";
+import DashboardTabs from "@/components/dashboard/DashboardTabs";
 import ProjectActionsMenu from "@/components/dashboard/ProjectActions";
 import ImageGallery from "@/components/Gallery/ImageGallery";
 import { Button } from "@/components/ui/button";
@@ -100,7 +101,7 @@ const ProjectDetails = () => {
     fetchProject();
   }, [id]);
 
-  if (loading || userLoading) {
+  if (loading) {
     return (
       <div className="flex h-full items-center justify-center text-gray-600 dark:text-gray-300">
         Loading project details...
@@ -120,7 +121,7 @@ const ProjectDetails = () => {
     // make this a column so header stays fixed and the content below scrolls
     <div className="h-[calc(100vh-120px)] flex flex-col">
       {/* Header Tabs - keep styles but prevent it from shrinking/scrolling */}
-      <header className="flex items-center gap-2 py-6 shrink-0">
+      <header className="flex items-center gap-2 py-0 shrink-0">
         {/* Back Button */}
         <Button
           onClick={() => router.back()}
@@ -129,26 +130,13 @@ const ProjectDetails = () => {
           <Undo2 className="h-4 w-4" />
         </Button>
 
-        {/* Reçus Button */}
-        <Link href="/dashboard?tab=recu">
-          <Button className="bg-[#63a053] hover:bg-[#528a45] text-white font-semibold rounded-none text-xs h-7">
-            Reçus
-          </Button>
-        </Link>
-
-        {/* Mes projets Button */}
-        <Link href="/dashboard?tab=mes-projets">
-          <Button className="bg-[#326EA6] hover:bg-[#275984] text-white font-semibold rounded-none text-xs h-7">
-            Mes projets
-          </Button>
-        </Link>
-
-        {/* En cours Button */}
-        <Link href="/dashboard?tab=encours">
-          <Button className="bg-[#326EA6] hover:bg-[#275984] text-white font-semibold rounded-none text-xs h-7">
-            En cours
-          </Button>
-        </Link>
+        <DashboardTabs
+          activeTab={null}
+          onChange={(key) => {
+            router.push(`/dashboard?tab=${key}&page=1`);
+          }}
+          role={user?.role || "admin"}
+        />
       </header>
 
       {/* Make THIS container the scroller (fills remaining height) */}

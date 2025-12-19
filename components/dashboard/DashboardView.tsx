@@ -8,7 +8,7 @@ import DashboardTabs from "./DashboardTabs";
 import { HomeCandidate } from "./HomeCandidate";
 
 interface Props {
-  activeTab: "recu" | "mes-projets" | "encours";
+  activeTab: "recu" | "mes-projets" | "encours" | "reserve";
   projects: any[];
   filters: any;
   loading: boolean;
@@ -45,7 +45,7 @@ export default function DashboardView({
           <DashboardTabs
             activeTab={activeTab}
             onChange={onTabChange}
-            role={user?.role || "admin"}
+            role={user?.role || "onterpeoner"}
           />
 
           <DashboardFilters values={filters} onChange={onFiltersChange} />

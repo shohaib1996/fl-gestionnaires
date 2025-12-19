@@ -13,7 +13,7 @@ export interface DashboardTab {
 
 interface DashboardTabsProps {
   role: UserRole;
-  activeTab: string;
+  activeTab: string | null;
   onChange: (key: string) => void;
 }
 
@@ -34,7 +34,7 @@ export const DASHBOARD_TABS_BY_ROLE: Record<UserRole, DashboardTab[]> = {
     { key: "reserve", label: "Réservé" },
   ],
 
-  user: [],
+  onterpeoner: [],
 };
 
 // -----------------------------
