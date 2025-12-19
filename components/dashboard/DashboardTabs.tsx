@@ -47,9 +47,6 @@ export default function DashboardTabs({
 }: DashboardTabsProps) {
   const tabs = DASHBOARD_TABS_BY_ROLE[role];
 
-  // optional guard
-  if (tabs.length === 0) return null;
-
   return (
     <div className="flex gap-3 py-6 shrink-0">
       {tabs.map(({ key, label }) => (

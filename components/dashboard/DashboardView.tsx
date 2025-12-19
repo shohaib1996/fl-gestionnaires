@@ -28,9 +28,8 @@ export default function DashboardView({
   onPageChange,
   onFiltersChange,
 }: Props) {
-  const { user, loading: userLoading } = useUser();
-  if (userLoading || !user) return null;
-  console.log(user);
+  const { user } = useUser();
+
   return (
     <>
       {/* Mobile */}
@@ -46,7 +45,7 @@ export default function DashboardView({
           <DashboardTabs
             activeTab={activeTab}
             onChange={onTabChange}
-            role={user.role}
+            role={user?.role || "admin"}
           />
 
           <DashboardFilters values={filters} onChange={onFiltersChange} />

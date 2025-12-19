@@ -1,10 +1,10 @@
 "use client";
-import React from "react";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { AccountRequestFormData } from "./types";
+import { Input } from "@/components/ui/input";
+import React from "react";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
+import { AccountRequestFormData } from "./types";
 
 interface PersonalInformationStepProps {
   formData: AccountRequestFormData;
@@ -103,9 +103,21 @@ export const PersonalInformationStep: React.FC<
             7. Email <span className="text-red-500">*</span>
           </label>
           <Input
-            value={formData.email}
-            onChange={(e) => updateFormData({ email: e.target.value })}
+            defaultValue={formData.email}
+            readOnly
             placeholder="Entrez votre adresse email"
+            className="bg-[#F0F6F4] border-b border-black/60 rounded-none border-t-0 border-x-0 h-12 text-base placeholder:text-gray-400 focus-visible:ring-0 focus-visible:border-black"
+          />
+        </div>
+        <div className="space-y-2">
+          <label className="text-sm text-gray-600">
+            8. Password <span className="text-red-500">*</span>
+          </label>
+          <Input
+            type="password"
+            value={formData.password || ""}
+            onChange={(e) => updateFormData({ password: e.target.value || "" })}
+            placeholder="Entrez votre mot de passe"
             className="bg-[#F0F6F4] border-b border-black/60 rounded-none border-t-0 border-x-0 h-12 text-base placeholder:text-gray-400 focus-visible:ring-0 focus-visible:border-black"
           />
         </div>

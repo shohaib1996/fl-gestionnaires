@@ -25,8 +25,10 @@ import {
 } from "@/components/account-request/types";
 
 import { createClient } from "@/lib/supabase/client";
-import { useRouter, useSearchParams } from "next/navigation";
+import { User } from "@supabase/supabase-js";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { updateUser } from "../actions/user/updateUser";
 
 const supabase = createClient();
 
@@ -35,21 +37,28 @@ const AccountRequestPage = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] =
     useState<AccountRequestFormData>(initialFormData);
+  const [user, setUser] = useState<User | null>(null);
 
-  const searchParams = useSearchParams();
   const router = useRouter();
 
   useEffect(() => {
     const checkAccess = async () => {
-      const accessToken = searchParams.get("access_token");
+      const hash = window.location.hash.substring(1);
+      const params = new URLSearchParams(hash);
 
-      if (!accessToken) {
+      const accessToken = params.get("access_token");
+      const refreshToken = params.get("refresh_token");
+      console.log("accessToken", accessToken);
+      if (!accessToken || !refreshToken) {
         router.replace("/not-invited");
         return;
       }
+
       // 1 Try session first (covers reload / revisit)
       const { data } = await supabase.auth.getUser(accessToken);
       const user = data?.user;
+      setFormData({ ...formData, email: user?.email ?? "" });
+      setUser(user);
 
       // 2️ If no session and no access token → not invited
       if (!user) {
@@ -70,7 +79,7 @@ const AccountRequestPage = () => {
     };
 
     checkAccess();
-  }, [searchParams, router]);
+  }, []);
 
   const updateFormData = (updates: Partial<AccountRequestFormData>) => {
     setFormData((prev) => ({ ...prev, ...updates }));
@@ -146,21 +155,57 @@ const AccountRequestPage = () => {
         return <div>Étape non trouvée</div>;
     }
   };
-
   const handleSubmit = async () => {
-    console.log("📤 Submitting full form...", formData);
+    console.log("📤 Submitting full form...", JSON.stringify(formData));
 
-    const result = await createAccountRequest(formData);
+    try {
+      if (!user?.id || !formData.password) {
+        throw new Error("User not authenticated");
+      }
 
-    if (result.error) {
-      console.error("❌ Submission Failed:", result.error);
-      alert("Something went wrong. Please try again.");
-      return;
+      /* ----------------------------------
+       * 1. Update password (Server Action)
+       * ---------------------------------- */
+      const passwordResult = await updateUser({
+        userId: user.id,
+        password: formData.password,
+      });
+
+      if (!passwordResult.success) {
+        throw new Error(passwordResult.error);
+      }
+
+      console.log("🔐 Password updated successfully");
+
+      /* ----------------------------------
+       * 2. Prepare payload (remove password)
+       * ---------------------------------- */
+      const payload = structuredClone(formData);
+      delete payload.password;
+
+      /* ----------------------------------
+       * 3. Create account request
+       * ---------------------------------- */
+      const result = await createAccountRequest({
+        ...payload,
+        user_id: user.id,
+      });
+
+      if (result?.error) {
+        throw new Error(result.error);
+      }
+
+      console.log("✅ Submission Success:", result.data);
+
+      onNext(); // Move to ConfirmationStep
+    } catch (error) {
+      console.error("❌ Submission error:", error);
+
+      const message =
+        error instanceof Error ? error.message : "Unexpected error occurred";
+
+      alert(message || "Something went wrong. Please try again.");
     }
-
-    console.log("✅ Submission Success:", result.data);
-
-    onNext(); // Move to ConfirmationStep
   };
 
   return (

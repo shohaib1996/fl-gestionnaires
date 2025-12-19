@@ -23,17 +23,6 @@ export default function AdminLoginPage() {
     setError(null);
     setLoading(true);
 
-    const { error: signInError } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
-    if (signInError) {
-      setError(signInError.message);
-      setLoading(false);
-      return;
-    }
-
     const { data: profile } = await supabase
       .from("users")
       .select("role")
@@ -42,6 +31,17 @@ export default function AdminLoginPage() {
 
     if (profile?.role !== "admin" && profile?.role !== "super_admin") {
       setError("Access denied. Only admins can sign in.");
+      setLoading(false);
+      return;
+    }
+
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (signInError) {
+      setError(signInError.message);
       setLoading(false);
       return;
     }

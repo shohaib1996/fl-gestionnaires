@@ -77,22 +77,52 @@ export async function approveAccountRequest(requestId: string) {
   return { ok: true };
 }
 
-/* -------------------------
-   REJECT REQUEST
--------------------------- */
-export async function rejectAccountRequest(id: string, reason?: string) {
+export async function rejectAccountRequest(requestId: string, reason?: string) {
   const supabase = await createClient();
 
-  const { error } = await supabase
+  /* -------------------------
+     1️⃣ Fetch account request
+  -------------------------- */
+  const { data: request, error: fetchError } = await supabase
+    .from("account_requests")
+    .select("id, user_id")
+    .eq("id", requestId)
+    .single();
+
+  if (fetchError || !request) {
+    return { ok: false, error: "Account request not found" };
+  }
+
+  /* -------------------------
+     2️⃣ Delete user if exists
+  -------------------------- */
+  if (request.user_id) {
+    const { error: deleteUserError } = await supabase
+      .from("users")
+      .delete()
+      .eq("id", request.user_id);
+
+    if (deleteUserError) {
+      return {
+        ok: false,
+        error: "Failed to remove associated user",
+      };
+    }
+  }
+
+  /* -------------------------
+     3️⃣ Update request status
+  -------------------------- */
+  const { error: updateError } = await supabase
     .from("account_requests")
     .update({
       status: "rejected",
       // rejection_reason: reason ?? null,
       // updated_at: new Date().toISOString(),
     })
-    .eq("id", id);
+    .eq("id", requestId);
 
-  if (error) {
+  if (updateError) {
     return { ok: false, error: "Failed to reject account request" };
   }
 

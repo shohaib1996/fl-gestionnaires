@@ -1,4 +1,5 @@
 export interface AccountRequestFormData {
+  user_id: string;
   // Personal Information
   firstName: string;
   lastName: string;
@@ -7,6 +8,7 @@ export interface AccountRequestFormData {
   address: string;
   phoneNumber: string;
   email: string;
+  password?: string;
 
   // Identification Information
   idType: string[];
@@ -33,6 +35,7 @@ export interface AccountRequestFormData {
 }
 
 export const initialFormData: AccountRequestFormData = {
+  user_id: "",
   firstName: "",
   lastName: "",
   postnom: "",

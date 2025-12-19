@@ -45,13 +45,6 @@ export function UserProvider({ children, initialAuthUser }: UserProviderProps) {
     setUser(data);
   };
 
-  // 🔹 initial fetch (NOT inside effect)
-  if (initialAuthUser && user === null && !loading) {
-    fetchPublicUser(initialAuthUser.id).finally(() => {
-      setLoading(false);
-    });
-  }
-
   useEffect(() => {
     const { data: listener } = supabase.auth.onAuthStateChange(
       async (_event, session) => {

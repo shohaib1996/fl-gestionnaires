@@ -1,8 +1,9 @@
 "use server";
 
+import { AccountRequestFormData } from "@/components/account-request/types";
 import { createClient } from "@/lib/supabase/server";
-import { revalidatePath } from "next/cache";
 import { randomUUID } from "crypto";
+import { revalidatePath } from "next/cache";
 
 /**
  * Server action to create an account request:
@@ -11,35 +12,6 @@ import { randomUUID } from "crypto";
  *
  * Expects the client to pass the same AccountRequestFormData shape you already use.
  */
-type AccountRequestFormData = {
-  firstName: string;
-  lastName: string;
-  postnom?: string;
-  birthDate: string;
-  address: string;
-  phoneNumber: string;
-  email: string;
-
-  idType: string[];
-  otherIdType?: string;
-  idNumber?: string;
-  idFrontImage?: File | null;
-  idBackImage?: File | null;
-
-  incomeSources: string[];
-  otherIncomeSource?: string;
-
-  occupation: string;
-  employerName?: string;
-  employerAddress?: string;
-
-  termsAccepted: boolean;
-  privacyAccepted: boolean;
-  fundsSourceConfirmed: boolean;
-
-  signature?: string | null; // base64 data URL
-  signerName?: string;
-};
 
 function base64ToBlob(base64DataUrl: string) {
   const parts = base64DataUrl.split(",");
@@ -118,6 +90,7 @@ export async function createAccountRequest(form: AccountRequestFormData) {
 
     // 4) insert record
     const insertPayload = {
+      user_id: form.user_id,
       first_name: form.firstName,
       last_name: form.lastName,
       postnom: form.postnom ?? null,
