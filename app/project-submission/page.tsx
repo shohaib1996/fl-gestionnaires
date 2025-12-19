@@ -1,28 +1,28 @@
 "use client";
 
-import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Search } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { Search } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { useState } from "react";
 
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu } from "lucide-react";
-import { Stepper } from "@/components/project-submission/Stepper";
+import { uploadLogo } from "@/app/actions/upload-logo";
+import { ConfirmationStep } from "@/components/project-submission/ConfirmationStep";
 import { PersonalInformationStep } from "@/components/project-submission/PersonalInformationStep";
 import { ProjectCategoryStep } from "@/components/project-submission/ProjectCategoryStep";
 import { ProjectDescriptionStep } from "@/components/project-submission/ProjectDescriptionStep";
 import { SignatureStep } from "@/components/project-submission/SignatureStep";
+import { Stepper } from "@/components/project-submission/Stepper";
 import {
   FormData,
   initialFormData,
 } from "@/components/project-submission/types";
 import { VerificationStep } from "@/components/project-submission/VerificationStep";
-import { ConfirmationStep } from "@/components/project-submission/ConfirmationStep";
-import { createProject } from "../actions";
-import { uploadLogo } from "@/app/actions/upload-logo";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { generateProjectId } from "@/lib/project-id-mappings";
+import { Menu } from "lucide-react";
+import { createProject } from "../actions";
 
 const ProjectSubmission = () => {
   const [isStarted, setIsStarted] = useState(false);
@@ -132,8 +132,8 @@ const ProjectSubmission = () => {
         signer_name: formData.signerName || null,
 
         // Enum status
-        status: "submitted",
-        claimed: 0,
+        status: "receipt",
+        claim_count: 0,
       };
 
       console.log("📦 PROJECT PAYLOAD TO SUPABASE:", projectData);
