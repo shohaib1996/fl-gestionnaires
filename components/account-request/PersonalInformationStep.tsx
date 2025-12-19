@@ -103,8 +103,8 @@ export const PersonalInformationStep: React.FC<
             7. Email <span className="text-red-500">*</span>
           </label>
           <Input
-            defaultValue={formData.email}
-            readOnly
+            value={formData.email}
+            onChange={(e) => updateFormData({ email: e.target.value })}
             placeholder="Entrez votre adresse email"
             className="bg-[#F0F6F4] border-b border-black/60 rounded-none border-t-0 border-x-0 h-12 text-base placeholder:text-gray-400 focus-visible:ring-0 focus-visible:border-black"
           />

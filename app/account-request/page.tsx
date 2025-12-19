@@ -27,8 +27,7 @@ import {
 import { createClient } from "@/lib/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import { updateUser } from "../actions/user/updateUser";
+import { recreateAuthUser } from "../actions/recreateAuthUser";
 
 const supabase = createClient();
 
@@ -41,45 +40,45 @@ const AccountRequestPage = () => {
 
   const router = useRouter();
 
-  useEffect(() => {
-    const checkAccess = async () => {
-      const hash = window.location.hash.substring(1);
-      const params = new URLSearchParams(hash);
+  // useEffect(() => {
+  //   const checkAccess = async () => {
+  //     const hash = window.location.hash.substring(1);
+  //     const params = new URLSearchParams(hash);
 
-      const accessToken = params.get("access_token");
-      const refreshToken = params.get("refresh_token");
-      console.log("accessToken", accessToken);
-      if (!accessToken || !refreshToken) {
-        router.replace("/not-invited");
-        return;
-      }
+  //     const accessToken = params.get("access_token");
+  //     const refreshToken = params.get("refresh_token");
+  //     console.log("accessToken", accessToken);
+  //     if (!accessToken || !refreshToken) {
+  //       router.replace("/not-invited");
+  //       return;
+  //     }
 
-      // 1 Try session first (covers reload / revisit)
-      const { data } = await supabase.auth.getUser(accessToken);
-      const user = data?.user;
-      setFormData({ ...formData, email: user?.email ?? "" });
-      setUser(user);
+  //     // 1 Try session first (covers reload / revisit)
+  //     const { data } = await supabase.auth.getUser(accessToken);
+  //     const user = data?.user;
+  //     setFormData({ ...formData, email: user?.email ?? "" });
+  //     setUser(user);
 
-      // 2️ If no session and no access token → not invited
-      if (!user) {
-        router.replace("/not-invited");
-        return;
-      }
+  //     // 2️ If no session and no access token → not invited
+  //     if (!user) {
+  //       router.replace("/not-invited");
+  //       return;
+  //     }
 
-      // 3 Approved user check
-      const { data: approvedUser } = await supabase
-        .from("users")
-        .select("id")
-        .eq("id", user.id)
-        .maybeSingle();
+  //     // 3 Approved user check
+  //     const { data: approvedUser } = await supabase
+  //       .from("users")
+  //       .select("id")
+  //       .eq("id", user.id)
+  //       .maybeSingle();
 
-      if (approvedUser) {
-        router.replace("/dashboard");
-      }
-    };
+  //     if (approvedUser) {
+  //       router.replace("/dashboard");
+  //     }
+  //   };
 
-    checkAccess();
-  }, []);
+  //   checkAccess();
+  // }, []);
 
   const updateFormData = (updates: Partial<AccountRequestFormData>) => {
     setFormData((prev) => ({ ...prev, ...updates }));
@@ -159,26 +158,26 @@ const AccountRequestPage = () => {
     console.log("📤 Submitting full form...", JSON.stringify(formData));
 
     try {
-      if (!user?.id || !formData.password) {
-        throw new Error("User not authenticated");
+      if (!formData.email || !formData.password) {
+        throw new Error("Email and password are required");
       }
 
       /* ----------------------------------
-       * 1. Update password (Server Action)
+       * 1. Recreate auth user (server)
        * ---------------------------------- */
-      const passwordResult = await updateUser({
-        userId: user.id,
+      const authResult = await recreateAuthUser({
+        email: formData.email,
         password: formData.password,
       });
 
-      if (!passwordResult.success) {
-        throw new Error(passwordResult.error);
+      if (!authResult.ok || !authResult.userId) {
+        throw new Error(authResult.error || "Auth setup failed");
       }
 
-      console.log("🔐 Password updated successfully");
+      console.log("🔐 Auth user created:", authResult.userId);
 
       /* ----------------------------------
-       * 2. Prepare payload (remove password)
+       * 2. Prepare payload
        * ---------------------------------- */
       const payload = structuredClone(formData);
       delete payload.password;
@@ -188,7 +187,7 @@ const AccountRequestPage = () => {
        * ---------------------------------- */
       const result = await createAccountRequest({
         ...payload,
-        user_id: user.id,
+        user_id: authResult.userId,
       });
 
       if (result?.error) {
@@ -197,14 +196,15 @@ const AccountRequestPage = () => {
 
       console.log("✅ Submission Success:", result.data);
 
-      onNext(); // Move to ConfirmationStep
+      onNext();
     } catch (error) {
       console.error("❌ Submission error:", error);
 
-      const message =
-        error instanceof Error ? error.message : "Unexpected error occurred";
-
-      alert(message || "Something went wrong. Please try again.");
+      alert(
+        error instanceof Error
+          ? error.message
+          : "Something went wrong. Please try again."
+      );
     }
   };
 
