@@ -18,7 +18,8 @@ export async function POST(request: Request) {
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
 
-  const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? nextHeaders.get("origin");
+  // const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? nextHeaders.get("origin");
+  const APP_URL = "https://fl-gestionnaires-naim.vercel.app";
 
   /* --------------------------------------------------
    * 1. Check public.users
@@ -87,6 +88,8 @@ export async function POST(request: Request) {
   const { data, error } = await supabase.auth.admin.inviteUserByEmail(email, {
     redirectTo: `${APP_URL}/account-request`,
   });
+
+  console.log(`${APP_URL}/account-request`);
 
   if (error) {
     return NextResponse.json(
