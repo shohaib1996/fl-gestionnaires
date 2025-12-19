@@ -132,7 +132,7 @@ const ProjectSubmission = () => {
         signer_name: formData.signerName || null,
 
         // Enum status
-        status: "receipt",
+        status: "reserved",
         claim_count: 0,
       };
 
