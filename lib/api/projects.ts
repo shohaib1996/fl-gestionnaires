@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/client";
 import type { ProjectRow } from "@/types/db";
+import { UserRole } from "@/types/role";
 import { ProjectStatus } from "@/types/status";
-
 export interface ProjectFilters {
   status?: ProjectStatus | ProjectStatus[];
   search?: string;
@@ -11,7 +11,11 @@ export interface ProjectFilters {
   category?: string;
   name?: string;
   ifl?: string;
-  assignedTo?: string;
+
+  /* 🔐 role-based */
+  role?: UserRole;
+  userId?: string;
+
   page?: number;
   pageSize?: number;
 }
@@ -24,14 +28,26 @@ export async function fetchProjects(
   let query = supabase.from("projects").select("*");
 
   /* ---------------------------
+   * 🔐 ROLE / VISIBILITY
+   * --------------------------- */
+  if (filters.role === "admin") {
+    if (!filters.userId) {
+      throw new Error("userId is required for admin role");
+    }
+
+    // admin → only own claimed / assigned projects
+    query = query.eq("assigned_to", filters.userId);
+  }
+
+  // super_admin → no restriction (sees all)
+
+  /* ---------------------------
    * STATUS
    * --------------------------- */
   if (filters.status) {
-    if (Array.isArray(filters.status)) {
-      query = query.in("status", filters.status);
-    } else {
-      query = query.eq("status", filters.status);
-    }
+    query = Array.isArray(filters.status)
+      ? query.in("status", filters.status)
+      : query.eq("status", filters.status);
   }
 
   /* ---------------------------
@@ -53,19 +69,14 @@ export async function fetchProjects(
    * CATEGORY
    * --------------------------- */
   if (filters.category?.trim()) {
-    // if category is text[]
     query = query.contains("categories", [filters.category]);
-
-    // ⚠️ If category is TEXT (not array), use instead:
-    // query = query.ilike("category", `%${filters.category.trim()}%`);
   }
 
   /* ---------------------------
-   * NAME (project title / owner)
+   * NAME
    * --------------------------- */
   if (filters.name?.trim()) {
-    const q = `%${filters.name.trim()}%`;
-    query = query.ilike("title", q);
+    query = query.ilike("title", `%${filters.name.trim()}%`);
   }
 
   /* ---------------------------
@@ -83,13 +94,6 @@ export async function fetchProjects(
   }
   if (filters.toDate) {
     query = query.lte("created_at", filters.toDate);
-  }
-
-  /* ---------------------------
-   * ASSIGNED ADMIN
-   * --------------------------- */
-  if (filters.assignedTo) {
-    query = query.eq("assigned_to", filters.assignedTo);
   }
 
   /* ---------------------------
