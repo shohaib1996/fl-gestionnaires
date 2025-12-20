@@ -622,12 +622,11 @@ export type Database = {
       milestone_priority: "low" | "normal" | "high"
       milestone_status: "pending" | "active" | "completed"
       project_status:
-        | "reserved"
+        | "submitted"
         | "claimed"
-        | "receipt"
         | "in_progress"
-        | "declined"
         | "completed"
+        | "declined"
       roles: "admin" | "super_admin" | "onterpeoner"
       task_status: "todo" | "in_progress" | "completed"
     }
@@ -760,12 +759,11 @@ export const Constants = {
       milestone_priority: ["low", "normal", "high"],
       milestone_status: ["pending", "active", "completed"],
       project_status: [
-        "reserved",
+        "submitted",
         "claimed",
-        "receipt",
         "in_progress",
-        "declined",
         "completed",
+        "declined",
       ],
       roles: ["admin", "super_admin", "onterpeoner"],
       task_status: ["todo", "in_progress", "completed"],

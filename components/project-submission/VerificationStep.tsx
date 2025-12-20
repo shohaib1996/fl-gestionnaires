@@ -1,18 +1,21 @@
-import React from "react";
 import { Button } from "@/components/ui/button";
-import { FormData } from "./types";
 import Image from "next/image";
+import React from "react";
+import { Spinner } from "../ui/spinner";
+import { FormData } from "./types";
 
 interface VerificationStepProps {
   formData: FormData;
   onNext: () => void;
   onPrevious: () => void;
+  isSubmitting: boolean;
 }
 
 export const VerificationStep: React.FC<VerificationStepProps> = ({
   formData,
   onNext,
   onPrevious,
+  isSubmitting,
 }) => {
   return (
     <div className="w-full max-w-4xl mx-auto py-4">
@@ -103,7 +106,6 @@ export const VerificationStep: React.FC<VerificationStepProps> = ({
             </div>
           </div>
         </section>
-
         {/* Project Category Section */}
         <section>
           <h3 className="text-base font-bold text-black border-b border-[#C8E6C9] pb-1 mb-6 inline-block">
@@ -142,7 +144,6 @@ export const VerificationStep: React.FC<VerificationStepProps> = ({
             </div>
           </div>
         </section>
-
         {/* Project Description Section */}
         <section>
           <h3 className="text-base font-bold text-black border-b border-[#C8E6C9] pb-1 mb-6 inline-block">
@@ -220,7 +221,6 @@ export const VerificationStep: React.FC<VerificationStepProps> = ({
             </div>
           </div>
         </section>
-
         {/* Signature Section */}
         <section>
           <h3 className="text-base font-bold text-black border-b border-[#C8E6C9] pb-1 mb-6 inline-block">
@@ -251,19 +251,28 @@ export const VerificationStep: React.FC<VerificationStepProps> = ({
             </div>
           </div>
         </section>
-
         <div className="flex justify-center gap-32 pt-12 pb-8">
           <Button
             onClick={onPrevious}
-            className="bg-[#5F8E70] hover:bg-[#4d755b] text-white px-12 py-6 text-lg rounded-xs"
+            disabled={isSubmitting}
+            className="bg-[#5F8E70] hover:bg-[#4d755b] text-white px-12 py-6 text-lg rounded-xs disabled:opacity-60 disabled:cursor-not-allowed"
           >
             Précédent
           </Button>
+
           <Button
             onClick={onNext}
-            className="bg-[#5F8E70] hover:bg-[#4d755b] text-white px-12 py-6 text-lg rounded-xs"
+            disabled={isSubmitting}
+            className="bg-[#5F8E70] hover:bg-[#4d755b] text-white px-12 py-6 text-lg rounded-xs flex items-center justify-center gap-3 disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            Envoyer
+            {isSubmitting ? (
+              <>
+                <Spinner className="h-5 w-5 animate-spin text-white" />
+                Envoi en cours
+              </>
+            ) : (
+              "Envoyer"
+            )}
           </Button>
         </div>
       </div>

@@ -35,6 +35,8 @@ const supabase = createClient();
 const AccountRequestPage = () => {
   const [isStarted, setIsStarted] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const [formData, setFormData] =
     useState<AccountRequestFormData>(initialFormData);
   const [user, setUser] = useState<User | null>(null);
@@ -147,6 +149,7 @@ const AccountRequestPage = () => {
             formData={formData}
             onNext={handleSubmit}
             onPrevious={onPrevious}
+            isSubmitting={isSubmitting}
           />
         );
       case 6:
@@ -156,15 +159,19 @@ const AccountRequestPage = () => {
     }
   };
   const handleSubmit = async () => {
+    if (isSubmitting) return; // safety guard
+
     console.log("📤 Submitting full form...", JSON.stringify(formData));
 
     try {
+      setIsSubmitting(true);
+
       if (!formData.email || !formData.password) {
         throw new Error("Email and password are required");
       }
 
       /* ----------------------------------
-       * 1. Recreate auth user (server)
+       * 1. Recreate auth user
        * ---------------------------------- */
       const authResult = await recreateAuthUser({
         email: formData.email,
@@ -174,8 +181,6 @@ const AccountRequestPage = () => {
       if (!authResult.ok || !authResult.userId) {
         throw new Error(authResult.error || "Auth setup failed");
       }
-
-      console.log("🔐 Auth user created:", authResult.userId);
 
       /* ----------------------------------
        * 2. Prepare payload
@@ -195,8 +200,6 @@ const AccountRequestPage = () => {
         throw new Error(result.error);
       }
 
-      console.log("✅ Submission Success:", result.data);
-
       onNext();
     } catch (error) {
       console.error("❌ Submission error:", error);
@@ -206,6 +209,8 @@ const AccountRequestPage = () => {
           ? error.message
           : "Something went wrong. Please try again."
       );
+    } finally {
+      setIsSubmitting(false);
     }
   };
 

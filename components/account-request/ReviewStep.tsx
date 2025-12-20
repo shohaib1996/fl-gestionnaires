@@ -1,19 +1,22 @@
 "use client";
-import React from "react";
 import { Button } from "@/components/ui/button";
-import { AccountRequestFormData } from "./types";
 import { Check, X } from "lucide-react";
+import React from "react";
+import { Spinner } from "../ui/spinner";
+import { AccountRequestFormData } from "./types";
 
 interface ReviewStepProps {
   formData: AccountRequestFormData;
   onNext: () => void;
   onPrevious: () => void;
+  isSubmitting: boolean;
 }
 
 export const ReviewStep: React.FC<ReviewStepProps> = ({
   formData,
   onNext,
   onPrevious,
+  isSubmitting,
 }) => {
   const renderBoolean = (value: boolean) =>
     value ? (
@@ -209,15 +212,25 @@ export const ReviewStep: React.FC<ReviewStepProps> = ({
       <div className="flex justify-center gap-32 pt-12 pb-8">
         <Button
           onClick={onPrevious}
-          className="bg-[#5F8E70] hover:bg-[#4d755b] text-white px-12 py-6 text-lg rounded-xs"
+          disabled={isSubmitting}
+          className="bg-[#5F8E70] hover:bg-[#4d755b] text-white px-12 py-6 text-lg rounded-xs disabled:opacity-60 disabled:cursor-not-allowed"
         >
           Précédent
         </Button>
+
         <Button
           onClick={onNext}
-          className="bg-[#5F8E70] hover:bg-[#4d755b] text-white px-12 py-6 text-lg rounded-xs"
+          disabled={isSubmitting}
+          className="bg-[#5F8E70] hover:bg-[#4d755b] text-white px-12 py-6 text-lg rounded-xs flex items-center justify-center gap-3 disabled:opacity-60 disabled:cursor-not-allowed"
         >
-          Envoyer
+          {isSubmitting ? (
+            <>
+              <Spinner className="h-5 w-5 animate-spin text-white" />
+              Envoi en cours
+            </>
+          ) : (
+            "Envoyer"
+          )}
         </Button>
       </div>
     </div>

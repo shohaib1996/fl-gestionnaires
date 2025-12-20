@@ -29,16 +29,27 @@ const ProjectSubmission = () => {
   const [isStarted, setIsStarted] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState<FormData>(initialFormData);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const updateFormData = (updates: Partial<FormData>) => {
     setFormData((prev) => ({ ...prev, ...updates }));
   };
 
   const handleNext = async () => {
-    if (currentStep === 4) {
-      //
-      // 1. Sanitize for debugging (optional)
-      //
+    if (isSubmitting) return; // guard
+
+    // only submit logic needs loading
+    if (currentStep !== 4) {
+      setCurrentStep((prev) => Math.min(prev + 1, 5));
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+
+      /* ---------------------------
+       * 1. Debug sanitize (optional)
+       * --------------------------- */
       const sanitize = (fd: FormData) => {
         const { logos, ...rest } = fd as any;
         return {
@@ -54,110 +65,78 @@ const ProjectSubmission = () => {
 
       console.log("🔍 FULL FORM DATA:", sanitize(formData));
 
-      //
-      // 2. Upload logos (if exist)
-      //
+      /* ---------------------------
+       * 2. Upload logos
+       * --------------------------- */
       const logoUrls: string[] = [];
 
-      if (formData.logos && formData.logos.length > 0) {
-        console.log(`📤 Uploading ${formData.logos.length} logo(s)…`);
-
+      if (formData.logos?.length) {
         for (let i = 0; i < formData.logos.length; i++) {
-          const file = formData.logos[i];
-          console.log(
-            `📤 Uploading image ${i + 1}/${formData.logos.length}...`
-          );
-
-          const uploadResult = await uploadLogo(file);
+          const uploadResult = await uploadLogo(formData.logos[i]);
 
           if (uploadResult.error) {
-            console.error(
-              `❌ Logo ${i + 1} upload failed:`,
-              uploadResult.error
-            );
-            toast.error(`Image ${i + 1} upload failed. Please try again.`);
+            toast.error(`Image ${i + 1} upload failed.`);
             return;
           }
 
           logoUrls.push(uploadResult.url!);
-          console.log(`✅ Logo ${i + 1} uploaded:`, uploadResult.url);
         }
 
-        // Update form data with uploaded URLs
         updateFormData({ logoUrls });
       }
 
-      //
-      // 3. Generate unique project ID
-      //
+      /* ---------------------------
+       * 3. Generate project ID
+       * --------------------------- */
       const projectId = generateProjectId(
         formData.province,
         formData.categories
       );
-      console.log("🆔 Generated Project ID:", projectId);
 
-      //
-      // 4. Build final project payload
-      //
+      /* ---------------------------
+       * 4. Build payload
+       * --------------------------- */
       const projectData = {
-        // Project ID
         project_id: projectId,
-
-        // Personal info
         first_name: formData.firstName,
         last_name: formData.lastName,
         parent_name: formData.parentName || null,
         phone: formData.phone,
         email: formData.email,
-
-        // Location
         project_city: formData.projectCity,
         residence_city: formData.residenceCity,
         province: formData.province,
-
-        // Collaborators
         collaborators: formData.hasCollaborators ? formData.collaborators : [],
-
-        // Project details
         title: formData.projectName,
         description: formData.description,
         categories: formData.categories,
         phase: formData.projectPhase,
         links: formData.links.filter(Boolean),
-
-        // Uploaded file URLs (array of strings)
         logo_urls: logoUrls,
-
-        // Signature + signer
         signature: formData.signature || null,
         signer_name: formData.signerName || null,
-
-        // Enum status
-        status: "receipt",
         claim_count: 0,
       };
 
-      console.log("📦 PROJECT PAYLOAD TO SUPABASE:", projectData);
-
-      //
-      // 5. Save project
-      //
+      /* ---------------------------
+       * 5. Save project
+       * --------------------------- */
       const result = await createProject(projectData);
 
       if (result.error) {
-        console.error("❌ Failed to create project:", result.error);
-        toast.error(`Error: ${result.error}`);
+        toast.error(result.error);
         return;
       }
 
-      console.log("✅ Project created successfully:", result.data);
-
-      //
-      // 6. Move to confirmation
-      //
-      setCurrentStep((prev) => Math.min(prev + 1, 5));
-    } else {
-      setCurrentStep((prev) => Math.min(prev + 1, 5));
+      /* ---------------------------
+       * 6. Go to confirmation
+       * --------------------------- */
+      setCurrentStep(5);
+    } catch (err) {
+      console.error(err);
+      toast.error("Une erreur est survenue. Veuillez réessayer.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -408,6 +387,7 @@ const ProjectSubmission = () => {
                   formData={formData}
                   onNext={handleNext}
                   onPrevious={handlePrevious}
+                  isSubmitting={isSubmitting}
                 />
               )}
               {currentStep === 5 && <ConfirmationStep />}

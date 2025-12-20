@@ -1,24 +1,10 @@
-export type ProjectStatus =
-  | "reserved"
-  | "claimed"
-  | "receipt"
-  | "in_progress"
-  | "declined"
-  | "completed";
+import { Database } from "./supabase";
 
-export const ALL_STATUSES: ProjectStatus[] = [
-  "reserved",
-  "claimed",
-  "receipt",
-  "in_progress",
-  "declined",
-  "completed",
-];
+export type ProjectStatus = Database["public"]["Enums"]["project_status"];
 
 export const STATUS_LABELS: Record<ProjectStatus, string> = {
-  reserved: "Reserved",
+  submitted: "Submitted",
   claimed: "Claimed",
-  receipt: "Receipt",
   in_progress: "In Progress",
   declined: "Declined",
   completed: "Completed",

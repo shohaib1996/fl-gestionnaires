@@ -104,7 +104,7 @@ export async function getTasksByMilestone(
 
     return {
       id: task.id,
-      goal: task.title,
+      goal: task.description ?? task.title,
       created_at: task.created_at,
       file_format: task.file_format,
       status: task.status,

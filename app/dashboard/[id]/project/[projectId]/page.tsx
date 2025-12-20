@@ -4,16 +4,19 @@ import AddDocumentModal from "@/components/modals/AddDocumentModal";
 import CreateJalonModal from "@/components/modals/CreateJalonModal";
 import EditDocumentModal from "@/components/modals/EditDocumentModal";
 import JalonDetailsModal from "@/components/modals/JalonDetailsModal";
-import { ArrowLeft, Ellipsis, X } from "lucide-react";
+import { Ellipsis, Undo2, X } from "lucide-react";
 import Image from "next/image";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
 import { TasksByMilestone } from "@/app/actions/projects/milestones/tasks/getTasksByMilestone";
+import DashboardTabs from "@/components/dashboard/DashboardTabs";
+import { Button } from "@/components/ui/button";
 import { useAssignedProjectDetails } from "@/hooks/useAssignedProjectDetails";
 import { useCreateTask } from "@/hooks/useCreateTaks";
 import { useTasksByMilestone } from "@/hooks/useTasksByMilestone";
 import { getPublicFileUrl } from "@/lib/utils/getPublicFileUrl";
+import { useUser } from "@/providers/UserProvider";
 import { toast } from "sonner";
 import TaskLists from "../../../../../components/sections/TaskLists";
 import { MilestoneTabs } from "./MilestoneTabas";
@@ -42,6 +45,7 @@ const ProjectDetails = () => {
   const [selectedTask, setSelectedTask] = useState<TasksByMilestone | null>(
     null
   );
+  const { user } = useUser();
 
   const [jalonDetailsModalOpen, setJalonDetailsModalOpen] = useState(false);
   const [selectedPhase, setSelectedPhase] = useState<Phase | null>(null);
@@ -201,22 +205,21 @@ const ProjectDetails = () => {
   return (
     <div className="p-0">
       {/* Header Tabs */}
-      <div className="flex items-center gap-1 py-6">
-        <button className="bg-[#326EA6] hover:bg-[#275883] text-white px-3 py-1 rounded-none flex items-center gap-1 text-sm font-medium transition">
-          <ArrowLeft className="w-5 h-5" />
-        </button>
-        <button className="bg-[#326EA6] hover:bg-[#275883] text-white px-4 py-1 text-sm">
-          Partager
-        </button>
-        <button className="bg-[#4D7BB0] text-white px-4 py-1 text-sm">
-          Reçus
-        </button>
-        <button className="bg-[#4D7BB0] text-white px-4 py-1 text-sm">
-          Retenus
-        </button>
-        <button className="bg-[#4D7BB0] text-white px-4 py-1 text-sm">
-          En cours
-        </button>
+      <div className="flex items-center gap-1 py-0">
+        {/* Back Button */}
+        <Button
+          onClick={() => router.back()}
+          className="flex items-center justify-center bg-[#326EA6] hover:bg-[#285b8b] text-white rounded-none px-3 h-7"
+        >
+          <Undo2 className="h-4 w-4" />
+        </Button>
+        <DashboardTabs
+          activeTab={null}
+          onChange={(key) => {
+            router.push(`/dashboard?tab=${key}&page=1`);
+          }}
+          role={user?.role || "admin"}
+        />
       </div>
 
       {/* Project Section */}

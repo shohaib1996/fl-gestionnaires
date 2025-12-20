@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/client";
 import type { ProjectRow } from "@/types/db";
 import { UserRole } from "@/types/role";
 import { ProjectStatus } from "@/types/status";
+
 export interface ProjectFilters {
   status?: ProjectStatus | ProjectStatus[];
   search?: string;
@@ -11,7 +12,6 @@ export interface ProjectFilters {
   category?: string;
   name?: string;
   ifl?: string;
-  assignedTo?: string;
 
   /* 🔐 role-based */
   role?: UserRole;
@@ -26,32 +26,32 @@ export async function fetchProjects(
 ): Promise<ProjectRow[]> {
   const supabase = createClient();
 
-  let query = supabase.from("projects").select(`*,
-     assignments:project_assignments (
-      user_id
-    ),
-      claimers:claims(
-      claimed_by
-    )
-    `);
+  let query = supabase.from("projects").select(
+    `
+        *,
+        assignments:project_assignments (
+          user_id
+        ),
+        claimers:claims (
+          claimed_by
+        )
+      `
+  );
 
-  /* ---------------------------
-   * 🔐 ROLE / VISIBILITY
-   * --------------------------- */
+  /* --------------------------------
+   * 🔐 ROLE / VISIBILITY (CRITICAL)
+   * -------------------------------- */
   if (filters.role === "admin") {
     if (!filters.userId) {
       throw new Error("userId is required for admin role");
     }
-    if (filters.status === "in_progress") {
-      query = query.eq("project_assignments.user_id", filters.userId);
-    }
 
-    if (filters.status === "claimed") {
-      query = query.eq("claims.claimed_by", filters.userId);
-    }
-
-    // admin → only own claimed / assigned projects
-    // query = query.eq("assigned_to", filters.userId);
+    // admin can ONLY see projects where he is involved
+    // - claimed by him
+    // - OR assigned to him
+    query = query.or(
+      `assignments.user_id.eq.${filters.userId},claimers.claimed_by.eq.${filters.userId}`
+    );
   }
 
   // super_admin → no restriction (sees all)

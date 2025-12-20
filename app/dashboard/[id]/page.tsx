@@ -47,6 +47,7 @@ const ProjectDetails = () => {
   const id = params?.id as string;
   const { claim, decline, invite } = useProjectActions();
   const { user, loading: userLoading } = useUser();
+  console.log(project);
 
   useEffect(() => {
     async function fetchProject() {

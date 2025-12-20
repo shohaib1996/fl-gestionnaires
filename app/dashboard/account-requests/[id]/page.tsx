@@ -3,7 +3,9 @@ import { AccountRequestActions } from "@/components/dashboard/account-request/Ac
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Undo2 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
+import ShowDocuments from "./ShowDocuments";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -94,18 +96,7 @@ export default async function AccountRequestDetailPage({ params }: PageProps) {
           </Field>
           <Field label="Numéro du document">{request.id_number || "—"}</Field>
 
-          {request.id_front_image && (
-            <DocumentPreview
-              label="Document (Recto)"
-              url={request.id_front_image}
-            />
-          )}
-          {request.id_back_image && (
-            <DocumentPreview
-              label="Document (Verso)"
-              url={request.id_back_image}
-            />
-          )}
+          <ShowDocuments request={request} />
         </SectionGrid>
 
         {/* ===== Informations financières ===== */}
@@ -215,13 +206,9 @@ function DocumentPreview({ label, url }: { label: string; url: string }) {
   return (
     <div className="col-span-1 md:col-span-2 bg-[#F2F6F8] rounded-xs px-3 py-2">
       <p className="text-xs text-gray-500 mb-1">{label}</p>
-      <a
-        href={url}
-        target="_blank"
-        className="text-[#326EA6] hover:underline text-sm"
-      >
-        Voir le document
-      </a>
+      <div className="relative h-10">
+        <Image src={url} alt={label} fill className="object-contain" />
+      </div>
     </div>
   );
 }
