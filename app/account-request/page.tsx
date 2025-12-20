@@ -27,6 +27,7 @@ import {
 import { createClient } from "@/lib/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { recreateAuthUser } from "../actions/recreateAuthUser";
 
 const supabase = createClient();
@@ -200,7 +201,7 @@ const AccountRequestPage = () => {
     } catch (error) {
       console.error("❌ Submission error:", error);
 
-      alert(
+      toast.error(
         error instanceof Error
           ? error.message
           : "Something went wrong. Please try again."

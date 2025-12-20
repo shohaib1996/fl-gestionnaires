@@ -22,6 +22,7 @@ import { VerificationStep } from "@/components/project-submission/VerificationSt
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { generateProjectId } from "@/lib/project-id-mappings";
 import { Menu } from "lucide-react";
+import { toast } from "sonner";
 import { createProject } from "../actions";
 
 const ProjectSubmission = () => {
@@ -74,7 +75,7 @@ const ProjectSubmission = () => {
               `❌ Logo ${i + 1} upload failed:`,
               uploadResult.error
             );
-            alert(`Image ${i + 1} upload failed. Please try again.`);
+            toast.error(`Image ${i + 1} upload failed. Please try again.`);
             return;
           }
 
@@ -132,7 +133,7 @@ const ProjectSubmission = () => {
         signer_name: formData.signerName || null,
 
         // Enum status
-        status: "reserved",
+        status: "receipt",
         claim_count: 0,
       };
 
@@ -145,7 +146,7 @@ const ProjectSubmission = () => {
 
       if (result.error) {
         console.error("❌ Failed to create project:", result.error);
-        alert(`Error: ${result.error}`);
+        toast.error(`Error: ${result.error}`);
         return;
       }
 

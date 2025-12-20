@@ -21,6 +21,7 @@ import {
   UploadCloud,
   User,
 } from "lucide-react";
+import { toast } from "sonner";
 
 interface Props {
   open: boolean;
@@ -41,7 +42,7 @@ export default function AddContactModal({ open, onClose }: Props) {
   // ⭐ Handler for Add button
   const handleAddContact = async () => {
     if (!name || !email) {
-      alert("Name and email are required.");
+      toast.error("Name and email are required.");
       return;
     }
 
@@ -52,7 +53,7 @@ export default function AddContactModal({ open, onClose }: Props) {
       const uploaded = await uploadLogo(imageFile); // ⭐ using your function
 
       if (uploaded.error) {
-        alert("Image upload failed: " + uploaded.error);
+        toast.error("Image upload failed: " + uploaded.error);
         return;
       }
 
@@ -77,7 +78,7 @@ export default function AddContactModal({ open, onClose }: Props) {
     const result = await createContact(contact);
 
     if (result.error) {
-      alert("❌ Failed to create contact: " + result.error);
+      toast.error("❌ Failed to create contact: " + result.error);
       return;
     }
 

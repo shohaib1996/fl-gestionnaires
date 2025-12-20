@@ -6,7 +6,7 @@ export type DashboardTab = "recu" | "mes-projets" | "encours" | "reserve";
 export type DashboardProject = ProjectRow;
 
 export const TAB_TO_STATUS: Record<DashboardTab, ProjectStatus> = {
-  recu: "reserved",
+  recu: "receipt",
   "mes-projets": "claimed",
   encours: "in_progress",
   reserve: "reserved",

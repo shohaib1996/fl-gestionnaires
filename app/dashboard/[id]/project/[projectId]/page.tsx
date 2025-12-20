@@ -143,7 +143,7 @@ const ProjectDetails = () => {
       window.URL.revokeObjectURL(blobUrl);
     } catch (err) {
       console.error("Download failed:", err);
-      alert("Unable to download file.");
+      toast.error("Unable to download file.");
     }
   };
   const handlePrint = async (url: string, type: string) => {
@@ -152,7 +152,8 @@ const ProjectDetails = () => {
         // Create a hidden window for printing
         const printWindow = window.open("", "_blank", "width=900,height=700");
 
-        if (!printWindow) return alert("Popup blocked. Allow popups to print.");
+        if (!printWindow)
+          return toast.error("Popup blocked. Allow popups to print.");
 
         printWindow.document.write(`
         <html>
@@ -177,7 +178,8 @@ const ProjectDetails = () => {
       } else if (type === "pdf") {
         // PDF can be printed directly
         const printWindow = window.open(url, "_blank");
-        if (!printWindow) return alert("Popup blocked. Allow popups to print.");
+        if (!printWindow)
+          return toast.error("Popup blocked. Allow popups to print.");
 
         printWindow.onload = () => {
           printWindow.focus();
@@ -185,17 +187,19 @@ const ProjectDetails = () => {
         };
       } else if (type === "web") {
         const printWindow = window.open(url, "_blank");
-        if (!printWindow) return alert("Popup blocked.");
+        if (!printWindow) return toast.error("Popup blocked.");
 
         printWindow.onload = () => {
           printWindow.print();
         };
       } else if (type === "video") {
-        alert("Printing videos is not supported. Try downloading instead.");
+        toast.error(
+          "Printing videos is not supported. Try downloading instead."
+        );
       }
     } catch (err) {
       console.error("Print failed:", err);
-      alert("Unable to print file.");
+      toast.error("Unable to print file.");
     }
   };
 
