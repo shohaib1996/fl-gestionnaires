@@ -66,6 +66,7 @@ export const PersonalInformationStep: React.FC<
             4. Date de naissance <span className="text-red-500">*</span>
           </label>
           <Input
+            type="date"
             value={formData.birthDate}
             onChange={(e) => updateFormData({ birthDate: e.target.value })}
             placeholder="JJ/MM/AAAA"

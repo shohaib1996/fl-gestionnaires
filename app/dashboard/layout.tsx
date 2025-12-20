@@ -12,6 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+import { useUser } from "@/providers/UserProvider";
 import { MenuIcon, Plus, Search } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -23,6 +24,7 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const router = useRouter();
+  const { user } = useUser();
 
   return (
     <div className="h-screen w-screen flex flex-col bg-background text-gray-800 dark:bgbackround dark:text-gray-100 overflow-hidden">
@@ -52,6 +54,16 @@ export default function DashboardLayout({
             height={48}
             className="rounded-full object-cover h-12"
           />
+          {user && (
+            <div className="flex flex-col">
+              <span className="text-sm font-medium leading-none">
+                {user?.fullName || ""}
+              </span>
+              <span className="text-xs leading-none text-muted-foreground">
+                {user.email}
+              </span>
+            </div>
+          )}
         </div>
 
         <div className="flex items-center gap-3">

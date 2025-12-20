@@ -45,7 +45,7 @@ export default function DashboardView({
           <DashboardTabs
             activeTab={activeTab}
             onChange={onTabChange}
-            role={user?.role || "onterpeoner"}
+            role={user?.role || "admin"}
           />
 
           <DashboardFilters values={filters} onChange={onFiltersChange} />

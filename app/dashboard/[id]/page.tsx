@@ -326,9 +326,9 @@ const ProjectDetails = () => {
         </section>
 
         {/* ===== Claimers ===== */}
-        {project.status === "claimed" && project.claimers.length > 0 && (
-          <ClaimerSection project={project} />
-        )}
+        {project.status === "claimed" &&
+          project.claimers.length > 0 &&
+          user?.role === "super_admin" && <ClaimerSection project={project} />}
       </div>
     </div>
   );

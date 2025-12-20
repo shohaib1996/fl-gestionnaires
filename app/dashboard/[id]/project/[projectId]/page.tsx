@@ -4,16 +4,7 @@ import AddDocumentModal from "@/components/modals/AddDocumentModal";
 import CreateJalonModal from "@/components/modals/CreateJalonModal";
 import EditDocumentModal from "@/components/modals/EditDocumentModal";
 import JalonDetailsModal from "@/components/modals/JalonDetailsModal";
-import {
-  ArrowLeft,
-  Ellipsis,
-  FileText,
-  FolderPlus,
-  Globe,
-  ImageDown,
-  PlaySquare,
-  X,
-} from "lucide-react";
+import { ArrowLeft, Ellipsis, X } from "lucide-react";
 import Image from "next/image";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
@@ -22,10 +13,12 @@ import { TasksByMilestone } from "@/app/actions/projects/milestones/tasks/getTas
 import { useAssignedProjectDetails } from "@/hooks/useAssignedProjectDetails";
 import { useCreateTask } from "@/hooks/useCreateTaks";
 import { useTasksByMilestone } from "@/hooks/useTasksByMilestone";
+import { getPublicFileUrl } from "@/lib/utils/getPublicFileUrl";
 import { toast } from "sonner";
 import TaskLists from "../../../../../components/sections/TaskLists";
 import { MilestoneTabs } from "./MilestoneTabas";
 import PreviewCard from "./PreviewCard";
+import PreviewRenderer from "./PreviewRenderer";
 
 interface Phase {
   step: number;
@@ -147,6 +140,8 @@ const ProjectDetails = () => {
     }
   };
   const handlePrint = async (url: string, type: string) => {
+    console.log("pdf", url, type);
+
     try {
       if (type === "image") {
         // Create a hidden window for printing
@@ -319,11 +314,6 @@ const ProjectDetails = () => {
               >
                 +
               </button>
-              <FileText className="w-5 h-5 text-gray-500" />
-              <ImageDown className="w-5 h-5 text-gray-500" />
-              <PlaySquare className="w-5 h-5 text-gray-500" />
-              <Globe className="w-5 h-5 text-gray-500" />
-              <FolderPlus className="w-5 h-5 text-gray-500" />
             </div>
           </div>
 
@@ -343,26 +333,26 @@ const ProjectDetails = () => {
 
       {fullscreenOpen && (
         <div
-          className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-9999  p-4"
+          className="fixed inset-0 z-[9999] bg-black/70 backdrop-blur-sm"
           onClick={() => setFullscreenOpen(false)}
         >
+          {/* Viewer container */}
           <div
-            className="relative max-w-[90vw] max-h-[90vh] flex items-center justify-center"
+            className="absolute inset-6 bg-transparent rounded-lg overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Viewer (supports future types) */}
-
-            <Image
-              src={project?.preview?.image || ""}
-              alt="Fullscreen preview"
-              width={1400}
-              height={1400}
-              className="rounded-md object-contain max-h-[90vh]"
+            <PreviewRenderer
+              variant="fullscreen"
+              url={
+                getPublicFileUrl(selectedTask?.document?.file_path || "") || ""
+              }
             />
+
             {/* Close button */}
             <button
               onClick={() => setFullscreenOpen(false)}
-              className="absolute top-3 right-3 bg-white/20 text-white p-2 rounded-full hover:bg-white/30 transition"
+              className="absolute top-4 right-4 bg-black/70 text-white p-2 rounded-full hover:bg-black transition"
+              aria-label="Close preview"
             >
               <X className="w-6 h-6" />
             </button>
