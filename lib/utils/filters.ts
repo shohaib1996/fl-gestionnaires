@@ -14,6 +14,6 @@ export function mapSearchParamsToFilters(
     pageSize: params.pageSize ? Number(params.pageSize) : 20,
     fromDate: params.fromDate,
     toDate: params.toDate,
-    assignedTo: params.assignedTo,
+    // assignedTo: params.assignedTo,
   };
 }

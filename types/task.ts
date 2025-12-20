@@ -1,3 +1,5 @@
+import { TaskStatus } from "./task-status";
+
 export interface AddDocumentPayload {
   milestoneId: string;
   name: string;
@@ -12,4 +14,5 @@ export interface EditTaskInput {
   description?: string | null;
   category?: string | null;
   file_format?: string;
+  status?: TaskStatus;
 }

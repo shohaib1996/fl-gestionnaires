@@ -1,6 +1,9 @@
 import { TasksByMilestone } from "@/app/actions/projects/milestones/tasks/getTasksByMilestone";
 import { iconMap } from "@/components/common/FileIconMap";
+import { useUser } from "@/providers/UserProvider";
+import { EditTaskInput } from "@/types/task";
 import { useEffect, useState } from "react";
+import { TaskStatusCell } from "./TaskStatusCell";
 
 const LS_KEY = "active_task_row";
 
@@ -9,11 +12,13 @@ export default function TaskLists({
   setSelectedTask,
   setOpenEditDoc,
   setDoc,
+  editTaskAsync,
 }: {
   tasks: TasksByMilestone[];
   setSelectedTask: (task: TasksByMilestone) => void;
   setOpenEditDoc: (open: boolean) => void;
   setDoc: (doc: TasksByMilestone) => void;
+  editTaskAsync: (editTaskInput: EditTaskInput) => void;
 }) {
   const [activeIndex, setActiveIndex] = useState<number>(() => {
     if (typeof window === "undefined") return 0;
@@ -21,7 +26,7 @@ export default function TaskLists({
     const saved = localStorage.getItem(LS_KEY);
     return saved !== null ? Number(saved) : 0;
   });
-
+  const { user } = useUser();
   useEffect(() => {
     if (!tasks.length) return;
 
@@ -86,7 +91,16 @@ export default function TaskLists({
               </td>
 
               <td className="px-4 py-2 text-gray-700 dark:text-gray-100 capitalize">
-                {task.status}
+                <TaskStatusCell
+                  status={task.status}
+                  role={user?.role}
+                  onChange={(newStatus) =>
+                    editTaskAsync({
+                      taskId: task.id,
+                      status: newStatus,
+                    })
+                  }
+                />
               </td>
             </tr>
           );

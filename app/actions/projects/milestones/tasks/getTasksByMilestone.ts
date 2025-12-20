@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import type { ActionResult } from "@/types/actions";
+import { TaskStatus } from "@/types/task-status";
 
 /* ---------------------------------
    Supabase query row shape
@@ -11,7 +12,7 @@ interface TaskWithDocumentRow {
   title: string;
   description: string | null;
   category: string;
-  status: string;
+  status: TaskStatus;
   order_index: number | null;
   created_at: string;
   file_format: string;
@@ -35,7 +36,7 @@ export interface TasksByMilestone {
   goal: string;
   created_at: string;
   file_format: string;
-  status: string;
+  status: TaskStatus;
   category: string;
   description: string | null;
   document: {

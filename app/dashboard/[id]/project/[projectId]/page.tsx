@@ -14,6 +14,7 @@ import DashboardTabs from "@/components/dashboard/DashboardTabs";
 import { Button } from "@/components/ui/button";
 import { useAssignedProjectDetails } from "@/hooks/useAssignedProjectDetails";
 import { useCreateTask } from "@/hooks/useCreateTaks";
+import useEditTask from "@/hooks/useEditTask";
 import { useTasksByMilestone } from "@/hooks/useTasksByMilestone";
 import { getPublicFileUrl } from "@/lib/utils/getPublicFileUrl";
 import { useUser } from "@/providers/UserProvider";
@@ -87,7 +88,7 @@ const ProjectDetails = () => {
   );
 
   const { mutateAsync } = useCreateTask();
-
+  const { editTaskAsync } = useEditTask(activeMilestoneId ?? "");
   const handlePhaseClick = (phase: Phase) => {
     setSelectedPhase(phase);
     setJalonDetailsModalOpen(true);
@@ -304,6 +305,7 @@ const ProjectDetails = () => {
                     setSelectedTask={setSelectedTask}
                     setOpenEditDoc={setOpenEditDoc}
                     setDoc={setDoc}
+                    editTaskAsync={editTaskAsync}
                   />
                 ) : null}
               </div>
