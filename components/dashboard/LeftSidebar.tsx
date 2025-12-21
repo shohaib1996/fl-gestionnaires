@@ -1,39 +1,34 @@
 "use client";
 
-import { useState } from "react";
-import { Calendar } from "@/components/ui/calendar";
-import { Button } from "@/components/ui/button";
 import AddTaskDialog from "@/components/modals/AddTaskDialog";
 import TaskDetailsModal from "@/components/modals/TaskDetailsModal";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import { useMemo, useState } from "react";
 
 import { fr } from "date-fns/locale";
+
+import { useMyCalendarEvents } from "@/hooks/useCalendarEvents";
+import { format } from "date-fns";
 
 export default function LeftSidebar() {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [openAdd, setOpenAdd] = useState(false);
 
+  const { data: events = [], isLoading } = useMyCalendarEvents({
+    from: date ? format(date, "yyyy-MM-dd") : undefined,
+    // to: date ? format("2025-12-31", "yyyy-MM-dd") : undefined,
+  });
+
+  const eventDates = useMemo(() => {
+    const dates = events.map((e) => new Date(e.start_date));
+
+    return dates;
+  }, [events]);
+
   // modal for task details
   const [openDetails, setOpenDetails] = useState(false);
-  const [activeTaskIndex, setActiveTaskIndex] = useState<number | null>(null);
-
-  // sample participants (replace with real urls)
-  const sampleParticipants = [
-    { id: 1, img: "/images/Profil1.svg", name: "A" },
-    { id: 2, img: "/images/Profil2.svg", name: "B" },
-    { id: 3, img: "/images/Profil3.svg", name: "C" },
-    { id: 4, img: "/images/Profil4.svg", name: "D" },
-  ];
-
-  const tasks = Array.from({ length: 6 }).map((_, i) => ({
-    id: i + 1,
-    title: `Appel projet #${i + 1}`,
-    date: "11 Mars 2025",
-    time: "8:30 - 9:00",
-    description:
-      "Gather and validate all legal files required for the design drafts, or updated business registration, and operating licenses. Ensure the team is fully ready before moving to the next stage.",
-    participants: sampleParticipants,
-    location: "2445 North West Library",
-  }));
+  const [activeEvent, setActiveEvent] = useState<any | null>(null);
 
   return (
     <aside className="flex flex-col h-full bg-white dark:bg-neutral-800 shadow-sm border-0.5 border-black/10 rounded-xs overflow-hidden">
@@ -45,15 +40,19 @@ export default function LeftSidebar() {
         open={openDetails}
         onOpenChange={setOpenDetails}
         task={
-          activeTaskIndex !== null
+          activeEvent
             ? {
-                title: tasks[activeTaskIndex].title,
-                subtitle: tasks[activeTaskIndex].location,
-                dateLabel: "Aujourd'hui",
-                timeFrom: "11:00 AM",
-                timeTo: "12:00",
-                participants: tasks[activeTaskIndex].participants,
-                description: tasks[activeTaskIndex].description,
+                title: activeEvent.title,
+                subtitle: activeEvent.location_label,
+                dateLabel: format(
+                  new Date(activeEvent.start_date),
+                  "dd MMMM yyyy",
+                  { locale: fr }
+                ),
+                timeFrom: activeEvent.start_time ?? "",
+                timeTo: activeEvent.end_time ?? "",
+                participants: [], // next step: real participants hook
+                description: activeEvent.description,
               }
             : null
         }
@@ -65,7 +64,14 @@ export default function LeftSidebar() {
           selected={date}
           onSelect={setDate}
           locale={fr}
-          className="w-full rounded-md "
+          modifiers={{
+            hasEvent: eventDates,
+          }}
+          modifiersClassNames={{
+            hasEvent:
+              "bg-[#63a053]/20 text-[#2f6f3e] font-semibold rounded-full",
+          }}
+          className="w-full rounded-md"
         />
       </div>
 
@@ -75,25 +81,36 @@ export default function LeftSidebar() {
 
       <div className="flex-1 overflow-auto px-4 pb-4 hide-scrollbar">
         <div className="space-y-4 text-md">
-          {tasks.map((t, i) => (
+          {isLoading && <p className="text-sm text-gray-400">Chargement…</p>}
+
+          {!isLoading && events.length === 0 && (
+            <p className="text-sm text-gray-400">Aucune tâche</p>
+          )}
+
+          {events.map((e) => (
             <div
-              key={t.id}
+              key={e.id}
               className="pb-3 border-b border-gray-200 dark:border-neutral-700"
             >
-              <p className="text-sm text-gray-400">{t.date}</p>
+              <p className="text-sm text-gray-400">
+                {format(new Date(e.start_date), "dd MMM yyyy", { locale: fr })}
+              </p>
 
-              {/* clickable title opens modal */}
               <p
                 className="text-blue-600 dark:text-blue-400 hover:underline cursor-pointer"
                 onClick={() => {
-                  setActiveTaskIndex(i);
+                  setActiveEvent(e);
                   setOpenDetails(true);
                 }}
               >
-                {t.title}
+                {e.title}
               </p>
 
-              <p className="text-sm text-gray-500">{t.time}</p>
+              {(e.start_time || e.end_time) && (
+                <p className="text-sm text-gray-500">
+                  {e.start_time ?? "--"} – {e.end_time ?? "--"}
+                </p>
+              )}
             </div>
           ))}
         </div>

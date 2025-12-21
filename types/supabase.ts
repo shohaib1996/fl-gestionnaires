@@ -104,6 +104,86 @@ export type Database = {
         }
         Relationships: []
       }
+      calendar_event_participants: {
+        Row: {
+          event_id: string
+          user_id: string
+        }
+        Insert: {
+          event_id: string
+          user_id: string
+        }
+        Update: {
+          event_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "calendar_event_participants_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "calendar_events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      calendar_events: {
+        Row: {
+          all_day: boolean | null
+          created_at: string | null
+          created_by: string
+          description: string | null
+          end_date: string
+          end_time: string | null
+          event_type: string
+          id: string
+          location_label: string | null
+          location_type: string | null
+          source: string | null
+          start_date: string
+          start_time: string | null
+          status: string | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          all_day?: boolean | null
+          created_at?: string | null
+          created_by: string
+          description?: string | null
+          end_date: string
+          end_time?: string | null
+          event_type: string
+          id?: string
+          location_label?: string | null
+          location_type?: string | null
+          source?: string | null
+          start_date: string
+          start_time?: string | null
+          status?: string | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          all_day?: boolean | null
+          created_at?: string | null
+          created_by?: string
+          description?: string | null
+          end_date?: string
+          end_time?: string | null
+          event_type?: string
+          id?: string
+          location_label?: string | null
+          location_type?: string | null
+          source?: string | null
+          start_date?: string
+          start_time?: string | null
+          status?: string | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       claims: {
         Row: {
           claimed_at: string

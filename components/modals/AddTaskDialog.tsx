@@ -26,7 +26,16 @@ import { Textarea } from "@/components/ui/textarea";
 
 import { Calendar } from "@/components/ui/calendar";
 
+import { useCreateCalendarEvent } from "@/hooks/useCalendarEvents";
+import { useUsersForParticipants } from "@/hooks/useUsersForParticipants";
 import { Calendar1, Check, ChevronDown, MapPin, User2, X } from "lucide-react";
+import { toast } from "sonner";
+
+type Participant = {
+  id: string;
+  name: string;
+  email: string;
+};
 
 export default function AddTaskDialog({
   open,
@@ -35,6 +44,9 @@ export default function AddTaskDialog({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
+  const { data: allParticipants = [], isLoading: loadingUsers } =
+    useUsersForParticipants();
+
   // form fields
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -43,19 +55,9 @@ export default function AddTaskDialog({
 
   const [location, setLocation] = useState<string>("Online");
 
-  // multi-select participants -------------------------------
-  type Participant = { name: string; email: string };
+  const createEvent = useCreateCalendarEvent();
 
-  const allParticipants: Participant[] = useMemo(
-    () => [
-      { name: "Alice Dupont", email: "alice@example.com" },
-      { name: "Benoît Martin", email: "benoit@example.com" },
-      { name: "Céline Durand", email: "celine@example.com" },
-      { name: "David Moreau", email: "david@example.com" },
-      { name: "Emma Laurent", email: "emma@example.com" },
-    ],
-    []
-  );
+  const toISODate = (d: Date) => format(d, "yyyy-MM-dd");
 
   const [participantQuery, setParticipantQuery] = useState("");
   const [selectedParticipants, setSelectedParticipants] = useState<
@@ -65,6 +67,7 @@ export default function AddTaskDialog({
   const filteredParticipants = useMemo(() => {
     const q = participantQuery.trim().toLowerCase();
     if (!q) return allParticipants;
+
     return allParticipants.filter(
       (p) =>
         p.name.toLowerCase().includes(q) || p.email.toLowerCase().includes(q)
@@ -72,13 +75,13 @@ export default function AddTaskDialog({
   }, [participantQuery, allParticipants]);
 
   const addParticipant = (p: Participant) => {
-    if (!selectedParticipants.find((x) => x.email === p.email)) {
+    if (!selectedParticipants.find((x) => x.id === p.id)) {
       setSelectedParticipants((prev) => [...prev, p]);
     }
   };
 
-  const removeParticipant = (email: string) => {
-    setSelectedParticipants((prev) => prev.filter((p) => p.email !== email));
+  const removeParticipant = (id: string) => {
+    setSelectedParticipants((prev) => prev.filter((p) => p.id !== id));
   };
 
   // date pickers -------------------------------------------
@@ -103,32 +106,43 @@ export default function AddTaskDialog({
   };
 
   const handleSave = async () => {
-    const task = {
+    if (!title || !startDate) {
+      toast.error("Titre et date de début requis");
+      return;
+    }
+
+    const result = await createEvent.mutateAsync({
       title,
-      description,
-      startDate: startDate ? fmt(startDate) : null,
-      endDate: endDateEnabled && endDate ? fmt(endDate) : null,
-      startTime,
-      endTime,
-      location,
-      participants: selectedParticipants,
-    };
+      description: description || undefined,
+      event_type: "task",
 
-    console.log("📝 NEW TASK:", task);
+      start_date: toISODate(startDate),
+      end_date:
+        endDateEnabled && endDate ? toISODate(endDate) : toISODate(startDate),
 
-    // const result = await createTask(task);
+      start_time: startTime || undefined,
+      end_time: endTime || undefined,
 
-    // if (result.error) {
-    //   alert("❌ Failed to create task");
-    //   return;
-    // }
+      location_type:
+        location === "Online"
+          ? "online"
+          : location === "Sur site"
+          ? "onsite"
+          : "hybrid",
 
-    // console.log("✅ Task created:", result.data);
+      location_label: location,
 
-    // ⭐ Reset everything
+      participantIds: selectedParticipants.map((p) => p.id),
+    });
+
+    if (result.success === false) {
+      toast.error(result.message ?? "Une erreur est survenue");
+      return;
+    }
+
+    toast.success("Événement créé avec succès");
+
     resetForm();
-
-    // Close dialog
     onOpenChange(false);
   };
 
@@ -351,11 +365,12 @@ export default function AddTaskDialog({
                 <div className="max-h-44 overflow-auto">
                   {filteredParticipants.map((p) => {
                     const selected = !!selectedParticipants.find(
-                      (x) => x.email === p.email
+                      (x) => x.id === p.id
                     );
+
                     return (
                       <DropdownMenuItem
-                        key={p.email}
+                        key={p.id}
                         disabled={selected}
                         onSelect={() => addParticipant(p)}
                         className={`flex flex-col ${
