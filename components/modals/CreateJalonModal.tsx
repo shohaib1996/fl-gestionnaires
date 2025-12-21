@@ -28,7 +28,7 @@ import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import AddDocumentModal from "./AddDocumentModal";
 
-import { createTask } from "@/app/actions/projects/milestones/tasks/createTask";
+import { createTask } from "@/app/actions/tasks/createTask";
 import {
   createMilestoneSchema,
   type CreateMilestoneFormValues,
@@ -396,6 +396,7 @@ export default function CreateJalonModal({
           onClose={() => setAddDocumentModalOpen(false)}
           onSubmit={(data) => {
             setTasks([...tasks, data]);
+            setAddDocumentModalOpen(false);
           }}
         />
       </DialogContent>

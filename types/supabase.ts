@@ -476,7 +476,7 @@ export type Database = {
           id: string
           milestone_id: string
           order_index: number | null
-          status: string | null
+          status: Database["public"]["Enums"]["task_status"]
           title: string
           updated_at: string | null
         }
@@ -488,7 +488,7 @@ export type Database = {
           id?: string
           milestone_id: string
           order_index?: number | null
-          status?: string | null
+          status?: Database["public"]["Enums"]["task_status"]
           title: string
           updated_at?: string | null
         }
@@ -500,11 +500,19 @@ export type Database = {
           id?: string
           milestone_id?: string
           order_index?: number | null
-          status?: string | null
+          status?: Database["public"]["Enums"]["task_status"]
           title?: string
           updated_at?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "tasks_milestone_id_fkey"
+            columns: ["milestone_id"]
+            isOneToOne: false
+            referencedRelation: "milestones"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_contacts: {
         Row: {
@@ -628,7 +636,7 @@ export type Database = {
         | "completed"
         | "declined"
       roles: "admin" | "super_admin" | "onterpeoner"
-      task_status: "todo" | "in_progress" | "completed"
+      task_status: "pending" | "in_progress" | "completed"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -766,7 +774,7 @@ export const Constants = {
         "declined",
       ],
       roles: ["admin", "super_admin", "onterpeoner"],
-      task_status: ["todo", "in_progress", "completed"],
+      task_status: ["pending", "in_progress", "completed"],
     },
   },
 } as const

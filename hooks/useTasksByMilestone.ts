@@ -1,6 +1,6 @@
 "use client";
 
-import { getTasksByMilestone } from "@/app/actions/projects/milestones/tasks/getTasksByMilestone";
+import { getTasksByMilestone } from "@/app/actions/tasks/getTasksByMilestone";
 import { useQuery } from "@tanstack/react-query";
 
 export const taskKeys = {

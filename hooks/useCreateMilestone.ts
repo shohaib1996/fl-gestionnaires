@@ -1,4 +1,4 @@
-import { createMilestone } from "@/app/actions/projects/milestones/createMilestones";
+import { createMilestone } from "@/app/actions/milestones/createMilestones";
 import { assignedProjectKeys } from "@/lib/queryKeys";
 import type { ActionResult } from "@/types/actions";
 import { useMutation, useQueryClient } from "@tanstack/react-query";

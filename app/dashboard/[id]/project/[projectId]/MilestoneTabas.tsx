@@ -1,4 +1,4 @@
-import { getTasksByMilestone } from "@/app/actions/projects/milestones/tasks/getTasksByMilestone";
+import { getTasksByMilestone } from "@/app/actions/tasks/getTasksByMilestone";
 import { taskKeys } from "@/hooks/useTasksByMilestone";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -11,7 +11,7 @@ interface Milestone {
 interface Props {
   milestones: Milestone[];
   activeMilestoneId: string | null;
-  onChange: (milestoneId: string) => void;
+  onChange: (milestone: Milestone) => void;
 }
 
 export function MilestoneTabs({
@@ -29,7 +29,7 @@ export function MilestoneTabs({
         return (
           <button
             key={m.id}
-            onClick={() => onChange(m.id)}
+            onClick={() => onChange(m)}
             className={`rounded-xs text-sm font-medium py-2 cursor-pointer ${
               active
                 ? "bg-[#63A053] text-white"

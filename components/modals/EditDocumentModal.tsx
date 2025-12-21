@@ -1,6 +1,6 @@
 "use client";
 
-import { editTaskWithDocument } from "@/app/actions/projects/milestones/tasks/editTaskWithDocument";
+import { editTaskWithDocument } from "@/app/actions/tasks/editTaskWithDocument";
 import {
   Dialog,
   DialogContent,

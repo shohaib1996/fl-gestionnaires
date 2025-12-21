@@ -2,24 +2,38 @@
 
 import { createClient } from "@/lib/supabase/server";
 
-export async function createContact(contact: any) {
+/* =====================================================
+   CREATE CONTACT
+===================================================== */
+
+export async function createContact(contact: {
+  name: string;
+  title?: string | null;
+  email: string;
+  phone?: string | null;
+  city?: string | null;
+  skills?: string | null;
+  bio?: string | null;
+  imageUrl?: string | null;
+  imagePath?: string | null;
+}) {
   const supabase = await createClient();
 
   const payload = {
     name: contact.name,
-    title: contact.title,
+    title: contact.title ?? null,
     email: contact.email,
-    phone: contact.phone,
-    city: contact.city,
-    skills: contact.skills,
-    bio: contact.bio,
-    image_url: contact.imageUrl,
-    image_path: contact.imagePath,
+    phone: contact.phone ?? null,
+    city: contact.city ?? null,
+    skills: contact.skills ?? null,
+    bio: contact.bio ?? null,
+    image_url: contact.imageUrl ?? null,
+    image_path: contact.imagePath ?? null,
   };
 
   const { data, error } = await supabase
     .from("contacts")
-    .insert([payload])
+    .insert(payload)
     .select()
     .single();
 
@@ -30,6 +44,11 @@ export async function createContact(contact: any) {
 
   return { data };
 }
+
+/* =====================================================
+   TOGGLE MY CONTACT
+===================================================== */
+
 export async function toggleMyContact(contactId: string) {
   const supabase = await createClient();
 
@@ -39,28 +58,38 @@ export async function toggleMyContact(contactId: string) {
 
   if (!user) throw new Error("Unauthorized");
 
-  const { data: existing } = await supabase
+  const { data: existing, error: fetchError } = await supabase
     .from("user_contacts")
     .select("contact_id")
     .eq("user_id", user.id)
     .eq("contact_id", contactId)
     .maybeSingle();
 
+  if (fetchError) throw fetchError;
+
   if (existing) {
-    await supabase
+    const { error } = await supabase
       .from("user_contacts")
       .delete()
       .eq("user_id", user.id)
       .eq("contact_id", contactId);
+
+    if (error) throw error;
   } else {
-    await supabase.from("user_contacts").insert({
+    const { error } = await supabase.from("user_contacts").insert({
       user_id: user.id,
       contact_id: contactId,
     });
+
+    if (error) throw error;
   }
 
   return { success: true };
 }
+
+/* =====================================================
+   TYPES
+===================================================== */
 
 export type ContactListItem = {
   id: string;
@@ -71,22 +100,42 @@ export type ContactListItem = {
   is_my_contact: boolean;
 };
 
+export interface GetContactsParams {
+  onlyMine?: boolean;
+  page?: number;
+  pageSize?: number;
+}
+
+/* =====================================================
+   GET CONTACTS (WITH PAGINATION)
+===================================================== */
+
 export async function getContacts({
   onlyMine = false,
-}: {
-  onlyMine?: boolean;
-}) {
+  page = 1,
+  pageSize = 10,
+}: GetContactsParams): Promise<{
+  data: ContactListItem[];
+  total: number;
+}> {
   const supabase = await createClient();
 
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) return [];
+  if (!user) {
+    return { data: [], total: 0 };
+  }
 
-  // 🔹 CASE 1: ONLY MY CONTACTS
+  const from = (page - 1) * pageSize;
+  const to = from + pageSize - 1;
+
+  /* ---------------------------
+     CASE 1: ONLY MY CONTACTS
+  ---------------------------- */
   if (onlyMine) {
-    const { data, error } = await supabase
+    const { data, count, error } = await supabase
       .from("user_contacts")
       .select(
         `
@@ -97,22 +146,32 @@ export async function getContacts({
           city,
           image_url
         )
-      `
+      `,
+        { count: "exact" }
       )
-      .eq("user_id", user.id);
+      .eq("user_id", user.id)
+      .range(from, to);
 
     if (error) throw error;
 
-    return (
-      data?.map((row: any) => ({
-        ...row.contact,
-        is_my_contact: true,
-      })) ?? []
-    );
+    return {
+      data:
+        data?.map((row: any) => ({
+          id: row.contact.id,
+          name: row.contact.name,
+          title: row.contact.title,
+          city: row.contact.city,
+          image_url: row.contact.image_url,
+          is_my_contact: true,
+        })) ?? [],
+      total: count ?? 0,
+    };
   }
 
-  // 🔹 CASE 2: ALL CONTACTS (+ mark mine)
-  const { data, error } = await supabase
+  /* ---------------------------
+     CASE 2: ALL CONTACTS (+ MARK MINE)
+  ---------------------------- */
+  const { data, count, error } = await supabase
     .from("contacts")
     .select(
       `
@@ -122,20 +181,24 @@ export async function getContacts({
       city,
       image_url,
       user_contacts!left(contact_id)
-    `
+    `,
+      { count: "exact" }
     )
-    .eq("user_contacts.user_id", user.id);
+    .eq("user_contacts.user_id", user.id)
+    .range(from, to);
 
   if (error) throw error;
 
-  return (
-    data?.map((c: any) => ({
-      id: c.id,
-      name: c.name,
-      title: c.title,
-      city: c.city,
-      image_url: c.image_url,
-      is_my_contact: c.user_contacts?.length > 0,
-    })) ?? []
-  );
+  return {
+    data:
+      data?.map((c: any) => ({
+        id: c.id,
+        name: c.name,
+        title: c.title,
+        city: c.city,
+        image_url: c.image_url,
+        is_my_contact: (c.user_contacts?.length ?? 0) > 0,
+      })) ?? [],
+    total: count ?? 0,
+  };
 }

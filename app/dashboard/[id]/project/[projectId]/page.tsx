@@ -9,7 +9,7 @@ import Image from "next/image";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
-import { TasksByMilestone } from "@/app/actions/projects/milestones/tasks/getTasksByMilestone";
+import { TasksByMilestone } from "@/app/actions/tasks/getTasksByMilestone";
 import DashboardTabs from "@/components/dashboard/DashboardTabs";
 import { Button } from "@/components/ui/button";
 import { useAssignedProjectDetails } from "@/hooks/useAssignedProjectDetails";
@@ -23,12 +23,6 @@ import TaskLists from "../../../../../components/sections/TaskLists";
 import { MilestoneTabs } from "./MilestoneTabas";
 import PreviewCard from "./PreviewCard";
 import PreviewRenderer from "./PreviewRenderer";
-
-interface Phase {
-  step: number;
-  title: string;
-  status: string;
-}
 
 interface AddDocumentPayload {
   name: string;
@@ -49,7 +43,7 @@ const ProjectDetails = () => {
   const { user } = useUser();
 
   const [jalonDetailsModalOpen, setJalonDetailsModalOpen] = useState(false);
-  const [selectedPhase, setSelectedPhase] = useState<Phase | null>(null);
+  const [selectedPhase, setSelectedPhase] = useState<any | null>(null);
 
   const { projectId } = useParams() as { projectId: string };
 
@@ -89,7 +83,7 @@ const ProjectDetails = () => {
 
   const { mutateAsync } = useCreateTask();
   const { editTaskAsync } = useEditTask(activeMilestoneId ?? "");
-  const handlePhaseClick = (phase: Phase) => {
+  const handlePhaseClick = (phase: any) => {
     setSelectedPhase(phase);
     setJalonDetailsModalOpen(true);
   };
@@ -241,10 +235,14 @@ const ProjectDetails = () => {
           <MilestoneTabs
             activeMilestoneId={activeMilestoneId}
             milestones={project.milestones}
-            onChange={(milestoneId) => {
-              router.push(
-                `/dashboard/${projectId}/project/${projectId}?milestone=${milestoneId}`
-              );
+            onChange={(milestone) => {
+              if (milestone.status != "completed") {
+                handlePhaseClick(milestone);
+              } else {
+                router.push(
+                  `/dashboard/${projectId}/project/${projectId}?milestone=${milestone.id}`
+                );
+              }
             }}
           />
           <button
@@ -374,7 +372,8 @@ const ProjectDetails = () => {
         <JalonDetailsModal
           open={jalonDetailsModalOpen}
           onClose={() => setJalonDetailsModalOpen(false)}
-          phase={selectedPhase}
+          milestoneId={selectedPhase.id}
+          setAddDocumentModalOpen={setOpenAddDoc}
         />
       )}
       <AddDocumentModal

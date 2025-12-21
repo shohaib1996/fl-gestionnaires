@@ -3,7 +3,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-import { editTask } from "@/app/actions/projects/milestones/tasks/editTask";
+import { editTask } from "@/app/actions/tasks/editTask";
 import { EditTaskInput } from "@/types/task";
 import { taskKeys } from "./useTasksByMilestone";
 

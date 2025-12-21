@@ -7,4 +7,5 @@ export const iconMap: Record<string, any> = {
   folder: FolderPlus,
   image: Image,
   document: FileText,
+  audio: PlaySquare,
 };

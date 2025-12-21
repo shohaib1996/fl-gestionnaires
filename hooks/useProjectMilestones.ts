@@ -1,4 +1,4 @@
-import { getProjectMilestones } from "@/app/actions/projects/milestones/getProjectMilestones";
+import { getProjectMilestones } from "@/app/actions/milestones/getProjectMilestones";
 import { milestoneKeys } from "@/lib/queryKeys";
 import { useQuery } from "@tanstack/react-query";
 

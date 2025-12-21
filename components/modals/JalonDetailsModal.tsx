@@ -1,12 +1,21 @@
 "use client";
 
+import { updateMilestone } from "@/app/actions/milestones/actions";
+import { createTask } from "@/app/actions/tasks/createTask";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { FileText, PlaySquare, Image as ImageIcon, X } from "lucide-react";
+import { useMilestoneDetails } from "@/hooks/useMilestoneDetails";
+import { useQueryClient } from "@tanstack/react-query";
+import { FileText } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
+import JalonDetailsBodySkeleton from "../common/skeletons/MileStoneDetailsSkeleton";
+import { MilestoneForm } from "../form/MilestoneForm";
+import { Skeleton } from "../ui/skeleton";
 
 interface Phase {
   step: number;
@@ -17,127 +26,212 @@ interface Phase {
 interface Props {
   open: boolean;
   onClose: () => void;
-  phase: Phase;
+  milestoneId: string | null;
+  setAddDocumentModalOpen: (open: boolean) => void;
 }
 
-export default function JalonDetailsModal({ open, onClose, phase }: Props) {
+export default function JalonDetailsModal({
+  open,
+  onClose,
+  milestoneId,
+  setAddDocumentModalOpen,
+}: Props) {
+  const [mode, setMode] = useState<"view" | "edit">("view");
+  const qc = useQueryClient();
+
+  const { data, isLoading } = useMilestoneDetails(milestoneId ?? undefined);
+
+  if (!open || !milestoneId) return null;
+
+  const handleSubmit = async (values: any, tasks: any[]) => {
+    if (!data) return;
+    // 1️⃣ Update milestone meta
+    await updateMilestone(data.milestone.id, {
+      title: values.title,
+      description: values.description,
+      start_date: values.startDate,
+      end_date: values.endDate,
+      priority: values.priority,
+    });
+
+    console.log(tasks);
+
+    // 2️⃣ Separate new vs existing tasks
+    const newTasks = tasks.filter((t) => !t.id);
+    // const existingTasks = tasks.filter((t) => t.id);
+
+    // 3️⃣ Create new tasks
+    await Promise.all(
+      newTasks.map((task) =>
+        createTask({
+          milestoneId: data.milestone.id,
+          title: task.name,
+          description: task.description,
+          category: task.category,
+          file_format: task.file_format,
+        })
+      )
+    );
+
+    // 4️⃣ Update existing tasks
+    // await Promise.all(
+    //   existingTasks.map((task) =>
+    //     editTask({
+    //       taskId: task.id,
+    //       title: task.name,
+    //       description: task.description,
+    //       category: task.category,
+    //       file_format: task.file_format,
+    //     })
+    //   )
+    // );
+
+    toast.success("Jalon mis à jour");
+    setMode("view");
+
+    qc.invalidateQueries({
+      queryKey: ["milestone-details", milestoneId],
+    });
+  };
+
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="p-0 bg-white dark:bg-neutral-900 min-w-[70vw] max-h-[90vh] overflow-auto border-none rounded-none text-gray-800 dark:text-gray-200">
         {/* HEADER */}
         <DialogHeader className="px-8 py-4 bg-[#63A053] dark:bg-[#4e8742] text-white">
           <DialogTitle className="text-lg font-semibold">
-            Jalon {phase.step} : {phase.title}
+            {isLoading || !data ? (
+              <Skeleton className="h-5 w-64 bg-white/30" />
+            ) : (
+              <>
+                Jalon {data.milestone.order_index} : {data.milestone.title}
+              </>
+            )}
           </DialogTitle>
         </DialogHeader>
 
-        <div className="px-10 py-7 space-y-10">
-          {/* TOP SECTION GRID */}
-          <div className="grid grid-cols-12 gap-8">
-            {/* Description */}
-            <div className="col-span-6">
-              <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm mb-2">
-                Brève description
-              </p>
-              <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                Gather and validate all legal documents required for the
-                restaurant expansion, including updated business registration,
-                operating licenses, and health certificates. Ensure the business
-                is fully compliant before moving to the next stage.
-              </p>
-            </div>
+        {/* BODY */}
+        {isLoading || !data ? (
+          <JalonDetailsBodySkeleton />
+        ) : mode === "view" ? (
+          (() => {
+            const { milestone, tasks, manager } = data;
 
-            {/* Date Start */}
-            <div className="col-span-2 space-y-1">
-              <p className="font-semibold text-sm text-gray-900 dark:text-gray-100">
-                Date de début
-              </p>
-              <p className="text-gray-700 dark:text-gray-300">
-                15 septembre 2026
-              </p>
-              <p className="text-gray-500 dark:text-gray-400 text-sm">14h00</p>
-              <div className="mt-5">
-                <p className="font-semibold text-sm text-gray-900 dark:text-gray-100">
-                  Responsable du jalon
-                </p>
-                <div className="flex items-center gap-3 mt-2">
-                  <img
-                    src="/images/profile.jpeg"
-                    className="w-12 h-12 rounded-full object-cover"
-                  />
-                  <div>
-                    <p className="text-gray-800 dark:text-gray-200 font-medium">
-                      Lisa Mimo
+            return (
+              <div className="px-10 py-7 space-y-10">
+                {/* TOP SECTION GRID */}
+                <div className="grid grid-cols-12 gap-8">
+                  {/* Description */}
+                  <div className="col-span-6">
+                    <p className="font-semibold text-sm mb-2">
+                      Brève description
                     </p>
-                    <p className="text-gray-500 dark:text-gray-400 text-sm">
-                      Adviser
+                    <p className="text-gray-700 dark:text-gray-300">
+                      {milestone.description || "—"}
                     </p>
                   </div>
-                </div>
-              </div>
-            </div>
 
-            {/* Date End */}
-            <div className="col-span-2 space-y-1">
-              <p className="font-semibold text-sm text-gray-900 dark:text-gray-100">
-                Date butoir
-              </p>
-              <p className="text-gray-700 dark:text-gray-300">
-                25 septembre 2026
-              </p>
-              <p className="text-gray-500 dark:text-gray-400 text-sm">14h30</p>
-            </div>
+                  {/* Date Start */}
+                  <div className="col-span-2 space-y-1">
+                    <p className="font-semibold text-sm">Date de début</p>
+                    <p>{milestone.start_date || "—"}</p>
+                    <p className="text-sm">{milestone.start_time || "—"}</p>
 
-            {/* Priority + Responsable */}
-            <div className="col-span-2 space-y-4">
-              <div>
-                <p className="font-semibold text-sm text-gray-900 dark:text-gray-100">
-                  Priorités
-                </p>
-                <p className="text-gray-700 dark:text-gray-300">Normale</p>
-              </div>
-            </div>
-          </div>
-
-          {/* DELIVERABLES SECTION */}
-          <div>
-            <p className="text-sm italic text-gray-600 dark:text-gray-400 mb-4">
-              Livrables de ce jalon
-            </p>
-
-            <div className="grid grid-cols-3 gap-10">
-              {[0, 1, 2].map((col) => (
-                <div key={col} className="space-y-3">
-                  {[FileText, PlaySquare, ImageIcon].map((Icon, idx) => (
-                    <div key={idx}>
-                      <hr className="border-gray-200 dark:border-neutral-700 mb-1" />
-                      <div className="flex items-center gap-4">
-                        <div className="w-11 h-11 rounded flex items-center justify-center">
-                          <Icon className="w-7 h-7 text-[#326EA6] dark:text-[#7fb5df]" />
-                        </div>
-                        <div className="flex gap-7 items-center">
-                          <p className="text-sm font-medium text-[#343E47] dark:text-gray-100">
-                            Permit document 2025
-                          </p>
-                          <p className="text-xs text-gray-500 dark:text-gray-400">
-                            Document légal
-                          </p>
+                    <div className="mt-5">
+                      <p className="font-semibold text-sm">
+                        Responsable du jalon
+                      </p>
+                      <div className="flex gap-3 mt-2">
+                        <img
+                          src="/images/profile.jpeg"
+                          className="w-12 h-12 rounded-full"
+                        />
+                        <div>
+                          <p className="font-medium">{manager?.email || "—"}</p>
+                          <p className="text-sm text-gray-500">Manager</p>
                         </div>
                       </div>
                     </div>
-                  ))}
-                </div>
-              ))}
-            </div>
-          </div>
+                  </div>
 
-          {/* FOOTER BUTTON */}
-          <div className="flex justify-center pt-4">
-            <button className="px-6 py-2 bg-[#63A053] dark:bg-[#4e8742] text-white rounded-xs hover:bg-[#528a45] dark:hover:bg-[#3b6c34]">
-              Modifier
-            </button>
+                  {/* Date End */}
+                  <div className="col-span-2 space-y-1">
+                    <p className="font-semibold text-sm">Date butoir</p>
+                    <p>{milestone.end_date || "—"}</p>
+                    <p className="text-sm">{milestone.end_time || "—"}</p>
+                  </div>
+
+                  {/* Priority */}
+                  <div className="col-span-2">
+                    <p className="font-semibold text-sm">Priorités</p>
+                    <p className="capitalize">{milestone.priority}</p>
+                  </div>
+                </div>
+
+                {/* DELIVERABLES */}
+                <div>
+                  <p className="text-sm italic mb-4">Livrables de ce jalon</p>
+
+                  <div className="grid grid-cols-3 gap-10">
+                    {tasks.length === 0 ? (
+                      <p className="text-sm text-gray-500">Aucun livrable</p>
+                    ) : (
+                      tasks.map((task) => (
+                        <div key={task.id}>
+                          <hr className="mb-1" />
+                          <div className="flex gap-4">
+                            <FileText className="w-6 h-6 text-[#326EA6]" />
+                            <div>
+                              <p className="font-medium">{task.title}</p>
+                              <p className="text-xs">{task.category}</p>
+                            </div>
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </div>
+
+                {/* FOOTER */}
+                <div className="flex justify-center pt-4">
+                  <button
+                    onClick={() => setMode("edit")}
+                    className="px-6 py-2 bg-[#63A053] text-white rounded-xs"
+                  >
+                    Modifier
+                  </button>
+                </div>
+              </div>
+            );
+          })()
+        ) : (
+          <div className="px-10 py-7">
+            <MilestoneForm
+              defaultValues={{
+                title: data.milestone.title,
+                description: data.milestone.description || "",
+                startDate: data.milestone.start_date || "",
+                endDate: data.milestone.end_date || "",
+                priority: data.milestone.priority,
+                managerId: data.milestone.manager_id || "",
+              }}
+              manager={{
+                id: data.milestone.manager_id || "",
+                name: data.manager?.fullName || "",
+              }}
+              onCancel={() => setMode("view")}
+              onSubmit={handleSubmit}
+              loading={isLoading}
+              defaultTasks={(data.tasks || []).map((task) => ({
+                id: task.id,
+                name: task.title,
+                category: task.category,
+                description: task.description ?? "",
+                file_format: task.file_format,
+              }))}
+            />
           </div>
-        </div>
+        )}
       </DialogContent>
     </Dialog>
   );

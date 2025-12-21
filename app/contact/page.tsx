@@ -6,97 +6,32 @@ import { Input } from "@/components/ui/input";
 import { ChevronDown, LayoutGrid, List, Plus } from "lucide-react";
 import { useState } from "react";
 
-const dummyPeople = [
-  {
-    id: 1,
-    name: "Jacqueline Katanga",
-    title: "Architecte",
-    city: "Kolwezi, Lualaba",
-    img: "/images/manager.png",
-  },
-  {
-    id: 2,
-    name: "Jacqueline Katanga",
-    title: "Architecte",
-    city: "Kolwezi, Lualaba",
-    img: "/images/manager.png",
-  },
-  {
-    id: 3,
-    name: "Jacqueline Katanga",
-    title: "Architecte",
-    city: "Kolwezi, Lualaba",
-    img: "/images/manager.png",
-  },
-  {
-    id: 4,
-    name: "Jacqueline Katanga",
-    title: "Architecte",
-    city: "Kolwezi, Lualaba",
-    img: "/images/manager.png",
-  },
-  {
-    id: 5,
-    name: "Jacqueline Katanga",
-    title: "Architecte",
-    city: "Kolwezi, Lualaba",
-    img: "/images/manager.png",
-  },
-  {
-    id: 6,
-    name: "Jojo Lipasa",
-    title: "Architecte",
-    city: "Kolwezi, Lualaba",
-    img: "/images/manager.png",
-  },
-  {
-    id: 7,
-    name: "Lilly Mala",
-    title: "Architecte",
-    city: "Kolwezi, Lualaba",
-    img: "/images/manager.png",
-  },
-  {
-    id: 8,
-    name: "Maggy Temo",
-    title: "Architecte",
-    city: "Kolwezi, Lualaba",
-    img: "/images/manager.png",
-  },
-  {
-    id: 9,
-    name: "Jacques Marsse",
-    title: "Architecte",
-    city: "Kolwezi, Lualaba",
-    img: "/images/manager.png",
-  },
-  {
-    id: 10,
-    name: "Jacqueline Katanga",
-    title: "Architecte",
-    city: "Kolwezi, Lualaba",
-    img: "/images/manager.png",
-  },
-];
-
 import { ContactGridSkeleton } from "@/components/common/skeletons/contactGridSkeleton";
 import { ContactListSkeleton } from "@/components/common/skeletons/ContactListSkeleton";
 import { useContactActions } from "@/hooks/useContactActions";
 import GridView from "./GridView";
 import ListView from "./ListView";
 
+const PAGE_SIZE = 10;
+
 const Contact = () => {
   const [view, setView] = useState<"grid" | "list">("grid");
   const [openAddContact, setOpenAddContact] = useState(false);
   const [onlyMine, setOnlyMine] = useState(false);
 
-  const { contacts, toggleMyContact, loading } = useContactActions({
+  const [page, setPage] = useState(1);
+
+  const { contacts, total, toggleMyContact, loading } = useContactActions({
     onlyMine,
+    page,
+    pageSize: PAGE_SIZE,
   });
 
   // useEffect(() => {
   //   getContacts({ onlyMine }).then(setContacts);
   // }, [onlyMine]);
+
+  const totalPages = Math.ceil(total / PAGE_SIZE);
 
   return (
     <div>
@@ -212,32 +147,92 @@ const Contact = () => {
 
         {/* Pagination */}
         <div className="flex justify-center items-center gap-4 mt-10 text-gray-500 dark:text-gray-400">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="18"
-            viewBox="0 0 20 18"
-            fill="none"
+          <button
+            className="disabled:opacity-50"
+            disabled={page === 1}
+            onClick={() => setPage((p) => p - 1)}
           >
-            <path
-              d="M9.95947 0L19.9188 17.25H0.000180244L9.95947 0Z"
-              fill="#C7C7C7"
-            />
-          </svg>
-          <span>1-20</span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="18"
-            viewBox="0 0 20 18"
-            fill="none"
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="18"
+              viewBox="0 0 20 18"
+              fill="none"
+            >
+              <path
+                d="M9.95947 0L19.9188 17.25H0.000180244L9.95947 0Z"
+                fill="#C7C7C7"
+              />
+            </svg>
+          </button>
+          <span>
+            {page}-{totalPages}
+          </span>
+          <button
+            className="disabled:opacity-50"
+            disabled={page === totalPages}
+            onClick={() => setPage((p) => p + 1)}
           >
-            <path
-              d="M9.95947 17.25L19.9188 0L0.000180244 0L9.95947 17.25Z"
-              fill="#C7C7C7"
-            />
-          </svg>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="18"
+              viewBox="0 0 20 18"
+              fill="none"
+            >
+              <path
+                d="M9.95947 17.25L19.9188 0L0.000180244 0L9.95947 17.25Z"
+                fill="#C7C7C7"
+              />
+            </svg>
+          </button>
         </div>
+
+        {totalPages > 1 && (
+          <div className="flex justify-center gap-2 mt-6">
+            <button
+              disabled={page === 1}
+              onClick={() => setPage((p) => p - 1)}
+              className="px-3 py-1 border disabled:opacity-50"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="18"
+                viewBox="0 0 20 18"
+                fill="none"
+              >
+                <path
+                  d="M9.95947 0L19.9188 17.25H0.000180244L9.95947 0Z"
+                  fill="#C7C7C7"
+                />
+              </svg>
+            </button>
+
+            <span className="px-3 py-1">
+              {page} / {totalPages}
+            </span>
+
+            <button
+              disabled={page === totalPages}
+              onClick={() => setPage((p) => p + 1)}
+              className="border disabled:opacity-50"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="18"
+                viewBox="0 0 20 18"
+                fill="none"
+              >
+                <path
+                  d="M9.95947 17.25L19.9188 0L0.000180244 0L9.95947 17.25Z"
+                  fill="#C7C7C7"
+                />
+              </svg>
+            </button>
+          </div>
+        )}
       </div>
       <AddContactModal
         open={openAddContact}

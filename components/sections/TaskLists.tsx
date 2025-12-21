@@ -1,4 +1,4 @@
-import { TasksByMilestone } from "@/app/actions/projects/milestones/tasks/getTasksByMilestone";
+import { TasksByMilestone } from "@/app/actions/tasks/getTasksByMilestone";
 import { iconMap } from "@/components/common/FileIconMap";
 import { useUser } from "@/providers/UserProvider";
 import { EditTaskInput } from "@/types/task";

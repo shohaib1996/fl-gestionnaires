@@ -11,17 +11,28 @@ import {
 
 interface UseContactActionsOptions {
   onlyMine: boolean;
+  page?: number;
+  pageSize?: number;
 }
 
-export function useContactActions({ onlyMine }: UseContactActionsOptions) {
+export type PaginatedContacts = {
+  data: ContactListItem[];
+  total: number;
+};
+
+export function useContactActions({
+  onlyMine,
+  page,
+  pageSize,
+}: UseContactActionsOptions) {
   const queryClient = useQueryClient();
 
   /* ---------------------------
      GET CONTACTS (QUERY)
   ---------------------------- */
-  const contactsQuery = useQuery<ContactListItem[]>({
-    queryKey: ["contacts", { onlyMine }],
-    queryFn: () => getContacts({ onlyMine }),
+  const contactsQuery = useQuery<PaginatedContacts>({
+    queryKey: ["contacts", { onlyMine, page, pageSize }],
+    queryFn: () => getContacts({ onlyMine, page, pageSize }),
   });
 
   /* ---------------------------
@@ -44,13 +55,11 @@ export function useContactActions({ onlyMine }: UseContactActionsOptions) {
   });
 
   return {
-    /* -------- DATA -------- */
-    contacts: contactsQuery.data ?? [],
+    contacts: contactsQuery.data?.data ?? [],
+    total: contactsQuery.data?.total ?? 0,
 
-    /* -------- ACTIONS -------- */
     toggleMyContact: (contactId: string) => toggle.mutate(contactId),
 
-    /* -------- LOADING STATES -------- */
     loading: {
       list: contactsQuery.isLoading || contactsQuery.isFetching,
       toggle: toggle.isPending,
