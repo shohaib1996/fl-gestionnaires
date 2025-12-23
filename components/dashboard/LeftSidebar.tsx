@@ -8,7 +8,9 @@ import { useMemo, useState } from "react";
 
 import { fr } from "date-fns/locale";
 
+import { useCalendarEventDetails } from "@/hooks/useCalendarEventDetails";
 import { useMyCalendarEvents } from "@/hooks/useCalendarEvents";
+import { useEventParticipants } from "@/hooks/useEventParticipants";
 import { format } from "date-fns";
 
 export default function LeftSidebar() {
@@ -30,6 +32,15 @@ export default function LeftSidebar() {
   const [openDetails, setOpenDetails] = useState(false);
   const [activeEvent, setActiveEvent] = useState<any | null>(null);
 
+  const { data: event, isLoading: loadingEvent } = useCalendarEventDetails(
+    activeEvent?.id
+  );
+
+  const { data: participants = [], isLoading: loadingParticipants } =
+    useEventParticipants(activeEvent?.id);
+
+  console.log("participants", participants);
+
   return (
     <aside className="flex flex-col h-full bg-white dark:bg-neutral-800 shadow-sm border-0.5 border-black/10 rounded-xs overflow-hidden">
       {/* Add dialog */}
@@ -40,19 +51,26 @@ export default function LeftSidebar() {
         open={openDetails}
         onOpenChange={setOpenDetails}
         task={
-          activeEvent
+          event
             ? {
-                title: activeEvent.title,
-                subtitle: activeEvent.location_label,
-                dateLabel: format(
-                  new Date(activeEvent.start_date),
-                  "dd MMMM yyyy",
-                  { locale: fr }
-                ),
-                timeFrom: activeEvent.start_time ?? "",
-                timeTo: activeEvent.end_time ?? "",
-                participants: [], // next step: real participants hook
-                description: activeEvent.description,
+                id: event.id,
+                title: event.title,
+                subtitle: event.location_label ?? undefined,
+                dateLabel: format(new Date(event.start_date), "dd MMMM yyyy", {
+                  locale: fr,
+                }),
+                timeFrom: event.start_time ?? "",
+                timeTo: event.end_time ?? "",
+                participants: participants.map((p) => ({
+                  id: p.id,
+                  img: p.avatar ?? undefined,
+                  name: p.name ?? undefined,
+                  email: p.email ?? undefined,
+                })),
+                description: event.description ?? "",
+                location: event.location_label ?? "",
+                startDate: new Date(event.start_date),
+                endDate: new Date(event.end_date),
               }
             : null
         }

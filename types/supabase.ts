@@ -125,6 +125,13 @@ export type Database = {
             referencedRelation: "calendar_events"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "cep_user_id_users_id_fk"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
         ]
       }
       calendar_events: {

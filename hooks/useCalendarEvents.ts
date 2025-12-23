@@ -55,7 +55,7 @@ interface UseMyCalendarEventsParams {
 
 export function useMyCalendarEvents(params?: UseMyCalendarEventsParams) {
   return useQuery({
-    queryKey: ["calendar-events", params],
+    queryKey: ["calendar-events"],
     queryFn: async () => {
       const supabase = createClient();
 
