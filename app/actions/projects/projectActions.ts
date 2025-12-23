@@ -1,7 +1,8 @@
-import { createClient } from "@/lib/supabase/client";
+"use server";
+import { createClient } from "@/lib/supabase/server";
 import { ActionResult } from "@/types/actions";
 
-const supabase = createClient();
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
 /* ----------------------------------
    CLAIM PROJECT (ADMIN ONLY)
@@ -13,6 +14,7 @@ export async function claimProject({
   projectId: string;
   userId: string;
 }): Promise<ActionResult> {
+  const supabase = await createClient();
   /* 1️⃣ Check project status */
   const { data: project, error: projectError } = await supabase
     .from("projects")
@@ -78,6 +80,8 @@ export async function claimProject({
    DECLINE PROJECT (SUPER ADMIN)
 ----------------------------------- */
 export async function declineProject(projectId: string): Promise<ActionResult> {
+  const supabase = await createClient();
+
   const { data, error } = await supabase
     .from("projects")
     .update({ status: "declined" })
@@ -99,13 +103,11 @@ export async function declineProject(projectId: string): Promise<ActionResult> {
 }
 
 /* ----------------------------------
-   INVITE USER
------------------------------------ */
-
-/* ----------------------------------
    SMART APPROVE (SUPER ADMIN)
 ----------------------------------- */
 export async function approveProject(projectId: string): Promise<ActionResult> {
+  const supabase = await createClient();
+
   /* 1️⃣ Fetch project */
   const { data: project, error: projectError } = await supabase
     .from("projects")
@@ -147,14 +149,11 @@ export async function approveProject(projectId: string): Promise<ActionResult> {
 
   /* 3️⃣ Invite if user does not exist */
   if (!userExists) {
-    const inviteRes = await fetch(
-      `${process.env.NEXT_PUBLIC_APP_URL}/api/invite`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: project.email }),
-      }
-    );
+    const inviteRes = await fetch(`${APP_URL}/api/invite`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: project.email }),
+    });
 
     if (!inviteRes.ok) {
       return {

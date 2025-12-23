@@ -7,7 +7,7 @@ import {
   approveProject,
   claimProject,
   declineProject,
-} from "@/lib/api/projectActions";
+} from "@/app/actions/projects/projectActions";
 
 export function useProjectActions() {
   const queryClient = useQueryClient();
