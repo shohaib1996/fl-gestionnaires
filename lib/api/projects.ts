@@ -13,8 +13,7 @@ export interface ProjectFilters {
   name?: string;
   ifl?: string;
 
-  /* 🔐 role-based */
-  role?: UserRole;
+  role: UserRole;
   userId?: string;
 
   page?: number;
@@ -22,7 +21,7 @@ export interface ProjectFilters {
 }
 
 export async function fetchProjects(
-  filters: ProjectFilters = {}
+  filters: ProjectFilters
 ): Promise<ProjectRow[]> {
   const supabase = createClient();
 
@@ -32,29 +31,23 @@ export async function fetchProjects(
         assignments:project_assignments (
           user_id
         ),
-        claimers:claims (
-          claimed_by
+        claims!inner (
+        claimed_by
         )
       `
   );
 
   /* --------------------------------
-   * 🔐 ROLE / VISIBILITY (CRITICAL)
+   * ROLE / VISIBILITY (CRITICAL)
    * -------------------------------- */
   if (filters.role === "admin") {
     if (!filters.userId) {
       throw new Error("userId is required for admin role");
     }
 
-    // admin can ONLY see projects where he is involved
-    // - claimed by him
-    // - OR assigned to him
-    query = query.or(
-      `assignments.user_id.eq.${filters.userId},claimers.claimed_by.eq.${filters.userId}`
-    );
+    // Admin → ONLY projects claimed by himself
+    query = query.eq("claims.claimed_by", filters.userId);
   }
-
-  // super_admin → no restriction (sees all)
 
   /* ---------------------------
    * STATUS
@@ -126,5 +119,92 @@ export async function fetchProjects(
 
   if (error) throw error;
 
+  return data ?? [];
+}
+
+export async function fetchReceivedProjects() {
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from("projects")
+    .select("*")
+    .eq("status", "submitted")
+    .order("created_at", { ascending: false });
+
+  if (error) throw error;
+  return data ?? [];
+}
+
+export async function fetchMyProjects({ userId }: { userId: string }) {
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from("projects")
+    .select(
+      `
+        *,
+        claims!inner (
+          claimed_by
+        )
+      `
+    )
+    .eq("claims.claimed_by", userId)
+    .eq("status", "claimed")
+    .order("created_at", { ascending: false });
+
+  if (error) throw error;
+  return data ?? [];
+}
+
+export async function fetchInProgressProjects({
+  role,
+  userId,
+}: {
+  role: UserRole;
+  userId?: string;
+}) {
+  const supabase = createClient();
+
+  let query = supabase
+    .from("projects")
+    .select(
+      `
+        *,
+        claims!inner (
+          claimed_by
+        )
+      `
+    )
+    .eq("status", "in_progress")
+    .order("created_at", { ascending: false });
+
+  if (role === "admin") {
+    if (!userId) throw new Error("userId required for admin");
+    query = query.eq("claims.claimed_by", userId);
+  }
+
+  const { data, error } = await query;
+
+  if (error) throw error;
+  return data ?? [];
+}
+
+export async function fetchClaimedProjects() {
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from("projects")
+    .select(
+      `
+        *,
+        claims!inner (
+          claimed_by
+        )
+      `
+    )
+    .eq("status", "claimed")
+    .order("created_at", { ascending: false });
+
+  if (error) throw error;
   return data ?? [];
 }

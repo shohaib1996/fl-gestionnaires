@@ -221,7 +221,7 @@ export type Database = {
           {
             foreignKeyName: "claims_project_id_fkey"
             columns: ["project_id"]
-            isOneToOne: false
+            isOneToOne: true
             referencedRelation: "projects"
             referencedColumns: ["id"]
           },
@@ -670,6 +670,10 @@ export type Database = {
           p_user_id: string
         }
         Returns: undefined
+      }
+      check_user_exists_by_email: {
+        Args: { email_input: string }
+        Returns: boolean
       }
       complete_milestone: {
         Args: { p_milestone_id: string }

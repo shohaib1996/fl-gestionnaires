@@ -4,9 +4,9 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import {
-  claimProjectSimple,
+  approveProject,
+  claimProject,
   declineProject,
-  inviteUser,
 } from "@/lib/api/projectActions";
 
 export function useProjectActions() {
@@ -16,41 +16,21 @@ export function useProjectActions() {
      CLAIM
   ---------------------------- */
   const claim = useMutation({
-    mutationFn: claimProjectSimple,
+    mutationFn: claimProject,
 
     onSuccess: (result) => {
       if (result.success) {
+        toast.success("Project claimed successfully.");
         queryClient.invalidateQueries({ queryKey: ["projects"] });
-        toast.success("Project claimed successfully!");
       } else {
-        toast.error(result.message ?? "Project already claimed.");
+        toast.error(result.message);
       }
     },
 
     onError: () => {
-      toast.error("Error claiming project.");
+      toast.error("Unexpected error while claiming project.");
     },
   });
-
-  /* ---------------------------
-     APPROVE
-  ---------------------------- */
-  // const approve = useMutation({
-  //   mutationFn: approveProject,
-
-  //   onSuccess: (result) => {
-  //     if (result.success) {
-  //       queryClient.invalidateQueries({ queryKey: ["projects"] });
-  //       toast.success("Project approved!");
-  //     } else {
-  //       toast.error(result.message);
-  //     }
-  //   },
-
-  //   onError: () => {
-  //     toast.error("Error approving project.");
-  //   },
-  // });
 
   /* ---------------------------
      DECLINE
@@ -60,52 +40,46 @@ export function useProjectActions() {
 
     onSuccess: (result) => {
       if (result.success) {
-        queryClient.invalidateQueries({ queryKey: ["projects"] });
         toast.success("Project declined.");
+        queryClient.invalidateQueries({ queryKey: ["projects"] });
       } else {
         toast.error(result.message);
       }
     },
 
     onError: () => {
-      toast.error("Error declining project.");
+      toast.error("Unexpected error while declining project.");
     },
   });
 
-  /* ---------------------------
-     INVITE
-  ---------------------------- */
-  const invite = useMutation({
-    mutationFn: inviteUser,
+  const approve = useMutation({
+    mutationFn: approveProject,
 
     onSuccess: (result) => {
       if (result.success) {
-        toast.success(`Invitation sent to ${result.data.email}`);
+        toast.success("Project approved and activated.");
+        queryClient.invalidateQueries({ queryKey: ["projects"] });
       } else {
         toast.error(result.message);
       }
     },
 
     onError: () => {
-      toast.error("Error sending invitation.");
+      toast.error("Error approving project.");
     },
   });
 
   return {
-    claim: ({
-      project_id,
-      claimed_by,
-    }: {
-      project_id: string;
-      claimed_by: string;
-    }) => claim.mutate({ projectId: project_id, userId: claimed_by }),
-    decline: (id: string) => decline.mutate(id),
-    invite: (email: string) => invite.mutate(email),
+    claim: (payload: { projectId: string; userId: string }) =>
+      claim.mutate(payload),
 
+    decline: (projectId: string) => decline.mutate(projectId),
+
+    approve: (projectId: string) => approve.mutate(projectId),
     loading: {
       claim: claim.isPending,
       decline: decline.isPending,
-      invite: invite.isPending,
+      approve: approve.isPending,
     },
   };
 }

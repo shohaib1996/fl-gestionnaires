@@ -3,71 +3,85 @@ import { ActionResult } from "@/types/actions";
 
 const supabase = createClient();
 
-// ---------------------------
-// CLAIM PROJECT
-// ---------------------------
-export async function claimProjectSimple({
+/* ----------------------------------
+   CLAIM PROJECT (ADMIN ONLY)
+----------------------------------- */
+export async function claimProject({
   projectId,
   userId,
 }: {
   projectId: string;
   userId: string;
-}) {
-  const { error } = await supabase.from("claims").insert({
+}): Promise<ActionResult> {
+  /* 1️⃣ Check project status */
+  const { data: project, error: projectError } = await supabase
+    .from("projects")
+    .select("status")
+    .eq("id", projectId)
+    .single();
+
+  if (projectError) {
+    return {
+      success: false,
+      message: projectError.message,
+    };
+  }
+
+  if (project.status !== "submitted") {
+    return {
+      success: false,
+      message: "Project cannot be claimed at this stage.",
+    };
+  }
+
+  /* 2️⃣ Try to insert claim */
+  const { error: claimError } = await supabase.from("claims").insert({
     project_id: projectId,
     claimed_by: userId,
   });
 
-  if (error) {
+  /* UNIQUE constraint hit → already claimed */
+  if (claimError?.code === "23505") {
     return {
       success: false,
-      message: error.message,
-      code: error.code,
-      details: error.details,
+      message: "Project already claimed by another admin.",
+    };
+  }
+
+  if (claimError) {
+    return {
+      success: false,
+      message: claimError.message,
+    };
+  }
+
+  /* 3️⃣ Update project status */
+  const { error: statusError } = await supabase
+    .from("projects")
+    .update({ status: "claimed" })
+    .eq("id", projectId);
+
+  if (statusError) {
+    return {
+      success: false,
+      message: statusError.message,
     };
   }
 
   return {
     success: true,
+    data: { projectId, userId },
   };
 }
 
-// ---------------------------
-// APPROVE PROJECT
-// ---------------------------
-// export async function approveProject(
-//   id: string
-// ): Promise<ActionResult> {
-//   const { data, error } = await supabase
-//     .from("projects")
-//     .update({ status: "approved" })
-//     .eq("id", id)
-//     .select()
-//     .single();
-
-//   if (error) {
-//     return {
-//       success: false,
-//       message: error.message,
-//       code: error.code,
-//       details: error.details,
-//     };
-//   }
-
-//   return {
-//     success: true,
-//     data,
-//   };
-// }
-
-// ---------------------------
-// DECLINE PROJECT
-// ---------------------------
-export async function declineProject(id: string): Promise<ActionResult> {
+/* ----------------------------------
+   DECLINE PROJECT (SUPER ADMIN)
+----------------------------------- */
+export async function declineProject(projectId: string): Promise<ActionResult> {
   const { data, error } = await supabase
     .from("projects")
     .update({ status: "declined" })
-    .eq("id", id)
+    .eq("id", projectId)
     .select()
     .single();
 
@@ -75,8 +89,6 @@ export async function declineProject(id: string): Promise<ActionResult> {
     return {
       success: false,
       message: error.message,
-      code: error.code,
-      details: error.details,
     };
   }
 
@@ -86,27 +98,87 @@ export async function declineProject(id: string): Promise<ActionResult> {
   };
 }
 
-// ---------------------------
-// INVITE USER
-// ---------------------------
-export async function inviteUser(
-  email: string
-): Promise<ActionResult<{ email: string }>> {
-  const res = await fetch("/api/invite", {
-    method: "POST",
-    body: JSON.stringify({ email }),
-  });
+/* ----------------------------------
+   INVITE USER
+----------------------------------- */
 
-  if (!res.ok) {
-    const errorBody = await res.json().catch(() => null);
+/* ----------------------------------
+   SMART APPROVE (SUPER ADMIN)
+----------------------------------- */
+export async function approveProject(projectId: string): Promise<ActionResult> {
+  /* 1️⃣ Fetch project */
+  const { data: project, error: projectError } = await supabase
+    .from("projects")
+    .select("id, email, status")
+    .eq("id", projectId)
+    .single();
+
+  if (projectError) {
+    return { success: false, message: projectError.message };
+  }
+
+  if (project.status !== "claimed") {
     return {
       success: false,
-      message: errorBody?.error || res.statusText,
+      message: "Project cannot be approved at this stage.",
+    };
+  }
+
+  /* IMPORTANT: email must exist */
+  if (!project.email) {
+    return {
+      success: false,
+      message: "Project owner email is missing.",
+    };
+  }
+
+  /* 2️⃣ Check if user exists */
+  const { data: userExists, error: rpcError } = await supabase.rpc(
+    "check_user_exists_by_email",
+    { email_input: project.email }
+  );
+
+  if (rpcError) {
+    return {
+      success: false,
+      message: rpcError.message,
+    };
+  }
+
+  /* 3️⃣ Invite if user does not exist */
+  if (!userExists) {
+    const inviteRes = await fetch(
+      `${process.env.NEXT_PUBLIC_APP_URL}/api/invite`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: project.email }),
+      }
+    );
+
+    if (!inviteRes.ok) {
+      return {
+        success: false,
+        message: "Failed to send account invitation.",
+      };
+    }
+  }
+
+  /* 4️⃣ Move project to in_progress */
+  const { error: updateError } = await supabase
+    .from("projects")
+    .update({ status: "in_progress" })
+    .eq("id", projectId);
+
+  if (updateError) {
+    return {
+      success: false,
+      message: updateError.message,
     };
   }
 
   return {
     success: true,
-    data: { email },
+    data: project,
   };
 }

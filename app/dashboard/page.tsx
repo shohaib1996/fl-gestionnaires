@@ -7,6 +7,7 @@ import DashboardView from "@/components/dashboard/DashboardView";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useProjects } from "@/hooks/useProjects";
 
+import { useUser } from "@/providers/UserProvider";
 import type { DashboardFilters, DashboardTab } from "@/types/dashboard";
 import { TAB_TO_STATUS } from "@/types/dashboard";
 
@@ -49,12 +50,22 @@ export default function DashboardPage() {
   /* --------------------------------
    * 4️⃣ DATA FETCH (STATE DRIVEN)
    * -------------------------------- */
-  const { data: projects = [], isLoading } = useProjects({
-    status: TAB_TO_STATUS[activeTab],
-    page,
-    pageSize: PAGE_SIZE,
-    ...debouncedFilters,
+  // const { data: projects = [], isLoading } = useProjects({
+  //   status: TAB_TO_STATUS[activeTab],
+  //   page,
+  //   pageSize: PAGE_SIZE,
+  //   ...debouncedFilters,
+  // });
+  const { user, loading: userLoading } = useUser();
+
+  const { data: projects, isLoading } = useProjects({
+    tab: activeTab,
+    role: user?.role ?? "admin",
+    userId: user?.id,
+    enabled: !!user && !userLoading,
   });
+
+  console.log("projects", projects);
 
   /* --------------------------------
    * 5️⃣ URL SYNC (SIDE EFFECT)
@@ -98,7 +109,7 @@ export default function DashboardPage() {
   return (
     <DashboardView
       activeTab={activeTab}
-      projects={projects}
+      projects={projects ?? []}
       loading={isLoading}
       page={page}
       filters={filters}

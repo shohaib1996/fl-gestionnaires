@@ -5,7 +5,7 @@ import { Database } from "@/types/supabase";
 
 type ProjectRow = Database["public"]["Tables"]["projects"]["Row"];
 
-interface Claimer {
+export interface Claimer {
   fullName: string;
   email: string;
   avatarURL: string | null;
@@ -14,7 +14,7 @@ interface Claimer {
 export interface GetProjectByIdResult {
   data:
     | (ProjectRow & {
-        claimers: Claimer[] | null;
+        claimer: Claimer | null;
       })
     | null;
   error: string | null;
@@ -37,7 +37,7 @@ export async function getProjectById(
     .select(
       `
         *,
-        claims (
+        claimer:claims (
           claimed_at,
           user:users (
             id,
@@ -67,29 +67,20 @@ export async function getProjectById(
     };
   }
 
-  const claimers: Claimer[] | null =
-    data.claims && data.claims.length > 0
-      ? (data.claims
-          .map((c: any) => {
-            if (!c.user) return null;
+  const claimer: Claimer | null = data.claimer?.user
+    ? {
+        fullName: data.claimer.user.fullName ?? "",
+        email: data.claimer.user.email,
+        avatarURL: data.claimer.user.avatarURL ?? null,
+      }
+    : null;
 
-            return {
-              id: c.user.id,
-              fullName: c.user.fullName ?? "",
-              email: c.user.email ?? "",
-              avatarURL: c.user.avatarURL ?? null,
-            };
-          })
-          .filter(Boolean) as Claimer[])
-      : null;
-
-  // raw relation remove করে clean response বানানো
-  const { claims, ...project } = data;
+  const { ...project } = data;
 
   return {
     data: {
       ...project,
-      claimers,
+      claimer,
     },
     error: null,
   };

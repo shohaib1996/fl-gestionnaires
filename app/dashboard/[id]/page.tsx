@@ -1,13 +1,18 @@
 "use client";
 
-import { getProjectById } from "@/app/actions/projects/projects.action";
+import {
+  Claimer,
+  getProjectById,
+} from "@/app/actions/projects/projects.action";
 import ClaimerSection from "@/components/dashboard/ClaimerSection";
 import DashboardTabs from "@/components/dashboard/DashboardTabs";
-import ProjectActionsMenu from "@/components/dashboard/ProjectActions";
+import ProjectActionsMenu from "@/components/dashboard/ProjectActionsMenu";
 import ImageGallery from "@/components/Gallery/ImageGallery";
 import { Button } from "@/components/ui/button";
 import { useProjectActions } from "@/hooks/useProjectActions";
+import { getProjectActions } from "@/lib/project/getProjectActions";
 import { useUser } from "@/providers/UserProvider";
+import { ProjectStatus } from "@/types/status";
 import { Undo2 } from "lucide-react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
@@ -33,8 +38,8 @@ export interface Project {
   signer_name: string;
   logo_urls: string[];
   claimed: number;
-  claimers: any[];
-  status: string;
+  claimer: Claimer | null;
+  status: ProjectStatus;
   created_at: string;
   project_id: string;
 }
@@ -45,9 +50,8 @@ const ProjectDetails = () => {
   const router = useRouter();
   const params = useParams();
   const id = params?.id as string;
-  const { claim, decline, invite } = useProjectActions();
+  const { claim, approve } = useProjectActions();
   const { user, loading: userLoading } = useUser();
-  console.log(project);
 
   useEffect(() => {
     async function fetchProject() {
@@ -55,7 +59,7 @@ const ProjectDetails = () => {
 
       const { data, error } = await getProjectById(id);
 
-      if (error || !data) {
+      if (error || !data || !data.status) {
         console.error("Error fetching project:", error);
         setLoading(false);
         return;
@@ -90,8 +94,8 @@ const ProjectDetails = () => {
         logo_urls: data.logo_urls ?? [],
 
         claimed: data.claim_count ?? 0,
-        claimers: data.claimers ?? [],
-        status: data.status ?? "",
+        claimer: data.claimer ?? null,
+        status: data.status,
         created_at: data.created_at ?? "",
       };
 
@@ -102,10 +106,18 @@ const ProjectDetails = () => {
     fetchProject();
   }, [id]);
 
-  if (loading) {
+  if (userLoading || loading) {
     return (
-      <div className="flex h-full items-center justify-center text-gray-600 dark:text-gray-300">
-        Loading project details...
+      <div className="flex h-full items-center justify-center text-gray-600">
+        Loading...
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="flex h-full items-center justify-center text-red-600">
+        Unauthorized access
       </div>
     );
   }
@@ -117,6 +129,27 @@ const ProjectDetails = () => {
       </div>
     );
   }
+
+  console.log("project", project);
+
+  const actions = getProjectActions({
+    role: user.role,
+    status: project.status,
+  });
+
+  const handleClaim = () => {
+    if (user.role !== "admin") return;
+    if (project.status !== "submitted") return;
+
+    claim({ projectId: project.id, userId: user.id });
+  };
+
+  const handleApprove = () => {
+    if (user.role !== "super_admin") return;
+    if (project.status !== "claimed") return;
+
+    approve(project.id);
+  };
 
   return (
     // make this a column so header stays fixed and the content below scrolls
@@ -152,13 +185,11 @@ const ProjectDetails = () => {
             </Link>
             <span className="text-sm font-medium text-gray-600 dark:text-gray-300 flex items-center gap-7">
               ID: {project.project_id}
-              {user && (
+              {actions?.length > 0 && (
                 <ProjectActionsMenu
-                  onInvite={() => invite(project.email)}
-                  onClaim={() =>
-                    claim({ project_id: project.id, claimed_by: user.id })
-                  }
-                  onDecline={() => decline(id)}
+                  actions={actions}
+                  onClaim={handleClaim}
+                  onApprove={handleApprove}
                 />
               )}
             </span>
@@ -327,9 +358,9 @@ const ProjectDetails = () => {
         </section>
 
         {/* ===== Claimers ===== */}
-        {project.status === "claimed" &&
-          project.claimers.length > 0 &&
-          user?.role === "super_admin" && <ClaimerSection project={project} />}
+        {user.role === "super_admin" &&
+          project.status === "claimed" &&
+          project.claimer && <ClaimerSection claimer={project.claimer} />}
       </div>
     </div>
   );
