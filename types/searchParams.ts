@@ -6,4 +6,5 @@ export interface ProjectSearchParams {
   fromDate?: string;
   toDate?: string;
   assignedTo?: string;
+  role: string;
 }
