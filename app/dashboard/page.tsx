@@ -12,7 +12,7 @@ import type { DashboardFilters, DashboardTab } from "@/types/dashboard";
 import { TAB_TO_STATUS } from "@/types/dashboard";
 
 const DEFAULT_TAB: DashboardTab = "recu";
-const PAGE_SIZE = 20;
+const PAGE_SIZE = 8;
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -28,7 +28,14 @@ export default function DashboardPage() {
   /* --------------------------------
    * 2️⃣ DEBOUNCED FILTERS
    * -------------------------------- */
-  const debouncedFilters = useDebounce(filters, 400);
+  const debouncedFilters = useDebounce(
+    {
+      page,
+      pageSize: PAGE_SIZE,
+      ...filters,
+    },
+    400
+  );
 
   /* --------------------------------
    * 3️⃣ INITIAL STATE FROM URL (ONCE)
@@ -50,12 +57,6 @@ export default function DashboardPage() {
   /* --------------------------------
    * 4️⃣ DATA FETCH (STATE DRIVEN)
    * -------------------------------- */
-  // const { data: projects = [], isLoading } = useProjects({
-  //   status: TAB_TO_STATUS[activeTab],
-  //   page,
-  //   pageSize: PAGE_SIZE,
-  //   ...debouncedFilters,
-  // });
   const { user, loading: userLoading } = useUser();
 
   const { data: projects, isLoading } = useProjects({
@@ -63,9 +64,8 @@ export default function DashboardPage() {
     role: user?.role ?? "admin",
     userId: user?.id,
     enabled: !!user && !userLoading,
+    filters: debouncedFilters,
   });
-
-  console.log("projects", projects);
 
   /* --------------------------------
    * 5️⃣ URL SYNC (SIDE EFFECT)
@@ -94,6 +94,7 @@ export default function DashboardPage() {
   };
 
   const handlePageChange = (nextPage: number) => {
+    console.log("📤 Next Page:", nextPage);
     if (nextPage < 1) return;
     setPage(nextPage);
   };

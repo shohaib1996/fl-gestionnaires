@@ -63,7 +63,6 @@ export function useMyCalendarEvents(params?: UseMyCalendarEventsParams) {
         .from("calendar_events")
         .select("*")
         .order("start_date", { ascending: true });
-      console.log("query", params);
 
       if (params?.from) {
         query = query.gte("start_date", params.from);

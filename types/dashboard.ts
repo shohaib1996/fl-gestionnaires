@@ -13,10 +13,13 @@ export const TAB_TO_STATUS: Record<DashboardTab, ProjectStatus> = {
 };
 
 export interface DashboardFilters {
+  search?: string;
+  fromDate?: string;
+  toDate?: string;
   location?: string;
   category?: string;
-  date?: string;
   name?: string;
   ifl?: string;
-  search?: string;
+  page?: number;
+  pageSize?: number;
 }

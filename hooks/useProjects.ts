@@ -9,14 +9,16 @@ import {
   fetchInProgressProjects,
   fetchMyProjects,
   fetchReceivedProjects,
+  ProjectFilters,
 } from "@/lib/api/projects";
-import { DashboardTab } from "@/types/dashboard";
+import { DashboardFilters, DashboardTab } from "@/types/dashboard";
 
 interface UseProjectsParams {
   tab: DashboardTab;
   role: UserRole;
   userId?: string;
   enabled?: boolean;
+  filters?: DashboardFilters;
 }
 
 export function useProjects({
@@ -24,32 +26,39 @@ export function useProjects({
   role,
   userId,
   enabled = true,
+  filters,
 }: UseProjectsParams) {
+  const projectFilters: ProjectFilters = {
+    ...filters,
+    role,
+    userId,
+  };
+
   return useQuery<ProjectRow[], Error>({
-    queryKey: ["projects", tab, role, userId],
+    queryKey: ["projects", tab, role, userId, filters],
     enabled,
 
     queryFn: async () => {
       switch (tab) {
         case "recu":
-          // both admin & super admin
-          return fetchReceivedProjects();
+          return fetchReceivedProjects(projectFilters);
 
         case "mes-projets":
-          console.log(role);
           if (role === "admin") {
-            if (!userId) return [];
-            // ✅ admin → own claimed
-            return fetchMyProjects({ userId });
+            if (!userId) {
+              throw new Error("userId is required for admin mes-projets");
+            }
+
+            return fetchMyProjects({
+              ...projectFilters,
+              userId,
+            });
           }
 
-          // ✅ super admin → ALL claimed
-          return fetchClaimedProjects(); // ⬅️ NEW
+          return fetchClaimedProjects(projectFilters);
 
         case "encours":
-          // admin → own in_progress
-          // super admin → all in_progress
-          return fetchInProgressProjects({ role, userId });
+          return fetchInProgressProjects(projectFilters);
 
         default:
           return [];
