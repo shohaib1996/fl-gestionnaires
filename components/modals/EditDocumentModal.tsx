@@ -55,6 +55,7 @@ interface Props {
   onClose: () => void;
   doc: DocumentType;
   milestoneId: string;
+  projectId: string;
 }
 
 const FILE_ACCEPT_MAP: Record<string, string> = {
@@ -71,6 +72,7 @@ export default function EditDocumentModal({
   onClose,
   doc,
   milestoneId,
+  projectId,
 }: Props) {
   const [name, setName] = useState(doc?.goal);
   const [category, setCategory] = useState(doc?.category);
@@ -109,6 +111,7 @@ export default function EditDocumentModal({
       const payload = {
         taskId: doc.id,
         milestoneId: milestoneId,
+        projectId: projectId,
         name,
         description: description ?? null,
         category: category ?? null,

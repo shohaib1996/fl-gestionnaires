@@ -6,6 +6,7 @@ import type { TablesInsert, TablesUpdate } from "@/types/supabase";
 
 interface EditTaskWithDocumentInput {
   taskId: string;
+  projectId: string;
   milestoneId: string;
   name?: string;
   description?: string | null;
@@ -63,6 +64,7 @@ export async function editTaskWithDocument(
 
     const insertPayload: TablesInsert<"documents"> = {
       task_id: taskId,
+      project_id: taskUpdates.projectId ?? "",
       name: taskUpdates.name,
       category: taskUpdates.category ?? undefined,
       description: taskUpdates.description ?? undefined,

@@ -14,7 +14,7 @@ export async function getProjectSidebarOverview(
       .select("id", { count: "exact", head: true })
       .eq("project_id", projectId),
     supabase
-      .from("notes")
+      .from("project_notes")
       .select("id", { count: "exact", head: true })
       .eq("project_id", projectId),
     supabase

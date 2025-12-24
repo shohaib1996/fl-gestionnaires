@@ -20,6 +20,7 @@ export interface DashboardFilters {
   category?: string;
   name?: string;
   ifl?: string;
+  date?: string;
   page?: number;
   pageSize?: number;
 }

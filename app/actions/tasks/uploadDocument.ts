@@ -5,6 +5,7 @@ import type { ActionResult } from "@/types/actions";
 
 interface UploadDocumentInput {
   taskId: string;
+  projectId: string;
   filePath: string; // storage path
   name: string;
   description?: string;
@@ -22,6 +23,7 @@ export async function createDocument(
     .from("documents")
     .insert({
       task_id: input.taskId,
+      project_id: input.projectId,
       name: input.name,
       description: input.description,
       category: input.category,

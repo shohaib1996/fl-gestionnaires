@@ -394,6 +394,7 @@ const ProjectDetails = () => {
           }}
           doc={doc}
           milestoneId={activeMilestoneId ?? ""}
+          projectId={project.id ?? ""}
         />
       )}
     </div>
