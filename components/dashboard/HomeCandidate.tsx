@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+"use client";
 import { AnimatePresence, motion } from "framer-motion";
+import { useState } from "react";
+import AddTaskScreen from "./AddTaskScreen";
+import CalendarScreen from "./CalendarScreen";
 import { EvolutionDetail } from "./EvolutionDetail";
 import { TaskDetail } from "./TaskDetail";
-import CalendarScreen from "./CalendarScreen";
-import AddTaskScreen from "./AddTaskScreen";
 
 export const HomeCandidate = () => {
   const [showEvolution, setShowEvolution] = useState(false);
