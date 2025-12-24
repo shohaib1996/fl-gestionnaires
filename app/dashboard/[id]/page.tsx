@@ -114,7 +114,7 @@ const ProjectDetails = () => {
     );
   }
 
-  if (!user) {
+  if (!user && !loading) {
     return (
       <div className="flex h-full items-center justify-center text-red-600">
         Unauthorized access
@@ -122,7 +122,7 @@ const ProjectDetails = () => {
     );
   }
 
-  if (!project) {
+  if (!project && !loading) {
     return (
       <div className="flex h-full items-center justify-center text-gray-600 dark:text-gray-300">
         Project not found
@@ -130,7 +130,8 @@ const ProjectDetails = () => {
     );
   }
 
-  console.log("project", project);
+  if (!project) return;
+  if (!user) return;
 
   const actions = getProjectActions({
     role: user.role,

@@ -22,7 +22,7 @@ export function useCreateMilestone() {
   >({
     mutationFn: createMilestone,
 
-    onSuccess: (res, variables) => {
+    onSuccess: async (res, variables) => {
       if (!res.success) {
         toast.error(res.message);
         return;

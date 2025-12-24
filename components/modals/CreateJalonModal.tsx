@@ -29,11 +29,13 @@ import { Textarea } from "../ui/textarea";
 import AddDocumentModal from "./AddDocumentModal";
 
 import { createTask } from "@/app/actions/tasks/createTask";
+import { taskKeys } from "@/hooks/useTasksByMilestone";
 import {
   createMilestoneSchema,
   type CreateMilestoneFormValues,
 } from "@/schemas/milestone.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { iconMap } from "../common/FileIconMap";
@@ -49,6 +51,7 @@ interface Props {
   open: boolean;
   onClose: () => void;
   projectId: string;
+  projectName: string;
   manager: {
     id: string;
     name: string | null;
@@ -60,9 +63,12 @@ export default function CreateJalonModal({
   onClose,
   projectId,
   manager,
+  projectName,
 }: Props) {
   const [addDocumentModalOpen, setAddDocumentModalOpen] = useState(false);
   const [tasks, setTasks] = useState<AddDocumentPayload[]>([]);
+
+  const queryClient = useQueryClient();
 
   const { mutateAsync, isPending } = useCreateMilestone();
 
@@ -115,10 +121,11 @@ export default function CreateJalonModal({
             })
           )
         );
-      }
 
-      // 3. Success feedback
-      toast.success("Jalon et tâches créés avec succès");
+        queryClient.invalidateQueries({
+          queryKey: taskKeys.byMilestone(milestoneId),
+        });
+      }
 
       onClose();
     } catch (error) {
@@ -135,7 +142,7 @@ export default function CreateJalonModal({
         <DialogHeader className="px-8 py-4 bg-[#63A053] dark:bg-[#4e8742] text-white">
           <DialogTitle className="text-lg font-semibold flex justify-between items-center px-5">
             <p>Créer un jalon</p>
-            <p className="text-sm opacity-90">Colla Naturelle</p>
+            <p className="text-sm opacity-90">{projectName}</p>
           </DialogTitle>
         </DialogHeader>
 

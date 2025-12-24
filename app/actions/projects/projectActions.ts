@@ -105,6 +105,7 @@ export async function declineProject(projectId: string): Promise<ActionResult> {
 /* ----------------------------------
    SMART APPROVE (SUPER ADMIN)
 ----------------------------------- */
+
 export async function approveProject(projectId: string): Promise<ActionResult> {
   const supabase = await createClient();
 
@@ -126,28 +127,39 @@ export async function approveProject(projectId: string): Promise<ActionResult> {
     };
   }
 
-  /* IMPORTANT: email must exist */
-  if (!project.email) {
+  /* 2️⃣ Get claimer (CRITICAL PART) */
+  const { data: claim, error: claimError } = await supabase
+    .from("claims")
+    .select("claimed_by")
+    .eq("project_id", projectId)
+    .single();
+
+  if (claimError || !claim) {
     return {
       success: false,
-      message: "Project owner email is missing.",
+      message: "No claimer found for this project.",
     };
   }
 
-  /* 2️⃣ Check if user exists */
+  const claimerId = claim.claimed_by;
+
+  /* 3️⃣ Invite project owner if needed */
+  if (!project.email) {
+    return {
+      success: false,
+      message: "Project owner email missing.",
+    };
+  }
+
   const { data: userExists, error: rpcError } = await supabase.rpc(
     "check_user_exists_by_email",
     { email_input: project.email }
   );
 
   if (rpcError) {
-    return {
-      success: false,
-      message: rpcError.message,
-    };
+    return { success: false, message: rpcError.message };
   }
 
-  /* 3️⃣ Invite if user does not exist */
   if (!userExists) {
     const inviteRes = await fetch(`${APP_URL}/api/invite`, {
       method: "POST",
@@ -163,7 +175,21 @@ export async function approveProject(projectId: string): Promise<ActionResult> {
     }
   }
 
-  /* 4️⃣ Move project to in_progress */
+  /* 4️⃣ Assign project to claimer */
+  const { error: assignError } = await supabase.rpc("assign_project", {
+    p_project_id: projectId,
+    p_user_id: claimerId,
+    p_assigned_by: claimerId, // or auth.uid() if you want
+  });
+
+  if (assignError) {
+    return {
+      success: false,
+      message: "Failed to assign project to claimer.",
+    };
+  }
+
+  /* 5️⃣ Move project to in_progress */
   const { error: updateError } = await supabase
     .from("projects")
     .update({ status: "in_progress" })
@@ -178,6 +204,7 @@ export async function approveProject(projectId: string): Promise<ActionResult> {
 
   return {
     success: true,
-    data: project,
+    data: { projectId, claimerId },
+    message: "Project approved and assigned successfully.",
   };
 }

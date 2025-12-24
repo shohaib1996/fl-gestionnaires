@@ -1,6 +1,6 @@
 "use server";
 
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from "@/lib/supabase/server";
 
 type ActionResult = {
   success: boolean;
@@ -12,7 +12,7 @@ export async function assignProjectToUser(
   targetUserId: string,
   assignedBy: string
 ): Promise<ActionResult> {
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const { error } = await supabase.rpc("assign_project", {
     p_project_id: projectId,

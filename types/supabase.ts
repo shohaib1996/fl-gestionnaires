@@ -238,6 +238,7 @@ export type Database = {
           image_url: string | null
           name: string
           phone: string | null
+          project_id: string | null
           skills: string | null
           title: string | null
         }
@@ -251,6 +252,7 @@ export type Database = {
           image_url?: string | null
           name: string
           phone?: string | null
+          project_id?: string | null
           skills?: string | null
           title?: string | null
         }
@@ -264,6 +266,7 @@ export type Database = {
           image_url?: string | null
           name?: string
           phone?: string | null
+          project_id?: string | null
           skills?: string | null
           title?: string | null
         }
@@ -278,6 +281,7 @@ export type Database = {
           file_path: string | null
           id: string
           name: string
+          project_id: string
           status: string | null
           task_id: string
           type: string | null
@@ -290,6 +294,7 @@ export type Database = {
           file_path?: string | null
           id?: string
           name: string
+          project_id: string
           status?: string | null
           task_id: string
           type?: string | null
@@ -302,11 +307,19 @@ export type Database = {
           file_path?: string | null
           id?: string
           name?: string
+          project_id?: string
           status?: string | null
           task_id?: string
           type?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "documents_project_fk"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "documents_task_id_fkey"
             columns: ["task_id"]
@@ -452,6 +465,51 @@ export type Database = {
         }
         Relationships: []
       }
+      project_notes: {
+        Row: {
+          author_id: string | null
+          content: string
+          created_at: string
+          id: string
+          project_id: string
+          title: string | null
+          updated_at: string
+        }
+        Insert: {
+          author_id?: string | null
+          content: string
+          created_at?: string
+          id?: string
+          project_id: string
+          title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          author_id?: string | null
+          content?: string
+          created_at?: string
+          id?: string
+          project_id?: string
+          title?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_notes_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "project_notes_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       projects: {
         Row: {
           approved_at: string | null
@@ -563,6 +621,7 @@ export type Database = {
           id: string
           milestone_id: string
           order_index: number | null
+          project_id: string | null
           status: Database["public"]["Enums"]["task_status"]
           title: string
           updated_at: string | null
@@ -575,6 +634,7 @@ export type Database = {
           id?: string
           milestone_id: string
           order_index?: number | null
+          project_id?: string | null
           status?: Database["public"]["Enums"]["task_status"]
           title: string
           updated_at?: string | null
@@ -587,6 +647,7 @@ export type Database = {
           id?: string
           milestone_id?: string
           order_index?: number | null
+          project_id?: string | null
           status?: Database["public"]["Enums"]["task_status"]
           title?: string
           updated_at?: string | null

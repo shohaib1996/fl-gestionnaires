@@ -78,7 +78,10 @@ const ProjectDetails = () => {
 
   // ✅ Tasks fetch only when milestone resolved
   const { data: tasks, isLoading: tasksLoading } = useTasksByMilestone(
-    activeMilestoneId ?? ""
+    activeMilestoneId ?? "",
+    {
+      enabled: !!activeMilestoneId,
+    }
   );
 
   const { mutateAsync } = useCreateTask();
@@ -367,6 +370,7 @@ const ProjectDetails = () => {
         onClose={() => setJalonModalOpen(false)}
         projectId={project.id}
         manager={project.manager}
+        projectName={project.name}
       />
       {selectedPhase && (
         <JalonDetailsModal
