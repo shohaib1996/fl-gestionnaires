@@ -14,9 +14,9 @@ import { getProjectActions } from "@/lib/project/getProjectActions";
 import { useUser } from "@/providers/UserProvider";
 import { ProjectStatus } from "@/types/status";
 import { Undo2 } from "lucide-react";
-import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export interface Project {
   id: string;
@@ -152,6 +152,13 @@ const ProjectDetails = () => {
     approve(project.id);
   };
 
+  const handleRedirect = () => {
+    if (project.status !== "in_progress") {
+      return toast.message("Project is not assigned yet");
+    }
+    router.push(`/dashboard/${id}/project/${id}`);
+  };
+
   return (
     // make this a column so header stays fixed and the content below scrolls
     <div className="h-[calc(100vh-120px)] flex flex-col">
@@ -179,11 +186,12 @@ const ProjectDetails = () => {
         {/* Project Header */}
         <section className="bg-white dark:bg-neutral-800 rounded-xs ">
           <div className="flex items-center justify-between py-4 px-11 bg-[#63a053]/25">
-            <Link href={`/dashboard/${id}/project/${id}`}>
-              <h2 className="text-2xl text-[#7F7E83] font-bold dark:text-white relative inline-block after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-0.5 after:bg-[#326EA6] after:transition-all after:duration-300 hover:after:w-full">
-                {project.title}
-              </h2>
-            </Link>
+            <h2
+              onClick={handleRedirect}
+              className="text-2xl text-[#7F7E83] font-bold dark:text-white relative inline-block after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-0.5 after:bg-[#326EA6] after:transition-all after:duration-300 hover:after:w-full cursor-pointer"
+            >
+              {project.title}
+            </h2>
             <span className="text-sm font-medium text-gray-600 dark:text-gray-300 flex items-center gap-7">
               ID: {project.project_id}
               {actions?.length > 0 && (
