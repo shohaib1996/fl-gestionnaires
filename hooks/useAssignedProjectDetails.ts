@@ -20,5 +20,6 @@ export function useAssignedProjectDetails(projectId: string) {
       return res.data;
     },
     enabled: !!projectId,
+    retry: false,
   });
 }

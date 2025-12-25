@@ -87,10 +87,14 @@ const ProjectDetails = () => {
   const { mutateAsync } = useCreateTask();
   const { editTaskAsync } = useEditTask(activeMilestoneId ?? "");
 
-  console.log("data", project, tasks);
+  console.log("data", project, isLoading);
 
-  if (!project || isLoading)
+  if (!project && isLoading)
     return <div className="p-6 text-gray-500">Loading project...</div>;
+
+  if (!project && !isLoading) {
+    return <div className="p-6 text-gray-500">Project not assigned yet</div>;
+  }
 
   const handleTaskAdd = async (task: AddDocumentPayload) => {
     if (!activeMilestoneId) {
@@ -195,6 +199,8 @@ const ProjectDetails = () => {
       toast.error("Unable to print file.");
     }
   };
+
+  if (!project) return;
 
   return (
     <div className="p-0">
