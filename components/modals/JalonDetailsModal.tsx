@@ -9,6 +9,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useMilestoneDetails } from "@/hooks/useMilestoneDetails";
+import { taskKeys } from "@/hooks/useTasksByMilestone";
+import { assignedProjectKeys } from "@/lib/queryKeys";
 import { useQueryClient } from "@tanstack/react-query";
 import { FileText } from "lucide-react";
 import { useState } from "react";
@@ -28,6 +30,7 @@ interface Props {
   onClose: () => void;
   milestoneId: string | null;
   setAddDocumentModalOpen: (open: boolean) => void;
+  projectId?: string;
 }
 
 export default function JalonDetailsModal({
@@ -35,6 +38,7 @@ export default function JalonDetailsModal({
   onClose,
   milestoneId,
   setAddDocumentModalOpen,
+  projectId,
 }: Props) {
   const [mode, setMode] = useState<"view" | "edit">("view");
   const qc = useQueryClient();
@@ -86,12 +90,51 @@ export default function JalonDetailsModal({
     //   )
     // );
 
-    toast.success("Jalon mis à jour");
-    setMode("view");
-
+    // 5️⃣ Invalidate and wait for refetch to complete BEFORE switching to view mode
+    // Invalidate milestone details (for this modal)
     qc.invalidateQueries({
       queryKey: ["milestone-details", milestoneId],
     });
+
+    // Invalidate tasks by milestone (for the main page table)
+    qc.invalidateQueries({
+      queryKey: taskKeys.byMilestone(data.milestone.id),
+    });
+
+    // Invalidate project details (for milestone tabs in main page)
+    if (projectId) {
+      qc.invalidateQueries({
+        queryKey: assignedProjectKeys.details(projectId),
+      });
+
+      // Invalidate sidebar overview to update document counts
+      qc.invalidateQueries({
+        queryKey: ["project-sidebar-overview", projectId],
+      });
+    }
+
+    // Wait for all queries to refetch with fresh data
+    const refetchPromises = [
+      qc.refetchQueries({
+        queryKey: ["milestone-details", milestoneId],
+      }),
+      qc.refetchQueries({
+        queryKey: taskKeys.byMilestone(data.milestone.id),
+      }),
+    ];
+
+    if (projectId) {
+      refetchPromises.push(
+        qc.refetchQueries({
+          queryKey: assignedProjectKeys.details(projectId),
+        })
+      );
+    }
+
+    await Promise.all(refetchPromises);
+
+    toast.success("Jalon mis à jour");
+    setMode("view");
   };
 
   return (

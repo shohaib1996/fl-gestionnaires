@@ -95,6 +95,7 @@ export type ContactListItem = {
   id: string;
   name: string;
   title: string | null;
+  email: string;
   city: string | null;
   image_url: string | null;
   is_my_contact: boolean;
@@ -104,6 +105,8 @@ export interface GetContactsParams {
   onlyMine?: boolean;
   page?: number;
   pageSize?: number;
+  search?: string;
+  titleFilter?: string;
 }
 
 /* =====================================================
@@ -114,6 +117,8 @@ export async function getContacts({
   onlyMine = false,
   page = 1,
   pageSize = 10,
+  search = "",
+  titleFilter = "",
 }: GetContactsParams): Promise<{
   data: ContactListItem[];
   total: number;
@@ -135,7 +140,7 @@ export async function getContacts({
      CASE 1: ONLY MY CONTACTS
   ---------------------------- */
   if (onlyMine) {
-    const { data, count, error } = await supabase
+    let query = supabase
       .from("user_contacts")
       .select(
         `
@@ -143,14 +148,28 @@ export async function getContacts({
           id,
           name,
           title,
+          email,
           city,
           image_url
         )
       `,
         { count: "exact" }
       )
-      .eq("user_id", user.id)
-      .range(from, to);
+      .eq("user_id", user.id);
+
+    // Apply search filter (name or email)
+    if (search) {
+      query = query.or(
+        `contact.name.ilike.%${search}%,contact.email.ilike.%${search}%`
+      );
+    }
+
+    // Apply title filter (case-insensitive)
+    if (titleFilter) {
+      query = query.ilike("contact.title", titleFilter);
+    }
+
+    const { data, count, error } = await query.range(from, to);
 
     if (error) throw error;
 
@@ -160,6 +179,7 @@ export async function getContacts({
           id: row.contact.id,
           name: row.contact.name,
           title: row.contact.title,
+          email: row.contact.email,
           city: row.contact.city,
           image_url: row.contact.image_url,
           is_my_contact: true,
@@ -171,21 +191,33 @@ export async function getContacts({
   /* ---------------------------
      CASE 2: ALL CONTACTS (+ MARK MINE)
   ---------------------------- */
-  const { data, count, error } = await supabase
+  let query = supabase
     .from("contacts")
     .select(
       `
       id,
       name,
       title,
+      email,
       city,
       image_url,
       user_contacts!left(contact_id)
     `,
       { count: "exact" }
     )
-    .eq("user_contacts.user_id", user.id)
-    .range(from, to);
+    .eq("user_contacts.user_id", user.id);
+
+  // Apply search filter (name or email)
+  if (search) {
+    query = query.or(`name.ilike.%${search}%,email.ilike.%${search}%`);
+  }
+
+  // Apply title filter (case-insensitive)
+  if (titleFilter) {
+    query = query.ilike("title", titleFilter);
+  }
+
+  const { data, count, error } = await query.range(from, to);
 
   if (error) throw error;
 
@@ -195,6 +227,7 @@ export async function getContacts({
         id: c.id,
         name: c.name,
         title: c.title,
+        email: c.email,
         city: c.city,
         image_url: c.image_url,
         is_my_contact: (c.user_contacts?.length ?? 0) > 0,

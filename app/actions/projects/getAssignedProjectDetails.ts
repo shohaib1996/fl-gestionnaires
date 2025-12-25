@@ -25,6 +25,7 @@ export interface AssignedProjectDetails {
     id: string;
     title: string;
     status: string;
+    order_index: number;
   }[];
 
   /**
@@ -56,10 +57,11 @@ export async function getAssignedProjectDetails(
           title,
           status,
           project_id,
-          milestones (
+          milestones!milestones_project_id_fkey (
             id,
             title,
-            status
+            status,
+            order_index
           )
         ),
 
@@ -106,7 +108,9 @@ export async function getAssignedProjectDetails(
         avatarURL: data.user.avatarURL,
       },
 
-      milestones: data.project.milestones ?? [],
+      milestones: (data.project.milestones ?? []).sort(
+        (a, b) => a.order_index - b.order_index
+      ),
     };
 
     return {

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCreateMilestone } from "@/hooks/useCreateMilestone";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { Calendar } from "@/components/ui/calendar";
@@ -69,6 +70,7 @@ export default function CreateJalonModal({
   const [tasks, setTasks] = useState<AddDocumentPayload[]>([]);
 
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   const { mutateAsync, isPending } = useCreateMilestone();
 
@@ -122,9 +124,25 @@ export default function CreateJalonModal({
           )
         );
 
+        // Invalidate tasks query for the new milestone
         queryClient.invalidateQueries({
           queryKey: taskKeys.byMilestone(milestoneId),
         });
+
+        // Invalidate sidebar overview to update milestone and document counts
+        queryClient.invalidateQueries({
+          queryKey: ["project-sidebar-overview", projectId],
+        });
+
+        // Wait for all queries to settle before navigating
+        await queryClient.refetchQueries({
+          queryKey: taskKeys.byMilestone(milestoneId),
+        });
+
+        // Navigate to the new milestone
+        router.push(
+          `/dashboard/${projectId}/project/${projectId}?milestone=${milestoneId}`
+        );
       }
 
       onClose();

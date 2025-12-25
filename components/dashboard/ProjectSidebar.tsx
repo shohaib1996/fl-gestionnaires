@@ -16,15 +16,15 @@ export default function ProjectSidebar({ projectId }: { projectId: string }) {
   return (
     <aside className="min-h-72 flex flex-col h-full bg-white dark:bg-neutral-800 shadow-sm border rounded-xs p-4 overflow-auto hide-scrollbar">
       <h3 className="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-100">
-        Cola Naturelle
+        {data.projectName}
       </h3>
 
       <ul className="w-full divide-y">
         <Item name="Jalons" count={data.milestones} />
-        <Item name="Notes" count={data.notes} />
-        <Item name="Tâches" count={data.tasks} />
-        <Item name="Documents" count={data.documents} />
-        <Item name="Contacts" count={data.contacts} />
+        {/* <Item name="Notes" count={data.notes} /> */}
+        <Item name="Documents" count={data.tasks} />
+        {/* <Item name="Documents" count={data.documents} /> */}
+        {/* <Item name="Contacts" count={data.contacts} /> */}
       </ul>
     </aside>
   );

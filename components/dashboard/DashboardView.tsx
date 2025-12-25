@@ -110,8 +110,9 @@ export default function DashboardView({
                                   project.created_at
                                 ).toLocaleDateString("fr-FR")}
                               </p>
-                              {project.description ??
-                                "No description available"}
+                              {project.description
+                                ? project.description.slice(0, 150) + "..."
+                                : "No description available"}
                             </div>
                           </article>
                         </Link>

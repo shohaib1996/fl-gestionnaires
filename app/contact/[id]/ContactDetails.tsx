@@ -230,9 +230,10 @@ export default function ContactDetails({ person }: { person: Contact }) {
             </svg>
           </button>
 
-          <button
+          <a
+            href={`mailto:${person.email}`}
             aria-label="message"
-            className=" dark:bg-[#171717] flex items-center justify-center shadow-sm hover:shadow-md "
+            className=" dark:bg-[#171717] flex items-center justify-center shadow-sm hover:shadow-md cursor-pointer"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -254,7 +255,7 @@ export default function ContactDetails({ person }: { person: Contact }) {
               <path d="M11 11H18" stroke="#63A053" strokeLinecap="round" />
               <path d="M11 13H15" stroke="#63A053" strokeLinecap="round" />
             </svg>
-          </button>
+          </a>
         </div>
       </div>
     </section>

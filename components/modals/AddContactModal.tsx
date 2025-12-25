@@ -10,11 +10,13 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 
 import {
   Award,
   Briefcase,
+  Loader2,
   Mail,
   MapPin,
   Phone,
@@ -26,9 +28,12 @@ import { toast } from "sonner";
 interface Props {
   open: boolean;
   onClose: () => void;
+  onSuccess?: () => void;
 }
 
-export default function AddContactModal({ open, onClose }: Props) {
+export default function AddContactModal({ open, onClose, onSuccess }: Props) {
+  const queryClient = useQueryClient();
+
   // ⭐ State fields
   const [name, setName] = useState("");
   const [title, setTitle] = useState("");
@@ -39,26 +44,74 @@ export default function AddContactModal({ open, onClose }: Props) {
   const [bio, setBio] = useState("");
   const [imageFile, setImageFile] = useState<File | null>(null);
 
+  // ⭐ Mutation for creating contact
+  const createContactMutation = useMutation({
+    mutationFn: async (contact: {
+      name: string;
+      title: string;
+      email: string;
+      phone: string;
+      city: string;
+      skills: string;
+      bio: string;
+      imageUrl: string | null;
+      imagePath: string | null;
+    }) => {
+      const result = await createContact(contact);
+      if (result.error) {
+        throw new Error(result.error);
+      }
+      return result.data;
+    },
+    onSuccess: () => {
+      toast.success("✅ Contact créé avec succès!");
+
+      // Invalidate all contact queries to refresh the list
+      queryClient.invalidateQueries({ queryKey: ["contacts"] });
+
+      // Reset form
+      setName("");
+      setTitle("");
+      setEmail("");
+      setPhone("");
+      setCity("");
+      setSkills("");
+      setBio("");
+      setImageFile(null);
+
+      // Close modal
+      onClose();
+
+      // Call parent callback if provided
+      if (onSuccess) {
+        onSuccess();
+      }
+    },
+    onError: (error: Error) => {
+      toast.error("❌ Échec de la création du contact: " + error.message);
+    },
+  });
+
   // ⭐ Handler for Add button
   const handleAddContact = async () => {
     if (!name || !email) {
-      toast.error("Name and email are required.");
+      toast.error("Le nom et l'email sont requis.");
       return;
     }
 
-    let imageUrl = null;
-    let imagePath = null;
+    let imageUrl: string | null = null;
+    let imagePath: string | null = null;
 
     if (imageFile) {
-      const uploaded = await uploadLogo(imageFile); // ⭐ using your function
+      const uploaded = await uploadLogo(imageFile);
 
       if (uploaded.error) {
-        toast.error("Image upload failed: " + uploaded.error);
+        toast.error("Échec du téléchargement de l'image: " + uploaded.error);
         return;
       }
 
-      imageUrl = uploaded.url;
-      imagePath = uploaded.path;
+      imageUrl = uploaded.url ?? null;
+      imagePath = uploaded.path ?? null;
     }
 
     const contact = {
@@ -74,28 +127,7 @@ export default function AddContactModal({ open, onClose }: Props) {
     };
 
     console.log("📇 Creating contact:", contact);
-
-    const result = await createContact(contact);
-
-    if (result.error) {
-      toast.error("❌ Failed to create contact: " + result.error);
-      return;
-    }
-
-    console.log("✅ Contact created:", result.data);
-
-    // Reset
-    setName("");
-    setTitle("");
-    setEmail("");
-    setPhone("");
-    setCity("");
-    setSkills("");
-    setBio("");
-    setImageFile(null);
-
-    // Close modal
-    onClose();
+    createContactMutation.mutate(contact);
   };
 
   return (
@@ -252,9 +284,17 @@ export default function AddContactModal({ open, onClose }: Props) {
 
             <button
               onClick={handleAddContact}
-              className="px-6 py-2 bg-[#326EA6] text-white rounded hover:bg-[#255583]"
+              disabled={createContactMutation.isPending}
+              className="px-6 py-2 bg-[#326EA6] text-white rounded hover:bg-[#255583] disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 justify-center min-w-[120px]"
             >
-              Ajouter
+              {createContactMutation.isPending ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span>Ajout en cours...</span>
+                </>
+              ) : (
+                "Ajouter"
+              )}
             </button>
           </div>
         </div>

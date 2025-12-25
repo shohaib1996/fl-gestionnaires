@@ -40,6 +40,10 @@ export function useUpdateCalendarEvent() {
       queryClient.invalidateQueries({
         queryKey: ["calendar-event", res.data.id],
       });
+
+      queryClient.invalidateQueries({
+        queryKey: ["event-participants", res.data.id],
+      });
     },
   });
 }

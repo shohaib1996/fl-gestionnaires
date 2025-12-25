@@ -86,10 +86,6 @@ const ProjectDetails = () => {
 
   const { mutateAsync } = useCreateTask();
   const { editTaskAsync } = useEditTask(activeMilestoneId ?? "");
-  const handlePhaseClick = (phase: any) => {
-    setSelectedPhase(phase);
-    setJalonDetailsModalOpen(true);
-  };
 
   console.log("data", project, tasks);
 
@@ -239,13 +235,13 @@ const ProjectDetails = () => {
             activeMilestoneId={activeMilestoneId}
             milestones={project.milestones}
             onChange={(milestone) => {
-              if (milestone.status != "completed") {
-                handlePhaseClick(milestone);
-              } else {
-                router.push(
-                  `/dashboard/${projectId}/project/${projectId}?milestone=${milestone.id}`
-                );
-              }
+              router.push(
+                `/dashboard/${projectId}/project/${projectId}?milestone=${milestone.id}`
+              );
+            }}
+            onTitleClick={(milestone) => {
+              setSelectedPhase(milestone);
+              setJalonDetailsModalOpen(true);
             }}
           />
           <button
@@ -339,7 +335,7 @@ const ProjectDetails = () => {
 
       {fullscreenOpen && (
         <div
-          className="fixed inset-0 z-[9999] bg-black/70 backdrop-blur-sm"
+          className="fixed inset-0 z-9999 bg-black/70 backdrop-blur-sm"
           onClick={() => setFullscreenOpen(false)}
         >
           {/* Viewer container */}
@@ -378,6 +374,7 @@ const ProjectDetails = () => {
           onClose={() => setJalonDetailsModalOpen(false)}
           milestoneId={selectedPhase.id}
           setAddDocumentModalOpen={setOpenAddDoc}
+          projectId={projectId}
         />
       )}
       <AddDocumentModal

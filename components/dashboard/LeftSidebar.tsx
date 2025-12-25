@@ -11,22 +11,25 @@ import { fr } from "date-fns/locale";
 import { useCalendarEventDetails } from "@/hooks/useCalendarEventDetails";
 import { useMyCalendarEvents } from "@/hooks/useCalendarEvents";
 import { useEventParticipants } from "@/hooks/useEventParticipants";
-import { format } from "date-fns";
+import { format, isSameDay } from "date-fns";
 
 export default function LeftSidebar() {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [openAdd, setOpenAdd] = useState(false);
 
-  const { data: events = [], isLoading } = useMyCalendarEvents({
-    from: date ? format(date, "yyyy-MM-dd") : undefined,
-    // to: date ? format("2025-12-31", "yyyy-MM-dd") : undefined,
-  });
+  // Fetch ALL events (no date filter) so we have dots for past/future
+  const { data: events = [], isLoading } = useMyCalendarEvents({});
 
   const eventDates = useMemo(() => {
     const dates = events.map((e) => new Date(e.start_date));
-
     return dates;
   }, [events]);
+
+  // Filter functionality: Show events for the selected date ONLY
+  const filteredEvents = useMemo(() => {
+    if (!date) return [];
+    return events.filter((e) => isSameDay(new Date(e.start_date), date));
+  }, [events, date]);
 
   // modal for task details
   const [openDetails, setOpenDetails] = useState(false);
@@ -94,18 +97,20 @@ export default function LeftSidebar() {
       </div>
 
       <h3 className="mt-4.5 mb-2.5 px-4 text-lg font-semibold text-gray-700 dark:text-gray-200">
-        Tâches
+        Tâches {!date ? "" : `- ${format(date, "dd MMM", { locale: fr })}`}
       </h3>
 
       <div className="flex-1 overflow-auto px-4 pb-4 hide-scrollbar">
         <div className="space-y-4 text-md">
           {isLoading && <p className="text-sm text-gray-400">Chargement…</p>}
 
-          {!isLoading && events.length === 0 && (
-            <p className="text-sm text-gray-400">Aucune tâche</p>
+          {!isLoading && filteredEvents.length === 0 && (
+            <p className="text-sm text-gray-400">
+              Aucune tâche pour cette date
+            </p>
           )}
 
-          {events.map((e) => (
+          {filteredEvents.map((e) => (
             <div
               key={e.id}
               className="pb-3 border-b border-gray-200 dark:border-neutral-700"

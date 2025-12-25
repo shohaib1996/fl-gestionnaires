@@ -1,6 +1,5 @@
 "use client";
 
-import { getTasksByMilestone } from "@/app/actions/tasks/getTasksByMilestone";
 import { useQuery } from "@tanstack/react-query";
 
 export const taskKeys = {
@@ -15,11 +14,29 @@ export function useTasksByMilestone(
   return useQuery({
     queryKey: taskKeys.byMilestone(milestoneId),
     queryFn: async () => {
-      console.log("milestoneId", milestoneId);
-      const res = await getTasksByMilestone(milestoneId);
-      if (!res.success) throw new Error(res.message);
-      return res.data;
+      const response = await fetch(`/api/tasks/${milestoneId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        cache: "no-store",
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch tasks");
+      }
+
+      const result = await response.json();
+
+      if (!result.success) {
+        throw new Error(result.message);
+      }
+
+      return result.data;
     },
     enabled: options?.enabled ?? !!milestoneId,
+    staleTime: 0,
+    refetchOnMount: "always",
+    refetchOnWindowFocus: false,
   });
 }

@@ -13,6 +13,8 @@ interface UseContactActionsOptions {
   onlyMine: boolean;
   page?: number;
   pageSize?: number;
+  search?: string;
+  titleFilter?: string;
 }
 
 export type PaginatedContacts = {
@@ -24,6 +26,8 @@ export function useContactActions({
   onlyMine,
   page,
   pageSize,
+  search,
+  titleFilter,
 }: UseContactActionsOptions) {
   const queryClient = useQueryClient();
 
@@ -31,8 +35,14 @@ export function useContactActions({
      GET CONTACTS (QUERY)
   ---------------------------- */
   const contactsQuery = useQuery<PaginatedContacts>({
-    queryKey: ["contacts", { onlyMine, page, pageSize }],
-    queryFn: () => getContacts({ onlyMine, page, pageSize }),
+    queryKey: ["contacts", { onlyMine, page, pageSize, search, titleFilter }],
+    queryFn: () =>
+      getContacts({ onlyMine, page, pageSize, search, titleFilter }),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
   });
 
   /* ---------------------------

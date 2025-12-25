@@ -12,12 +12,14 @@ interface Props {
   milestones: Milestone[];
   activeMilestoneId: string | null;
   onChange: (milestone: Milestone) => void;
+  onTitleClick?: (milestone: Milestone) => void;
 }
 
 export function MilestoneTabs({
   milestones,
   activeMilestoneId,
   onChange,
+  onTitleClick,
 }: Props) {
   const queryClient = useQueryClient();
 
@@ -27,10 +29,9 @@ export function MilestoneTabs({
         const active = m.id === activeMilestoneId;
 
         return (
-          <button
+          <div
             key={m.id}
-            onClick={() => onChange(m)}
-            className={`rounded-xs text-sm font-medium py-2 cursor-pointer ${
+            className={`rounded-xs text-sm font-medium cursor-pointer flex ${
               active
                 ? "bg-[#63A053] text-white"
                 : "bg-[#A2CF96] text-gray-800 dark:text-gray-200"
@@ -46,11 +47,26 @@ export function MilestoneTabs({
               });
             }}
           >
-            <span className="bg-[#A2CF96] p-2.5 border-r text-white">
+            <span
+              onClick={() => onChange(m)}
+              className="bg-[#A2CF96] p-2.5 border-r text-white cursor-pointer"
+            >
               {ind + 1}.
             </span>
-            <span className="px-2.5 text-white capitalize">{m.title}</span>
-          </button>
+            <span
+              onClick={(e) => {
+                e.stopPropagation();
+                if (onTitleClick) {
+                  onTitleClick(m);
+                } else {
+                  onChange(m);
+                }
+              }}
+              className="px-2.5 py-2 text-white capitalize cursor-pointer"
+            >
+              {m.title}
+            </span>
+          </div>
         );
       })}
     </div>

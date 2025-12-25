@@ -52,7 +52,6 @@ export function UserProvider({ children, initialAuthUser }: UserProviderProps) {
         setAuthUser(nextAuthUser);
 
         if (nextAuthUser) {
-          setLoading(true);
           await fetchPublicUser(nextAuthUser.id);
         } else {
           setUser(null);

@@ -19,7 +19,7 @@ export interface CalendarEventDetails {
 
 export function useCalendarEventDetails(eventId?: string) {
   return useQuery({
-    queryKey: ["calendar-event-details", eventId],
+    queryKey: ["calendar-event", eventId],
     enabled: !!eventId,
     queryFn: async () => {
       const supabase = createClient();

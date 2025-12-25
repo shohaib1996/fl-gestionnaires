@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 
 export interface EventParticipant {
   id: string;
-  name: string;
+  name: string | null;
   email: string;
   avatar?: string | null;
 }

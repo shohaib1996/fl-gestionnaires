@@ -54,56 +54,77 @@ const ProjectDetails = () => {
   const { user, loading: userLoading } = useUser();
 
   useEffect(() => {
+    let isMounted = true;
+
     async function fetchProject() {
-      if (!id) return;
-
-      const { data, error } = await getProjectById(id);
-
-      if (error || !data || !data.status) {
-        console.error("Error fetching project:", error);
+      if (!id) {
         setLoading(false);
         return;
       }
 
-      const mappedProject: Project = {
-        id: data.id,
-        project_id: data.project_id,
+      console.log("Fetching project with ID:", id);
+      setLoading(true);
+      setProject(null);
 
-        first_name: data.first_name ?? "",
-        last_name: data.last_name ?? "",
-        parent_name: data.parent_name ?? "",
-        phone: data.phone ?? "",
-        email: data.email ?? "",
+      try {
+        const { data, error } = await getProjectById(id);
 
-        project_city: data.project_city ?? "",
-        residence_city: data.residence_city ?? "",
-        province: data.province ?? "",
+        if (!isMounted) {
+          console.log("Component unmounted, skipping state update");
+          return;
+        }
 
-        collaborators: data.collaborators ?? null,
+        if (error || !data || !data.status) {
+          console.error("Error fetching project:", error);
+          setLoading(false);
+          return;
+        }
 
-        title: data.title ?? "",
-        description: data.description ?? "",
+        const mappedProject: Project = {
+          id: data.id,
+          project_id: data.project_id,
+          first_name: data.first_name ?? "",
+          last_name: data.last_name ?? "",
+          parent_name: data.parent_name ?? "",
+          phone: data.phone ?? "",
+          email: data.email ?? "",
+          project_city: data.project_city ?? "",
+          residence_city: data.residence_city ?? "",
+          province: data.province ?? "",
+          collaborators: data.collaborators ?? null,
+          title: data.title ?? "",
+          description: data.description ?? "",
+          categories: data.categories ?? [],
+          links: data.links ?? [],
+          phase: data.phase ?? "",
+          signature: data.signature ?? "",
+          signer_name: data.signer_name ?? "",
+          logo_urls: data.logo_urls ?? [],
+          claimed: data.claim_count ?? 0,
+          claimer: data.claimer ?? null,
+          status: data.status,
+          created_at: data.created_at ?? "",
+        };
 
-        categories: data.categories ?? [],
-        links: data.links ?? [],
-
-        phase: data.phase ?? "",
-        signature: data.signature ?? "",
-        signer_name: data.signer_name ?? "",
-
-        logo_urls: data.logo_urls ?? [],
-
-        claimed: data.claim_count ?? 0,
-        claimer: data.claimer ?? null,
-        status: data.status,
-        created_at: data.created_at ?? "",
-      };
-
-      setProject(mappedProject);
-      setLoading(false);
+        if (isMounted) {
+          console.log("Setting project data:", mappedProject.title);
+          setProject(mappedProject);
+          setLoading(false);
+        }
+      } catch (err) {
+        if (isMounted) {
+          console.error("Unexpected error:", err);
+          setLoading(false);
+        }
+      }
     }
 
     fetchProject();
+
+    return () => {
+      console.log("Cleanup: unmounting component for ID:", id);
+      isMounted = false;
+    };
   }, [id]);
 
   if (userLoading || loading) {

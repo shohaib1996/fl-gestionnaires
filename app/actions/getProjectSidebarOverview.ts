@@ -8,30 +8,37 @@ export async function getProjectSidebarOverview(
 ): Promise<ProjectSidebarOverview> {
   const supabase = await createClient();
 
-  const [milestones, notes, tasks, documents, contacts] = await Promise.all([
-    supabase
-      .from("milestones")
-      .select("id", { count: "exact", head: true })
-      .eq("project_id", projectId),
-    supabase
-      .from("project_notes")
-      .select("id", { count: "exact", head: true })
-      .eq("project_id", projectId),
-    supabase
-      .from("tasks")
-      .select("id", { count: "exact", head: true })
-      .eq("project_id", projectId),
-    supabase
-      .from("documents")
-      .select("id", { count: "exact", head: true })
-      .eq("project_id", projectId),
-    supabase
-      .from("contacts")
-      .select("id", { count: "exact", head: true })
-      .eq("project_id", projectId),
-  ]);
+  const [project, milestones, notes, tasks, documents, contacts] =
+    await Promise.all([
+      supabase
+        .from("projects")
+        .select("title")
+        .eq("id", projectId)
+        .single(),
+      supabase
+        .from("milestones")
+        .select("id", { count: "exact", head: true })
+        .eq("project_id", projectId),
+      supabase
+        .from("project_notes")
+        .select("id", { count: "exact", head: true })
+        .eq("project_id", projectId),
+      supabase
+        .from("tasks")
+        .select("id", { count: "exact", head: true })
+        .eq("project_id", projectId),
+      supabase
+        .from("documents")
+        .select("id", { count: "exact", head: true })
+        .eq("project_id", projectId),
+      supabase
+        .from("contacts")
+        .select("id", { count: "exact", head: true })
+        .eq("project_id", projectId),
+    ]);
 
   return {
+    projectName: project.data?.title ?? "Project",
     milestones: milestones.count ?? 0,
     notes: notes.count ?? 0,
     tasks: tasks.count ?? 0,

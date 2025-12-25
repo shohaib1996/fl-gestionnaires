@@ -288,7 +288,7 @@ export default function CalendarEventForm({
         <label className="text-sm font-medium mb-2 block">Participants</label>
 
         <div className="flex flex-wrap gap-2 mb-2">
-          {selectedParticipants.slice(0, 2).map((p) => (
+          {selectedParticipants.map((p) => (
             <div
               key={p.id}
               className="flex items-center gap-1 bg-gray-200 text-sm px-2 py-1 rounded"

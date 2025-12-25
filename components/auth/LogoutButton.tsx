@@ -1,19 +1,24 @@
 "use client";
 
-import { createClient } from "@/lib/supabase/client";
-import { useRouter } from "next/navigation";
+import { logoutAction } from "@/app/auth/actions";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function LogoutButton() {
-  const router = useRouter();
+  const queryClient = useQueryClient();
 
-  const handleLogout = async () => {
-    const supabase = createClient();
-
-    await supabase.auth.signOut();
-
-    router.push("/login"); // redirect after logout
-    router.refresh();
-  };
-
-  return <button onClick={handleLogout}>Se déconnecter</button>;
+  return (
+    <button
+      onClick={async () => {
+        try {
+          queryClient.clear();
+          await logoutAction();
+        } finally {
+          // Force hard reload to clear all client state
+          window.location.href = "/login";
+        }
+      }}
+    >
+      Se déconnecter
+    </button>
+  );
 }

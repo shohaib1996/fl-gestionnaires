@@ -29,6 +29,8 @@ import {
   UploadCloud,
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { taskKeys } from "@/hooks/useTasksByMilestone";
 
 interface DocumentType {
   id: string;
@@ -82,6 +84,7 @@ export default function EditDocumentModal({
 
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const queryClient = useQueryClient();
 
   const MAX_FILE_SIZE_MB = 20;
   const acceptedTypes = FILE_ACCEPT_MAP[fileFormat ?? "external"];
@@ -124,6 +127,10 @@ export default function EditDocumentModal({
       if (!res.success) {
         throw new Error(res.message ?? "Update failed");
       }
+
+      await queryClient.invalidateQueries({
+        queryKey: taskKeys.byMilestone(milestoneId),
+      });
 
       onClose();
     } catch (err: any) {
@@ -335,8 +342,12 @@ export default function EditDocumentModal({
 
             <button
               onClick={handleSave}
-              className="px-6 py-2 bg-[#326EA6] text-white rounded hover:bg-[#255583]"
+              disabled={isUploading}
+              className="px-6 py-2 bg-[#326EA6] text-white rounded hover:bg-[#255583] disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
             >
+              {isUploading && (
+                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              )}
               Sauvegarder
             </button>
           </div>

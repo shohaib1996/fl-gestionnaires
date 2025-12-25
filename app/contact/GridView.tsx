@@ -66,8 +66,14 @@ export default function GridView({
                   : "Ajouter à mes contacts"}
               </DropdownMenuItem>
 
-              {/* future safe placeholder */}
-              <DropdownMenuItem disabled>Envoyer un message</DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <a
+                  href={`mailto:${person.email}`}
+                  className="cursor-pointer"
+                >
+                  Envoyer un message
+                </a>
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
 
@@ -117,9 +123,12 @@ export default function GridView({
 
               <div className="w-px bg-[#4C7B40]/20"></div>
 
-              <button className="px-6 py-1.5 text-sm font-medium dark:bg-[#326EA6]/30 bg-[#E3EDDF] dark:text-white/60 rounded-r-full">
+              <a
+                href={`mailto:${person.email}`}
+                className="px-6 py-1.5 text-sm font-medium dark:bg-[#326EA6]/30 bg-[#E3EDDF] dark:text-white/60 rounded-r-full hover:bg-[#d4dfcf] dark:hover:bg-[#326EA6]/50 transition-colors cursor-pointer"
+              >
                 Message
-              </button>
+              </a>
             </div>
           </div>
         </div>
