@@ -55,7 +55,7 @@ interface UseMyCalendarEventsParams {
 
 export function useMyCalendarEvents(params?: UseMyCalendarEventsParams) {
   return useQuery({
-    queryKey: ["calendar-events"],
+    queryKey: ["calendar-events", params],
     queryFn: async () => {
       const supabase = createClient();
 
@@ -80,6 +80,8 @@ export function useMyCalendarEvents(params?: UseMyCalendarEventsParams) {
 
       return data as CalendarEvent[];
     },
+    staleTime: 0, // Always refetch when invalidated
+    refetchOnMount: true, // Refetch when component mounts
   });
 }
 
