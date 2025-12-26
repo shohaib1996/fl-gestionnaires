@@ -30,14 +30,17 @@ export default function PreviewRenderer({
   switch (type) {
     case "image":
       return (
-        <Image
-          src={url}
-          alt="Preview"
-          fill={variant === "fullscreen"}
-          width={variant === "inline" ? 400 : undefined}
-          height={variant === "inline" ? 1000 : undefined}
-          className="object-contain grow"
-        />
+        <div className={`relative w-full ${height} overflow-hidden flex items-center justify-center`}>
+          <Image
+            src={url}
+            alt="Preview"
+            fill={variant === "fullscreen"}
+            width={variant === "inline" ? 400 : undefined}
+            height={variant === "inline" ? 1000 : undefined}
+            className="object-contain max-w-full max-h-full"
+            style={{ width: 'auto', height: 'auto' }}
+          />
+        </div>
       );
 
     case "video":
