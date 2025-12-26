@@ -4,7 +4,7 @@ import AddDocumentModal from "@/components/modals/AddDocumentModal";
 import CreateJalonModal from "@/components/modals/CreateJalonModal";
 import EditDocumentModal from "@/components/modals/EditDocumentModal";
 import JalonDetailsModal from "@/components/modals/JalonDetailsModal";
-import { Ellipsis, Undo2, X } from "lucide-react";
+import { Ellipsis, Undo2, X, CheckCircle2 } from "lucide-react";
 import Image from "next/image";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
@@ -12,6 +12,13 @@ import { useEffect, useMemo, useState } from "react";
 import { TasksByMilestone } from "@/app/actions/tasks/getTasksByMilestone";
 import DashboardTabs from "@/components/dashboard/DashboardTabs";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { completeProject } from "@/app/actions/projects/completeProject";
 import { useAssignedProjectDetails } from "@/hooks/useAssignedProjectDetails";
 import { useCreateTask } from "@/hooks/useCreateTaks";
 import useEditTask from "@/hooks/useEditTask";
@@ -19,6 +26,7 @@ import { useTasksByMilestone } from "@/hooks/useTasksByMilestone";
 import { getPublicFileUrl } from "@/lib/utils/getPublicFileUrl";
 import { useUser } from "@/providers/UserProvider";
 import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 import TaskLists from "../../../../../components/sections/TaskLists";
 import { MilestoneTabs } from "./MilestoneTabas";
 import PreviewCard from "./PreviewCard";
@@ -41,6 +49,7 @@ const ProjectDetails = () => {
     null
   );
   const { user } = useUser();
+  const queryClient = useQueryClient();
 
   const [jalonDetailsModalOpen, setJalonDetailsModalOpen] = useState(false);
   const [selectedPhase, setSelectedPhase] = useState<any | null>(null);
@@ -200,6 +209,19 @@ const ProjectDetails = () => {
     }
   };
 
+  const handleCompleteProject = async () => {
+    const result = await completeProject(projectId);
+    if (result.success) {
+      toast.success("Project marked as completed");
+      // Invalidate all project-related queries to refresh the data
+      queryClient.invalidateQueries({ queryKey: ["projects"] });
+      queryClient.invalidateQueries({ queryKey: ["assignedProject"] });
+      router.push("/dashboard?tab=encours&page=1");
+    } else {
+      toast.error(result.message || "Failed to complete project");
+    }
+  };
+
   if (!project) return;
 
   // Get active milestone data
@@ -252,7 +274,22 @@ const ProjectDetails = () => {
           </h1>
           <span className="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-5">
             {project.project_id}
-            <Ellipsis />
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="hover:bg-gray-100 dark:hover:bg-neutral-700 rounded-full p-1 transition-colors">
+                  <Ellipsis className="h-5 w-5" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuItem
+                  onClick={handleCompleteProject}
+                  className="flex gap-2 cursor-pointer"
+                >
+                  <CheckCircle2 className="h-4 w-4" />
+                  Mark as Completed
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </span>
         </div>
 

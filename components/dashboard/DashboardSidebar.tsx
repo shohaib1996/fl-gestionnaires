@@ -21,24 +21,22 @@ export default function DashboardSidebar() {
 
       <ul className="space-y-5 text-md">
         <Item
-          label="Projets reçus"
-          total={data.received}
-          week={data.receivedThisWeek}
-        />
-        <Item
-          label="Projets retenus"
+          label="Projets pris"
           total={data.retained}
-          week={data.retainedThisWeek}
+          period={data.retainedThisWeek}
+          periodLabel="ce mois"
         />
         <Item
           label="Projets en cours"
           total={data.inProgress}
-          week={data.inProgressThisWeek}
+          period={data.inProgressThisWeek}
+          periodLabel="ce mois"
         />
         <Item
           label="Projets lancés"
           total={data.launched}
-          week={data.launchedThisWeek}
+          period={data.launchedThisWeek}
+          periodLabel="cette année"
         />
       </ul>
     </aside>
@@ -48,11 +46,13 @@ export default function DashboardSidebar() {
 function Item({
   label,
   total,
-  week,
+  period,
+  periodLabel,
 }: {
   label: string;
   total: number;
-  week: number;
+  period: number;
+  periodLabel: string;
 }) {
   return (
     <li className="flex flex-col">
@@ -60,7 +60,7 @@ function Item({
         <span className="font-semibold">{total}</span> {label}
       </span>
       <span className="text-blue-600 hover:underline text-md">
-        {week} cette semaine
+        {periodLabel}
       </span>
     </li>
   );

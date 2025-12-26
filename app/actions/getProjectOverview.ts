@@ -9,10 +9,10 @@ export interface ProjectOverview {
   inProgress: number;
   launched: number;
 
-  receivedThisWeek: number;
-  retainedThisWeek: number;
-  inProgressThisWeek: number;
-  launchedThisWeek: number;
+  receivedThisWeek: number; // deprecated, kept for compatibility
+  retainedThisWeek: number; // represents this month
+  inProgressThisWeek: number; // represents this month
+  launchedThisWeek: number; // represents this year
 }
 
 export async function getProjectOverview(): Promise<ProjectOverview> {
@@ -37,10 +37,15 @@ export async function getProjectOverview(): Promise<ProjectOverview> {
     };
   }
 
-  // start of current week (Monday)
-  const startOfWeek = new Date();
-  startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay() + 1);
-  startOfWeek.setHours(0, 0, 0, 0);
+  // Start of current month
+  const startOfMonth = new Date();
+  startOfMonth.setDate(1);
+  startOfMonth.setHours(0, 0, 0, 0);
+
+  // Start of current year
+  const startOfYear = new Date();
+  startOfYear.setMonth(0, 1);
+  startOfYear.setHours(0, 0, 0, 0);
 
   // Fetch ALL projects
   const { data: projects, error: projectsError } = await supabase
@@ -95,7 +100,10 @@ export async function getProjectOverview(): Promise<ProjectOverview> {
 
   for (const project of projects) {
     const status = project.status as ProjectStatus;
-    const isThisWeek = new Date(project?.created_at as string) >= startOfWeek;
+    const createdAt = new Date(project?.created_at as string);
+    const isThisMonth = createdAt >= startOfMonth;
+    const isThisYear = createdAt >= startOfYear;
+
     // Check if this project belongs to the current user by looking up the claim
     const claimedBy = project.claim_id ? claimMap.get(project.claim_id) : null;
     const isMyProject = claimedBy === user.id;
@@ -103,7 +111,7 @@ export async function getProjectOverview(): Promise<ProjectOverview> {
     // For submitted projects: show all (claim_id is usually null for these)
     if (status === "submitted") {
       stats.received++;
-      if (isThisWeek) stats.receivedThisWeek++;
+      if (isThisMonth) stats.receivedThisWeek++; // keeping prop name for compatibility
       continue;
     }
 
@@ -113,17 +121,17 @@ export async function getProjectOverview(): Promise<ProjectOverview> {
     switch (status) {
       case "claimed":
         stats.retained++;
-        if (isThisWeek) stats.retainedThisWeek++;
+        if (isThisMonth) stats.retainedThisWeek++; // this month
         break;
 
       case "in_progress":
         stats.inProgress++;
-        if (isThisWeek) stats.inProgressThisWeek++;
+        if (isThisMonth) stats.inProgressThisWeek++; // this month
         break;
 
       case "completed":
         stats.launched++;
-        if (isThisWeek) stats.launchedThisWeek++;
+        if (isThisYear) stats.launchedThisWeek++; // this year
         break;
 
       case "declined":
