@@ -18,6 +18,7 @@ export interface DashboardFilters {
   toDate?: string;
   location?: string;
   category?: string;
+  categories?: string[];
   name?: string;
   ifl?: string;
   date?: string;

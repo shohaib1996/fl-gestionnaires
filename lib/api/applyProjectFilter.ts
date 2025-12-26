@@ -19,14 +19,21 @@ export function applyProjectFilters(query: any, filters: ProjectFilters) {
     query = query.or(`title.ilike.${q},description.ilike.${q}`);
   }
 
-  /* LOCATION */
+  /* LOCATION (Province) */
   if (filters.location?.trim()) {
-    query = query.ilike("project_city", `%${filters.location.trim()}%`);
+    query = query.eq("province", filters.location.trim());
   }
 
-  /* CATEGORY */
-  if (filters.category?.trim()) {
-    query = query.contains("categories", [filters.category]);
+  /* CATEGORY - Multi-select */
+  if (filters.categories && filters.categories.length > 0) {
+    // Filter projects that have ANY of the selected categories
+    // Using overlaps to check if the project's categories array overlaps with selected categories
+    query = query.overlaps("categories", filters.categories);
+  }
+
+  /* NAME (Title) - Case insensitive search */
+  if (filters.name?.trim()) {
+    query = query.ilike("title", `%${filters.name.trim()}%`);
   }
 
   /* IFL */
@@ -34,7 +41,18 @@ export function applyProjectFilters(query: any, filters: ProjectFilters) {
     query = query.ilike("project_id", `%${filters.ifl.trim()}%`);
   }
 
-  /* DATE RANGE */
+  /* DATE FILTER */
+  if (filters.date?.trim()) {
+    // Filter for specific date - match all records created on this date
+    const selectedDate = filters.date.trim();
+    const nextDay = new Date(selectedDate);
+    nextDay.setDate(nextDay.getDate() + 1);
+    const nextDayStr = nextDay.toISOString().split("T")[0];
+
+    query = query.gte("created_at", selectedDate).lt("created_at", nextDayStr);
+  }
+
+  /* DATE RANGE (if needed for other features) */
   if (filters.fromDate) {
     query = query.gte("created_at", filters.fromDate);
   }
