@@ -1,90 +1,136 @@
-import React, { useState } from "react";
-import { ArrowLeft, List, Plus } from "lucide-react";
+"use client";
+
+import { format, isBefore } from "date-fns";
+import { fr } from "date-fns/locale";
 import { motion } from "framer-motion";
+import { ArrowLeft, List, Plus } from "lucide-react";
+import { useEffect, useState } from "react";
+
+import {
+  CalendarEvent,
+  getProjectEvents,
+} from "@/app/actions/taskEvents/getProjectEvents";
+import { useUser } from "@/providers/UserProvider";
 import AddTaskScreen from "./AddTaskScreen";
-import TaskDetailScreen from "./TaskDetailScreen";
 
 interface TaskDetailProps {
   onBack: () => void;
+  project: {
+    id: string;
+    title: string;
+  };
 }
 
-export const TaskDetail = ({ onBack }: TaskDetailProps) => {
+type UITask = {
+  id: string;
+  date: string;
+  time: string;
+  description: string;
+  status: "expired" | "user" | "fond_local";
+  raw: CalendarEvent;
+};
+
+export const TaskDetail = ({ onBack, project }: TaskDetailProps) => {
   const [showAddTask, setShowAddTask] = useState(false);
-  const [selectedTask, setSelectedTask] = useState<any>(null);
+  const [selectedTask, setSelectedTask] = useState<CalendarEvent | null>(null);
+  const [tasks, setTasks] = useState<UITask[]>([]);
+  const [loading, setLoading] = useState(true);
+  const { user } = useUser();
 
-  const tasks: any[] = [];
+  const projectId = project.id;
+  const currentUserId = user?.id ?? "";
 
-  console.log(selectedTask);
+  /* -------------------------------
+   * Load & map events
+   * ------------------------------- */
+  useEffect(() => {
+    async function loadTasks() {
+      const res = await getProjectEvents(projectId);
 
+      if (!res.success || !res.data) {
+        setLoading(false);
+        return;
+      }
+
+      const now = new Date();
+
+      const mapped: UITask[] = res.data.map((e) => {
+        const endDateTime = new Date(`${e.end_date}T${e.end_time ?? "23:59"}`);
+
+        const isExpired = isBefore(endDateTime, now);
+
+        let status: UITask["status"];
+        if (isExpired) {
+          status = "expired";
+        } else if (e.created_by === currentUserId) {
+          status = "user";
+        } else {
+          status = "fond_local";
+        }
+
+        return {
+          id: e.id,
+          date: format(new Date(e.start_date), "dd MMMM yyyy", {
+            locale: fr,
+          }),
+          time:
+            e.start_time && e.end_time
+              ? `${e.start_time} - ${e.end_time}`
+              : "Toute la journée",
+          description:
+            status === "expired"
+              ? "Expired or overdue task or appointment"
+              : status === "user"
+              ? "Task or appointment set by User"
+              : "Task or appointment set by Fond Local",
+          status,
+          raw: e,
+        };
+      });
+
+      setTasks(mapped);
+      setLoading(false);
+    }
+
+    loadTasks();
+  }, [projectId, currentUserId]);
+
+  /* -------------------------------
+   * Navigation states
+   * ------------------------------- */
   if (showAddTask) {
     return <AddTaskScreen onBack={() => setShowAddTask(false)} />;
   }
 
-  if (selectedTask) {
-    return (
-      <TaskDetailScreen
-        task={selectedTask}
-        onBack={() => setSelectedTask(null)}
-      />
-    );
-  }
+  // if (selectedTask) {
+  //   return (
+  //     <TaskDetailScreen
+  //       task={selectedTask}
+  //       onBack={() => setSelectedTask(null)}
+  //     />
+  //   );
+  // }
 
+  /* -------------------------------
+   * UI
+   * ------------------------------- */
   return (
     <div
-      className="bg-[#e8e8e8] dark:bg-[#121212] w-full flex flex-col transition-colors duration-300 relative"
-      // inline style uses the --vh variable; fallback to 1vh if it's not set
+      className="bg-[#e8e8e8] dark:bg-[#121212] w-full flex flex-col relative"
       style={{ height: "calc(var(--vh, 1vh) * 100)" }}
     >
       {/* Header */}
-      <div className="w-full h-24 flex items-center justify-between bg-white dark:bg-[#1e1e1e] shadow-sm px-6 mb-8 transition-colors duration-300 shrink-0">
-        {/* Back Arrow */}
-        <button
-          onClick={onBack}
-          className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors"
-          aria-label="Retour"
-        >
+      <div className="w-full h-24 flex items-center justify-between bg-white shadow-sm px-6 mb-8 shrink-0">
+        <button onClick={onBack} className="p-2 rounded-full">
           <ArrowLeft className="w-6 h-6 text-[#63a053]" />
         </button>
 
-        <div className="absolute left-1/2 transform -translate-x-1/2">
-          <h1 className="font-bold text-[#63a053] text-2xl tracking-wide">
-            FOND LOCAL
-          </h1>
-        </div>
+        <h1 className="font-bold text-[#63a053] text-2xl">FOND LOCAL</h1>
 
-        {/* Menu Icon */}
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="23"
-          height="22"
-          viewBox="0 0 23 22"
-          fill="none"
-        >
-          <path
-            d="M1.4375 11H21.5625"
-            stroke="#63A053"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <path
-            d="M1.4375 5.25H21.5625"
-            stroke="#63A053"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <path
-            d="M1.4375 16.75H21.5625"
-            stroke="#63A053"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
+        <div className="w-6" />
       </div>
 
-      {/* Fixed Project Header Card */}
+      {/* Project Card */}
       <div className="px-4 pb-6 shrink-0">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -95,62 +141,68 @@ export const TaskDetail = ({ onBack }: TaskDetailProps) => {
           <div>
             <p className="text-[#9dcc91] text-lg font-medium mb-1">Tâches</p>
             <h2 className="text-white text-2xl font-semibold">
-              COLA NATURELLE
+              {project.title}
             </h2>
           </div>
           <List className="text-white opacity-50 w-10 h-10" />
         </motion.div>
       </div>
 
-      {/* Scrollable Tasks List */}
+      {/* Task List */}
       <div className="flex-1 overflow-y-auto px-4 pb-24 hide-scrollbar">
         <div className="w-full max-w-lg mx-auto space-y-3">
-          {tasks.map((task, index) => (
-            <motion.div
-              key={task.id}
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{
-                delay: 0.1 + index * 0.1,
-                duration: 0.4,
-                type: "spring",
-                stiffness: 100,
-              }}
-              onClick={() => setSelectedTask(task)}
-              className="bg-white dark:bg-[#1e1e1e] rounded-xs shadow-sm p-4 transition-colors duration-300 cursor-pointer active:scale-[0.98]"
-            >
-              <div className="flex items-start gap-3">
-                {task.status === "user" && (
-                  <div className="w-3 h-3 rounded-full bg-[#63a053] mt-1.5 shrink-0" />
-                )}
-                <div className="flex-1">
-                  <p className="text-[#4a5568] dark:text-gray-400 text-lg font-medium mb-1">
-                    {task.date}
-                  </p>
-                  <p
-                    className={`text-xl font-medium mb-1 ${
-                      task.status === "expired"
-                        ? "text-[#a0aec0] dark:text-gray-500"
-                        : "text-[#3182ce] dark:text-[#63b3ed]"
-                    }`}
-                  >
-                    {task.description}
-                  </p>
-                  <p className="text-[#718096] dark:text-gray-400 text-lg">
-                    {task.time}
-                  </p>
+          {loading ? (
+            <p className="text-center text-gray-500">Chargement…</p>
+          ) : tasks.length === 0 ? (
+            <p className="text-center text-gray-500">
+              Pas de tâches pour le moment.
+            </p>
+          ) : (
+            tasks.map((task, index) => (
+              <motion.div
+                key={task.id}
+                initial={{ opacity: 0, x: -40 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{
+                  delay: index * 0.06,
+                  duration: 0.35,
+                  type: "spring",
+                  stiffness: 120,
+                }}
+                onClick={() => setSelectedTask(task.raw)}
+                className="bg-white rounded-xs shadow-sm p-4 cursor-pointer active:scale-[0.98]"
+              >
+                <div className="flex items-start gap-3">
+                  {task.status === "user" && (
+                    <div className="w-3 h-3 rounded-full bg-[#63a053] mt-1.5 shrink-0" />
+                  )}
+
+                  <div className="flex-1">
+                    <p className="text-[#4a5568] text-lg font-medium mb-1">
+                      {task.date}
+                    </p>
+
+                    <p
+                      className={`text-xl font-medium mb-1 ${
+                        task.status === "expired"
+                          ? "text-[#a0aec0]"
+                          : "text-[#3182ce]"
+                      }`}
+                    >
+                      {task.description}
+                    </p>
+
+                    <p className="text-[#718096] text-lg">{task.time}</p>
+                  </div>
                 </div>
-              </div>
-            </motion.div>
-          ))}
+              </motion.div>
+            ))
+          )}
         </div>
       </div>
 
-      {/* Fixed Bottom Button */}
-      <div
-        className="fixed bottom-0 left-0 right-0 bg-[#63a053] hover:bg-[#528a43] z-50"
-        style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
-      >
+      {/* Bottom Button */}
+      <div className="fixed bottom-0 left-0 right-0 bg-[#63a053] z-50">
         <button
           onClick={() => setShowAddTask(true)}
           className="w-full h-16 text-white font-semibold text-xl flex items-center justify-center gap-2"

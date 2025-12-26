@@ -68,7 +68,7 @@ const UserLoginPage = () => {
        * 3. Success
        * ------------------------------------ */
       toast.success("Connexion réussie");
-      router.replace("/user");
+      router.replace("/projects");
     } catch (err: any) {
       toast.error(err.message || "Une erreur est survenue");
     } finally {

@@ -4,29 +4,29 @@ import { createClient } from "@/lib/supabase/server";
 import { ActionResult } from "@/types/actions";
 import type { Tables } from "@/types/supabase";
 
-type MilestoneRow = Tables<"milestones">;
+export type CalendarEvent = Tables<"calendar_events">;
 
-export async function getProjectMilestones(
+export async function getProjectEvents(
   projectId: string
-): Promise<ActionResult<MilestoneRow[]>> {
+): Promise<ActionResult<CalendarEvent[]>> {
   const supabase = await createClient();
 
   const { data, error } = await supabase
-    .from("milestones")
+    .from("calendar_events")
     .select("*")
     .eq("project_id", projectId)
-    .order("order_index");
+    .order("start_date", { ascending: true })
+    .order("start_time", { ascending: true });
 
   if (error) {
     return {
       success: false,
-      message: "Impossible de charger les jalons",
+      message: "Impossible de charger les tâches",
     };
   }
 
   return {
     success: true,
-    message: "Jalons chargés",
     data: data ?? [],
   };
 }

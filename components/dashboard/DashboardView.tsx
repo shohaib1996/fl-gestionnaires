@@ -5,7 +5,6 @@ import { useUser } from "@/providers/UserProvider";
 import DashboardFilters from "./DashboardFilters";
 import DashboardPagination from "./DashboardPagination";
 import DashboardTabs from "./DashboardTabs";
-import { HomeCandidate } from "./HomeCandidate";
 
 interface Props {
   activeTab: "recu" | "mes-projets" | "encours" | "reserve";
@@ -33,9 +32,7 @@ export default function DashboardView({
   return (
     <>
       {/* Mobile */}
-      <div className="lg:hidden">
-        <HomeCandidate />
-      </div>
+      <div className="lg:hidden">{/* <HomeCandidate /> */}</div>
 
       {/* Desktop */}
       <div className="hidden lg:block">

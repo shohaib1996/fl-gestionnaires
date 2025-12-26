@@ -1,7 +1,7 @@
 // Generic Success Response
 export interface ActionSuccess<T = unknown> {
   success: true;
-  data: T;
+  data?: T;
   message?: string;
 }
 
@@ -14,7 +14,7 @@ export interface ActionError {
 }
 
 // Unified Action Result
-export type ActionResult<T = unknown> = ActionSuccess<T> | ActionError;
+export type ActionResult<T = null> = ActionSuccess<T> | ActionError;
 
 // Mutation Variable Type (id, email, etc.)
 export type ActionVariable = string;

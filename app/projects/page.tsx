@@ -1,7 +1,6 @@
-"use client";
 import UserDashboard from "./UserDashboard";
 
-export default function UserPage() {
+export default async function ProjectsPage() {
   return (
     <div>
       <UserDashboard />

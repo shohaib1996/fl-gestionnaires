@@ -82,7 +82,7 @@ export default function UserDashboard() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
-            onClick={() => router.push(`/user/project/${project.id}`)}
+            onClick={() => router.push(`/project/${project.id}`)}
             className="bg-[#63a053] rounded-lg px-6 py-8 shadow-sm cursor-pointer active:scale-[0.98]"
           >
             <p className="text-white/70 text-sm mb-1">Projet</p>

@@ -6,7 +6,13 @@ import CalendarScreen from "./CalendarScreen";
 import { EvolutionDetail } from "./EvolutionDetail";
 import { TaskDetail } from "./TaskDetail";
 
-export const HomeCandidate = () => {
+interface Project {
+  id: string;
+  title: string;
+}
+
+export const HomeCandidate = ({ project }: { project: Project }) => {
+  console.log("project", project);
   const [showEvolution, setShowEvolution] = useState(false);
   const [showTasks, setShowTasks] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);
@@ -26,9 +32,14 @@ export const HomeCandidate = () => {
         <EvolutionDetail
           key="evolution"
           onBack={() => setShowEvolution(false)}
+          project={project}
         />
       ) : showTasks ? (
-        <TaskDetail key="tasks" onBack={() => setShowTasks(false)} />
+        <TaskDetail
+          key="tasks"
+          onBack={() => setShowTasks(false)}
+          project={project}
+        />
       ) : showAddTask ? (
         <AddTaskScreen key="add-task" onBack={() => setShowAddTask(false)} />
       ) : showCalendar ? (
@@ -106,7 +117,7 @@ export const HomeCandidate = () => {
             >
               <p className="text-[#9dcc91] text-xl font-medium mb-1">Projet</p>
               <h2 className="text-white text-2xl font-semibold">
-                COLA NATURELLE
+                {project.title}
               </h2>
             </motion.div>
 

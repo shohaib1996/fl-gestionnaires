@@ -1,19 +1,58 @@
-import React from "react";
-import { Check, ArrowLeft } from "lucide-react";
+"use client";
+import { getProjectMilestones } from "@/app/actions/milestones/getProjectMilestones";
 import { motion } from "framer-motion";
+import { ArrowLeft, Check } from "lucide-react";
+import { useEffect, useState } from "react";
+
+interface Step {
+  id: number;
+  title: string;
+  completed: boolean;
+}
 
 interface EvolutionDetailProps {
   onBack: () => void;
+  project: {
+    title: string;
+    id: string;
+  };
 }
 
-export const EvolutionDetail = ({ onBack }: EvolutionDetailProps) => {
-  const steps = [
-    { id: 5, title: "Suivi & Croissance", completed: false },
-    { id: 4, title: "Post-investissement", completed: false },
-    { id: 3, title: "Pitch", completed: false },
-    { id: 2, title: "Structuration financière", completed: false },
-    { id: 1, title: "Diagnostic & Mise en conformité", completed: true },
-  ];
+export const EvolutionDetail = ({ onBack, project }: EvolutionDetailProps) => {
+  const [steps, setSteps] = useState<Step[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadMilestones() {
+      try {
+        const milestones = await getProjectMilestones(project.id);
+
+        if (!milestones.success || !milestones.data) {
+          throw new Error(milestones.message);
+        }
+
+        const mapped: Step[] = milestones.data.map((m: any) => ({
+          id: m.order_index, // UI step number
+          title: m.title,
+          completed: Boolean(m.status === "completed"),
+        }));
+
+        setSteps(mapped);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadMilestones();
+  }, [project]);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-64 text-gray-500">
+        Loading evolution…
+      </div>
+    );
+  }
 
   return (
     <div className="bg-[#e8e8e8] dark:bg-[#121212] w-full min-h-screen flex flex-col transition-colors duration-300">
@@ -94,7 +133,7 @@ export const EvolutionDetail = ({ onBack }: EvolutionDetailProps) => {
           <div>
             <p className="text-[#9dcc91] text-xl font-medium mb-1">Evolution</p>
             <h2 className="text-white text-2xl font-semibold">
-              COLA NATURELLE
+              {project.title}
             </h2>
           </div>
           <svg
