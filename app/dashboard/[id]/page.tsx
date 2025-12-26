@@ -7,6 +7,7 @@ import {
   reserveProject,
 } from "@/app/actions/projects/projects.action";
 import { assignProjectToAdmin } from "@/app/actions/projects/assignProjectToAdmin";
+import { sendProjectNotification } from "@/app/actions/emails/sendNotification";
 import ClaimerSection from "@/components/dashboard/ClaimerSection";
 import DashboardTabs from "@/components/dashboard/DashboardTabs";
 import ProjectActionsMenu from "@/components/dashboard/ProjectActionsMenu";
@@ -16,7 +17,13 @@ import { useProjectActions } from "@/hooks/useProjectActions";
 import { getProjectActions } from "@/lib/project/getProjectActions";
 import { useUser } from "@/providers/UserProvider";
 import { ProjectStatus } from "@/types/status";
-import { Ellipsis, Undo2 } from "lucide-react";
+import { Ellipsis, Undo2, Mail } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -51,6 +58,7 @@ export interface Project {
 const ProjectDetails = () => {
   const [project, setProject] = useState<Project | null>(null);
   const [loading, setLoading] = useState(true);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const router = useRouter();
   const params = useParams();
   const id = params?.id as string;
@@ -65,12 +73,14 @@ const ProjectDetails = () => {
 
     console.log("Fetching project with ID:", id);
     setLoading(true);
+    setErrorMsg(null);
 
     try {
       const { data, error } = await getProjectById(id);
 
       if (error || !data || !data.status) {
         console.error("Error fetching project:", error);
+        setErrorMsg(error || "Project not found or invalid data");
         setLoading(false);
         return;
       }
@@ -105,8 +115,9 @@ const ProjectDetails = () => {
       console.log("Setting project data:", mappedProject.title);
       setProject(mappedProject);
       setLoading(false);
-    } catch (err) {
+    } catch (err: any) {
       console.error("Unexpected error:", err);
+      setErrorMsg(err.message || "Unexpected error");
       setLoading(false);
     }
   };
@@ -133,8 +144,10 @@ const ProjectDetails = () => {
 
   if (!project && !loading) {
     return (
-      <div className="flex h-full items-center justify-center text-gray-600 dark:text-gray-300">
-        Project not found
+      <div className="flex flex-col gap-2 h-full items-center justify-center text-gray-600 dark:text-gray-300">
+        <p>Project not found</p>
+        <p className="text-sm text-red-500">{errorMsg}</p>
+        <p className="text-xs text-gray-400">ID: {id}</p>
       </div>
     );
   }
@@ -200,6 +213,22 @@ const ProjectDetails = () => {
     }
   };
 
+  const handleSendEmail = async () => {
+    if (!project.email) {
+      toast.error("Project has no email address associated.");
+      return;
+    }
+
+    toast.info("Sending notification...");
+    const result = await sendProjectNotification(project.id, project.email);
+
+    if (result.success) {
+      toast.success("Email sent successfully");
+    } else {
+      toast.error(result.message || "Failed to send email");
+    }
+  };
+
   const handleRedirect = () => {
     if (project.status !== "in_progress") {
       return toast.message("Project is not assigned yet");
@@ -242,6 +271,24 @@ const ProjectDetails = () => {
             </h2>
             <span className="text-sm font-medium text-gray-600 dark:text-gray-300 flex items-center gap-7">
               ID: {project.project_id}
+              {project.status === "in_progress" && (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button className="hover:bg-gray-100 dark:hover:bg-neutral-700 rounded-full p-1 transition-colors">
+                      <Ellipsis className="h-5 w-5" />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-56">
+                    <DropdownMenuItem
+                      onClick={handleSendEmail}
+                      className="flex gap-2 cursor-pointer"
+                    >
+                      <Mail className="h-4 w-4" />
+                      Envoyer demande / approuver
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              )}
               {actions?.length > 0 && (
                 <ProjectActionsMenu
                   actions={actions}

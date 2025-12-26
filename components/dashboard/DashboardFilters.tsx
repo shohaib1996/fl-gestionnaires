@@ -1,4 +1,9 @@
 import { Input } from "@/components/ui/input";
+import { SearchableDropdown } from "@/components/ui/searchable-dropdown";
+import { MultiSelectDropdown } from "@/components/ui/multi-select-dropdown";
+import { DatePicker } from "@/components/ui/date-picker";
+import { PROVINCE_OPTIONS } from "@/lib/location-data";
+import { CATEGORY_OPTIONS } from "@/lib/categories-data";
 import type { DashboardFilters } from "@/types/dashboard";
 
 interface Props {
@@ -7,7 +12,7 @@ interface Props {
 }
 
 export default function DashboardFilters({ values, onChange }: Props) {
-  const update = (key: keyof DashboardFilters, value: string) => {
+  const update = (key: keyof DashboardFilters, value: string | string[]) => {
     onChange({ ...values, [key]: value });
   };
 
@@ -19,27 +24,31 @@ export default function DashboardFilters({ values, onChange }: Props) {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4">
         <Filter label="Location">
-          <Input
-            onChange={(e) => update("location", e.target.value)}
+          <SearchableDropdown
+            options={PROVINCE_OPTIONS}
+            value={values.location}
+            onChange={(value) => update("location", value)}
             placeholder="Taper ou sélectionner"
-            className="bg-gray-100 dark:bg-neutral-700 border-0 text-sm placeholder:text-gray-400 focus-visible:ring-1 focus-visible:ring-[#63a053]"
+            searchPlaceholder="Rechercher une province..."
+            columns={1}
           />
         </Filter>
 
         <Filter label="Catégorie">
-          <Input
-            onChange={(e) => update("category", e.target.value)}
-            placeholder="Taper ou sélectionner"
-            className="bg-gray-100 dark:bg-neutral-700 border-0 text-sm placeholder:text-gray-400 focus-visible:ring-1 focus-visible:ring-[#63a053]"
+          <MultiSelectDropdown
+            options={CATEGORY_OPTIONS}
+            value={values.categories || []}
+            onChange={(value) => update("categories", value)}
+            placeholder="Sélectionner"
+            searchPlaceholder="Rechercher une catégorie..."
           />
         </Filter>
 
         <Filter label="Date">
-          <Input
-            type="date"
-            onChange={(e) => update("date", e.target.value)}
+          <DatePicker
+            value={values.date}
+            onChange={(value) => update("date", value)}
             placeholder="Sélectionner"
-            className="bg-gray-100 dark:bg-neutral-700 border-0 text-sm placeholder:text-gray-400 focus-visible:ring-1 focus-visible:ring-[#63a053]"
           />
         </Filter>
 

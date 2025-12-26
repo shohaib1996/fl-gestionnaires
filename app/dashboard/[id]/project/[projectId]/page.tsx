@@ -234,9 +234,11 @@ const ProjectDetails = () => {
 
   // Normalize manager data (handle both 'name' and 'fullName' properties)
   const managerName =
-    'fullName' in currentManager ? currentManager.fullName : currentManager.name;
+    "fullName" in currentManager
+      ? currentManager.fullName
+      : currentManager.name;
   const managerEmail =
-    'email' in currentManager ? currentManager.email : undefined;
+    "email" in currentManager ? currentManager.email : undefined;
 
   // Helper function to truncate description
   const truncateDescription = (text: string | null | undefined) => {

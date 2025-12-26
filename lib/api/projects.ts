@@ -10,8 +10,10 @@ export interface ProjectFilters {
   toDate?: string;
   location?: string;
   category?: string;
+  categories?: string[];
   name?: string;
   ifl?: string;
+  date?: string;
 
   role: UserRole;
   userId?: string;

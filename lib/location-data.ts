@@ -145,7 +145,7 @@ export const CITIES = [
 ];
 
 export const PROVINCE_OPTIONS = PROVINCES.map((province) => ({
-  value: province.toLowerCase(),
+  value: province,
   label: province,
 }));
 

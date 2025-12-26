@@ -37,6 +37,15 @@ export async function getProjectOverview(): Promise<ProjectOverview> {
     };
   }
 
+  // Get user role to determine if we should show all projects or just user's projects
+  const { data: userData } = await supabase
+    .from("users")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+
+  const isSuperAdmin = userData?.role === "super_admin";
+
   // Start of current month
   const startOfMonth = new Date();
   startOfMonth.setDate(1);
@@ -115,8 +124,10 @@ export async function getProjectOverview(): Promise<ProjectOverview> {
       continue;
     }
 
-    // For all other statuses: only count if it belongs to current user
-    if (!isMyProject) continue;
+    // For all other statuses:
+    // - super_admin sees ALL projects
+    // - admin sees only their own projects
+    if (!isSuperAdmin && !isMyProject) continue;
 
     switch (status) {
       case "claimed":
