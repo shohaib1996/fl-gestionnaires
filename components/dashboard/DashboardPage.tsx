@@ -1,7 +1,6 @@
 "use client";
 
 import { getAllProjects } from "@/app/actions";
-import { HomeCandidate } from "@/components/dashboard/HomeCandidate";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { AnimatePresence, motion } from "framer-motion";
@@ -61,11 +60,6 @@ export default function DashboardPage() {
 
   return (
     <>
-      {/* Mobile and Tablet View - Hidden on lg and above */}
-      <div className="lg:hidden">
-        <HomeCandidate />
-      </div>
-
       {/* Desktop View - Hidden below lg breakpoint */}
       <div className="hidden lg:block">
         <div className="flex flex-col max-h-[71vh]">

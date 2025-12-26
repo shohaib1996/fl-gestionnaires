@@ -1,9 +1,9 @@
 "use client";
 
+import { AdminUser, getAdmins } from "@/app/actions/users/getAdmins";
 import { useCreateMilestone } from "@/hooks/useCreateMilestone";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { AdminUser, getAdmins } from "@/app/actions/users/getAdmins";
 import { AdminSelect } from "../ui/admin-select";
 
 import { Calendar } from "@/components/ui/calendar";
@@ -130,6 +130,7 @@ export default function CreateJalonModal({
       }
       // 2. Create tasks linked to milestone
       if (milestone.success) {
+        if (!milestone.data) return;
         const milestoneId = milestone.data.id;
 
         await Promise.all(

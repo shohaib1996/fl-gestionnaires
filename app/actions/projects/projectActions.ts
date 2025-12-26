@@ -14,7 +14,7 @@ export async function claimProject({
 }: {
   projectId: string;
   userId: string;
-}): Promise<ActionResult> {
+}): Promise<ActionResult<{ userId: string; projectId: string }>> {
   const supabase = await createClient();
   /* 1️⃣ Check project status */
   const { data: project, error: projectError } = await supabase
@@ -80,7 +80,9 @@ export async function claimProject({
 /* ----------------------------------
    DECLINE PROJECT (SUPER ADMIN)
 ----------------------------------- */
-export async function declineProject(projectId: string): Promise<ActionResult> {
+export async function declineProject(
+  projectId: string
+): Promise<ActionResult<any>> {
   const supabase = await createClient();
 
   const { data, error } = await supabase
@@ -107,7 +109,9 @@ export async function declineProject(projectId: string): Promise<ActionResult> {
    SMART APPROVE (SUPER ADMIN)
 ----------------------------------- */
 
-export async function approveProject(projectId: string): Promise<ActionResult> {
+export async function approveProject(
+  projectId: string
+): Promise<ActionResult<{ projectId: string; claimerId: string }>> {
   const supabase = await createClient();
 
   /* 1️⃣ Fetch project */
@@ -150,7 +154,9 @@ export async function approveProject(projectId: string): Promise<ActionResult> {
 
   // Optional: Log that invitation was skipped
   if (project.email) {
-    console.log(`Skipping invitation for ${project.email} - SendGrid not yet implemented`);
+    console.log(
+      `Skipping invitation for ${project.email} - SendGrid not yet implemented`
+    );
   }
 
   /* 4️⃣ Assign project to claimer */
@@ -187,7 +193,10 @@ export async function approveProject(projectId: string): Promise<ActionResult> {
   });
 
   if (!milestonesResult.success) {
-    console.error("Failed to create preset milestones:", milestonesResult.message);
+    console.error(
+      "Failed to create preset milestones:",
+      milestonesResult.message
+    );
     // Don't fail the entire approval if milestones fail - just log it
   }
 

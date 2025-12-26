@@ -31,6 +31,7 @@ export function useUpdateCalendarEvent() {
 
     onSuccess: (res) => {
       if (!res.success) return;
+      if (!res.data) return;
 
       // 🔄 refresh calendar & sidebar
       queryClient.invalidateQueries({

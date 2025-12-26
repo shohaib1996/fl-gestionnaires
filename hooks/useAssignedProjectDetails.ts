@@ -1,16 +1,13 @@
 "use client";
 
-import {
-  AssignedProjectDetails,
-  getAssignedProjectDetails,
-} from "@/app/actions/projects/getAssignedProjectDetails";
+import { getAssignedProjectDetails } from "@/app/actions/projects/getAssignedProjectDetails";
 import { assignedProjectKeys } from "@/lib/queryKeys";
 import { useQuery } from "@tanstack/react-query";
 
 export function useAssignedProjectDetails(projectId: string) {
-  return useQuery<AssignedProjectDetails>({
+  return useQuery({
     queryKey: assignedProjectKeys.details(projectId),
-    queryFn: async (): Promise<AssignedProjectDetails> => {
+    queryFn: async () => {
       const res = await getAssignedProjectDetails(projectId);
 
       if (!res.success) {
