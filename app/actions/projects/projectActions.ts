@@ -1,6 +1,7 @@
 "use server";
 import { createClient } from "@/lib/supabase/server";
 import { ActionResult } from "@/types/actions";
+import { createPresetMilestones } from "../milestones/createPresetMilestones";
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
@@ -144,35 +145,12 @@ export async function approveProject(projectId: string): Promise<ActionResult> {
   const claimerId = claim.claimed_by;
 
   /* 3️⃣ Invite project owner if needed */
-  if (!project.email) {
-    return {
-      success: false,
-      message: "Project owner email missing.",
-    };
-  }
+  // TODO: Implement SendGrid invitation system
+  // For now, skipping invitation - will be implemented with SendGrid later
 
-  const { data: userExists, error: rpcError } = await supabase.rpc(
-    "check_user_exists_by_email",
-    { email_input: project.email }
-  );
-
-  if (rpcError) {
-    return { success: false, message: rpcError.message };
-  }
-
-  if (!userExists) {
-    const inviteRes = await fetch(`${APP_URL}/api/invite`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: project.email }),
-    });
-
-    if (!inviteRes.ok) {
-      return {
-        success: false,
-        message: "Failed to send account invitation.",
-      };
-    }
+  // Optional: Log that invitation was skipped
+  if (project.email) {
+    console.log(`Skipping invitation for ${project.email} - SendGrid not yet implemented`);
   }
 
   /* 4️⃣ Assign project to claimer */
@@ -200,6 +178,17 @@ export async function approveProject(projectId: string): Promise<ActionResult> {
       success: false,
       message: updateError.message,
     };
+  }
+
+  /* 6️⃣ Create preset milestones */
+  const milestonesResult = await createPresetMilestones({
+    projectId,
+    managerId: claimerId,
+  });
+
+  if (!milestonesResult.success) {
+    console.error("Failed to create preset milestones:", milestonesResult.message);
+    // Don't fail the entire approval if milestones fail - just log it
   }
 
   return {

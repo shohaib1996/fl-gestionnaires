@@ -41,6 +41,7 @@ export default function JalonDetailsModal({
   projectId,
 }: Props) {
   const [mode, setMode] = useState<"view" | "edit">("view");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const qc = useQueryClient();
 
   const { data, isLoading } = useMilestoneDetails(milestoneId ?? undefined);
@@ -49,92 +50,106 @@ export default function JalonDetailsModal({
 
   const handleSubmit = async (values: any, tasks: any[]) => {
     if (!data) return;
-    // 1️⃣ Update milestone meta
-    await updateMilestone(data.milestone.id, {
-      title: values.title,
-      description: values.description,
-      start_date: values.startDate,
-      end_date: values.endDate,
-      priority: values.priority,
-    });
 
-    console.log(tasks);
-
-    // 2️⃣ Separate new vs existing tasks
-    const newTasks = tasks.filter((t) => !t.id);
-    // const existingTasks = tasks.filter((t) => t.id);
-
-    // 3️⃣ Create new tasks
-    await Promise.all(
-      newTasks.map((task) =>
-        createTask({
-          milestoneId: data.milestone.id,
-          title: task.name,
-          description: task.description,
-          category: task.category,
-          file_format: task.file_format,
-        })
-      )
-    );
-
-    // 4️⃣ Update existing tasks
-    // await Promise.all(
-    //   existingTasks.map((task) =>
-    //     editTask({
-    //       taskId: task.id,
-    //       title: task.name,
-    //       description: task.description,
-    //       category: task.category,
-    //       file_format: task.file_format,
-    //     })
-    //   )
-    // );
-
-    // 5️⃣ Invalidate and wait for refetch to complete BEFORE switching to view mode
-    // Invalidate milestone details (for this modal)
-    qc.invalidateQueries({
-      queryKey: ["milestone-details", milestoneId],
-    });
-
-    // Invalidate tasks by milestone (for the main page table)
-    qc.invalidateQueries({
-      queryKey: taskKeys.byMilestone(data.milestone.id),
-    });
-
-    // Invalidate project details (for milestone tabs in main page)
-    if (projectId) {
-      qc.invalidateQueries({
-        queryKey: assignedProjectKeys.details(projectId),
+    setIsSubmitting(true);
+    try {
+      // 1️⃣ Update milestone meta
+      await updateMilestone(data.milestone.id, {
+        title: values.title,
+        description: values.description,
+        start_date: values.startDate,
+        end_date: values.endDate,
+        start_time: values.startTime,
+        end_time: values.endTime,
+        priority: values.priority,
+        manager_id: values.managerId,
       });
 
-      // Invalidate sidebar overview to update document counts
-      qc.invalidateQueries({
-        queryKey: ["project-sidebar-overview", projectId],
-      });
-    }
+      console.log(tasks);
 
-    // Wait for all queries to refetch with fresh data
-    const refetchPromises = [
-      qc.refetchQueries({
-        queryKey: ["milestone-details", milestoneId],
-      }),
-      qc.refetchQueries({
-        queryKey: taskKeys.byMilestone(data.milestone.id),
-      }),
-    ];
+      // 2️⃣ Separate new vs existing tasks
+      const newTasks = tasks.filter((t) => !t.id);
+      // const existingTasks = tasks.filter((t) => t.id);
 
-    if (projectId) {
-      refetchPromises.push(
-        qc.refetchQueries({
-          queryKey: assignedProjectKeys.details(projectId),
-        })
+      // 3️⃣ Create new tasks
+      await Promise.all(
+        newTasks.map((task) =>
+          createTask({
+            milestoneId: data.milestone.id,
+            title: task.name,
+            description: task.description,
+            category: task.category,
+            file_format: task.file_format,
+          })
+        )
       );
+
+      // 4️⃣ Update existing tasks
+      // await Promise.all(
+      //   existingTasks.map((task) =>
+      //     editTask({
+      //       taskId: task.id,
+      //       title: task.name,
+      //       description: task.description,
+      //       category: task.category,
+      //       file_format: task.file_format,
+      //     })
+      //   )
+      // );
+
+      // 5️⃣ Invalidate and wait for refetch to complete BEFORE switching to view mode
+      // Invalidate milestone details (for this modal)
+      qc.invalidateQueries({
+        queryKey: ["milestone-details", milestoneId],
+      });
+
+      // Invalidate tasks by milestone (for the main page table)
+      qc.invalidateQueries({
+        queryKey: taskKeys.byMilestone(data.milestone.id),
+      });
+
+      // Invalidate project details (for milestone tabs in main page)
+      if (projectId) {
+        qc.invalidateQueries({
+          queryKey: assignedProjectKeys.details(projectId),
+        });
+
+        // Invalidate sidebar overview to update document counts
+        qc.invalidateQueries({
+          queryKey: ["project-sidebar-overview", projectId],
+        });
+      }
+
+      // Wait for all queries to refetch with fresh data
+      const refetchPromises = [
+        qc.refetchQueries({
+          queryKey: ["milestone-details", milestoneId],
+        }),
+        qc.refetchQueries({
+          queryKey: taskKeys.byMilestone(data.milestone.id),
+        }),
+      ];
+
+      if (projectId) {
+        refetchPromises.push(
+          qc.refetchQueries({
+            queryKey: assignedProjectKeys.details(projectId),
+          })
+        );
+      }
+
+      await Promise.all(refetchPromises);
+
+      toast.success("Jalon mis à jour");
+      setMode("view");
+    } catch (error) {
+      console.error("Failed to update milestone:", error);
+      toast.error(
+        error instanceof Error ? error.message : "Échec de la mise à jour du jalon"
+      );
+    } finally {
+      setIsSubmitting(false);
     }
-
-    await Promise.all(refetchPromises);
-
-    toast.success("Jalon mis à jour");
-    setMode("view");
   };
 
   return (
@@ -255,6 +270,8 @@ export default function JalonDetailsModal({
                 description: data.milestone.description || "",
                 startDate: data.milestone.start_date || "",
                 endDate: data.milestone.end_date || "",
+                startTime: data.milestone.start_time || "",
+                endTime: data.milestone.end_time || "",
                 priority: data.milestone.priority,
                 managerId: data.milestone.manager_id || "",
               }}
@@ -264,7 +281,7 @@ export default function JalonDetailsModal({
               }}
               onCancel={() => setMode("view")}
               onSubmit={handleSubmit}
-              loading={isLoading}
+              loading={isSubmitting}
               defaultTasks={(data.tasks || []).map((task) => ({
                 id: task.id,
                 name: task.title,

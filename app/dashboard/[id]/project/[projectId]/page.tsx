@@ -202,6 +202,27 @@ const ProjectDetails = () => {
 
   if (!project) return;
 
+  // Get active milestone data
+  const activeMilestone = project.milestones?.find(
+    (m) => m.id === activeMilestoneId
+  );
+
+  // Get the manager for the active milestone, fallback to project manager
+  const currentManager = activeMilestone?.manager || project.manager;
+
+  // Normalize manager data (handle both 'name' and 'fullName' properties)
+  const managerName =
+    'fullName' in currentManager ? currentManager.fullName : currentManager.name;
+  const managerEmail =
+    'email' in currentManager ? currentManager.email : undefined;
+
+  // Helper function to truncate description
+  const truncateDescription = (text: string | null | undefined) => {
+    if (!text) return "";
+    if (text.length <= 150) return text;
+    return `${text.slice(0, 150)}...`;
+  };
+
   return (
     <div className="p-0">
       {/* Header Tabs */}
@@ -263,23 +284,26 @@ const ProjectDetails = () => {
           <div>
             <p className="text-sm text-gray-700 dark:text-gray-300">
               <span className="inline-block w-2 h-2 rounded-full bg-green-500 mr-2"></span>
-              <strong>Goal:</strong> {project.goal}
+              <strong>Goal:</strong>{" "}
+              {activeMilestone?.description
+                ? truncateDescription(activeMilestone.description)
+                : "No description available"}
             </p>
           </div>
           <div className="flex items-center gap-2">
             <Image
-              src={project.manager?.avatarURL || "/images/profile.jpeg"}
-              alt={project.manager.name || "Manager"}
+              src={currentManager?.avatarURL || "/images/profile.jpeg"}
+              alt={managerName || "Manager"}
               width={40}
               height={40}
               className="rounded-full object-cover h-10"
             />
             <div>
               <p className="text-sm font-semibold text-gray-800 dark:text-gray-100">
-                {project.manager.role}
+                {currentManager?.role || "Admin"}
               </p>
               <p className="text-xs text-gray-500">
-                {project.manager.name || "Manager"}
+                {managerName || managerEmail || "Manager"}
               </p>
             </div>
           </div>

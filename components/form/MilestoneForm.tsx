@@ -20,13 +20,15 @@ import { fr } from "date-fns/locale";
 import { CalendarIcon, ChevronDown, Clock, Plus, User } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
 
+import { AdminUser, getAdmins } from "@/app/actions/users/getAdmins";
 import { iconMap } from "@/components/common/FileIconMap";
 import AddDocumentModal from "@/components/modals/AddDocumentModal";
 import {
   CreateMilestoneFormValues,
   createMilestoneSchema,
 } from "@/schemas/milestone.schema";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { AdminSelect } from "../ui/admin-select";
 
 interface AddDocumentPayload {
   name: string;
@@ -59,6 +61,8 @@ export function MilestoneForm({
 }: Props) {
   const [addDocOpen, setAddDocOpen] = useState(false);
   const [tasks, setTasks] = useState<AddDocumentPayload[]>(defaultTasks ?? []);
+  const [admins, setAdmins] = useState<AdminUser[]>([]);
+  const [loadingAdmins, setLoadingAdmins] = useState(true);
 
   const form = useForm<CreateMilestoneFormValues>({
     resolver: zodResolver(createMilestoneSchema),
@@ -73,7 +77,22 @@ export function MilestoneForm({
     handleSubmit,
     control,
     formState: { errors },
+    setValue,
   } = form;
+
+  // Fetch admins on component mount
+  useEffect(() => {
+    const fetchAdmins = async () => {
+      setLoadingAdmins(true);
+      const result = await getAdmins();
+      if (result.success && result.data) {
+        setAdmins(result.data);
+      }
+      setLoadingAdmins(false);
+    };
+
+    fetchAdmins();
+  }, []);
 
   return (
     <form
@@ -260,17 +279,23 @@ export function MilestoneForm({
           <label className="block text-sm text-gray-700 dark:text-gray-300">
             Responsable du jalon
           </label>
-          <div className="w-full mt-1 flex items-center gap-2 border rounded px-3 py-2 bg-gray-50 dark:bg-neutral-800">
-            <span className="flex items-center gap-2">
-              <User className="w-5 h-5 text-gray-500" />
-            </span>
-            <input
-              type="text"
-              readOnly
-              className="w-full bg-transparent outline-none"
-              defaultValue={manager?.name || manager?.id}
-            />
-          </div>
+          <Controller
+            name="managerId"
+            control={control}
+            render={({ field }) => (
+              <AdminSelect
+                admins={admins}
+                value={field.value || manager.id}
+                onChange={(adminId) => {
+                  field.onChange(adminId);
+                  setValue("managerId", adminId);
+                }}
+                placeholder={
+                  loadingAdmins ? "Loading..." : "Select admin..."
+                }
+              />
+            )}
+          />
         </div>
       </div>
 

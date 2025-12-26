@@ -8,4 +8,5 @@ export const STATUS_LABELS: Record<ProjectStatus, string> = {
   in_progress: "In Progress",
   declined: "Declined",
   completed: "Completed",
+  reserved: "Reserved",
 };

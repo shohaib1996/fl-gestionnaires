@@ -24,8 +24,17 @@ export interface AssignedProjectDetails {
   milestones: {
     id: string;
     title: string;
+    description: string | null;
     status: string;
     order_index: number;
+    manager_id: string | null;
+    manager?: {
+      id: string;
+      fullName: string | null;
+      email: string;
+      avatarURL: string | null;
+      role: string;
+    } | null;
   }[];
 
   /**
@@ -60,8 +69,17 @@ export async function getAssignedProjectDetails(
           milestones!milestones_project_id_fkey (
             id,
             title,
+            description,
             status,
-            order_index
+            order_index,
+            manager_id,
+            manager:users!milestones_manager_id_fkey (
+              id,
+              fullName,
+              email,
+              avatarURL,
+              role
+            )
           )
         ),
 
