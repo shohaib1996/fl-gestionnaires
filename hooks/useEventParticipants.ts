@@ -12,6 +12,7 @@ export function useEventParticipants(eventId: string) {
   return useQuery({
     queryKey: ["event-participants", eventId],
     enabled: !!eventId,
+    staleTime: 0, // Always refetch when invalidated
     queryFn: async () => {
       const supabase = createClient();
 

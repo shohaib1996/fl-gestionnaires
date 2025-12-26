@@ -21,6 +21,7 @@ export function useCalendarEventDetails(eventId?: string) {
   return useQuery({
     queryKey: ["calendar-event", eventId],
     enabled: !!eventId,
+    staleTime: 0, // Always refetch when invalidated
     queryFn: async () => {
       const supabase = createClient();
 
