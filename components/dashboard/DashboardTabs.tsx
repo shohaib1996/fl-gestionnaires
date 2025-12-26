@@ -28,10 +28,10 @@ export const DASHBOARD_TABS_BY_ROLE: Record<UserRole, DashboardTab[]> = {
   ],
 
   super_admin: [
-    { key: "recu", label: "Reçus" },
-    { key: "mes-projets", label: "Mes projets" },
+    { key: "recu", label: "Disponibles" },
+    { key: "mes-projets", label: "Claimed" },
     { key: "encours", label: "En cours" },
-    { key: "reserve", label: "Réservé" },
+    { key: "reserve", label: "Réserve" },
   ],
 
   onterpeoner: [],

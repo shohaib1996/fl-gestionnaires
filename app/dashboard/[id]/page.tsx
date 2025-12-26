@@ -3,7 +3,10 @@
 import {
   Claimer,
   getProjectById,
+  declineProject,
+  reserveProject,
 } from "@/app/actions/projects/projects.action";
+import { assignProjectToAdmin } from "@/app/actions/projects/assignProjectToAdmin";
 import ClaimerSection from "@/components/dashboard/ClaimerSection";
 import DashboardTabs from "@/components/dashboard/DashboardTabs";
 import ProjectActionsMenu from "@/components/dashboard/ProjectActionsMenu";
@@ -13,7 +16,7 @@ import { useProjectActions } from "@/hooks/useProjectActions";
 import { getProjectActions } from "@/lib/project/getProjectActions";
 import { useUser } from "@/providers/UserProvider";
 import { ProjectStatus } from "@/types/status";
-import { Undo2 } from "lucide-react";
+import { Ellipsis, Undo2 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -42,6 +45,7 @@ export interface Project {
   status: ProjectStatus;
   created_at: string;
   project_id: string;
+  claim_id?: string;
 }
 
 const ProjectDetails = () => {
@@ -53,78 +57,62 @@ const ProjectDetails = () => {
   const { claim, approve } = useProjectActions();
   const { user, loading: userLoading } = useUser();
 
-  useEffect(() => {
-    let isMounted = true;
+  const fetchProject = async () => {
+    if (!id) {
+      setLoading(false);
+      return;
+    }
 
-    async function fetchProject() {
-      if (!id) {
+    console.log("Fetching project with ID:", id);
+    setLoading(true);
+
+    try {
+      const { data, error } = await getProjectById(id);
+
+      if (error || !data || !data.status) {
+        console.error("Error fetching project:", error);
         setLoading(false);
         return;
       }
 
-      console.log("Fetching project with ID:", id);
-      setLoading(true);
-      setProject(null);
+      const mappedProject: Project = {
+        id: data.id,
+        project_id: data.project_id,
+        first_name: data.first_name ?? "",
+        last_name: data.last_name ?? "",
+        parent_name: data.parent_name ?? "",
+        phone: data.phone ?? "",
+        email: data.email ?? "",
+        project_city: data.project_city ?? "",
+        residence_city: data.residence_city ?? "",
+        province: data.province ?? "",
+        collaborators: data.collaborators ?? null,
+        title: data.title ?? "",
+        description: data.description ?? "",
+        categories: data.categories ?? [],
+        links: data.links ?? [],
+        phase: data.phase ?? "",
+        signature: data.signature ?? "",
+        signer_name: data.signer_name ?? "",
+        logo_urls: data.logo_urls ?? [],
+        claimed: data.claim_count ?? 0,
+        claimer: data.claimer ?? null,
+        status: data.status,
+        created_at: data.created_at ?? "",
+        claim_id: data.claim_id,
+      };
 
-      try {
-        const { data, error } = await getProjectById(id);
-
-        if (!isMounted) {
-          console.log("Component unmounted, skipping state update");
-          return;
-        }
-
-        if (error || !data || !data.status) {
-          console.error("Error fetching project:", error);
-          setLoading(false);
-          return;
-        }
-
-        const mappedProject: Project = {
-          id: data.id,
-          project_id: data.project_id,
-          first_name: data.first_name ?? "",
-          last_name: data.last_name ?? "",
-          parent_name: data.parent_name ?? "",
-          phone: data.phone ?? "",
-          email: data.email ?? "",
-          project_city: data.project_city ?? "",
-          residence_city: data.residence_city ?? "",
-          province: data.province ?? "",
-          collaborators: data.collaborators ?? null,
-          title: data.title ?? "",
-          description: data.description ?? "",
-          categories: data.categories ?? [],
-          links: data.links ?? [],
-          phase: data.phase ?? "",
-          signature: data.signature ?? "",
-          signer_name: data.signer_name ?? "",
-          logo_urls: data.logo_urls ?? [],
-          claimed: data.claim_count ?? 0,
-          claimer: data.claimer ?? null,
-          status: data.status,
-          created_at: data.created_at ?? "",
-        };
-
-        if (isMounted) {
-          console.log("Setting project data:", mappedProject.title);
-          setProject(mappedProject);
-          setLoading(false);
-        }
-      } catch (err) {
-        if (isMounted) {
-          console.error("Unexpected error:", err);
-          setLoading(false);
-        }
-      }
+      console.log("Setting project data:", mappedProject.title);
+      setProject(mappedProject);
+      setLoading(false);
+    } catch (err) {
+      console.error("Unexpected error:", err);
+      setLoading(false);
     }
+  };
 
+  useEffect(() => {
     fetchProject();
-
-    return () => {
-      console.log("Cleanup: unmounting component for ID:", id);
-      isMounted = false;
-    };
   }, [id]);
 
   if (userLoading || loading) {
@@ -171,6 +159,45 @@ const ProjectDetails = () => {
     if (project.status !== "claimed") return;
 
     approve(project.id);
+  };
+
+  const handleDecline = async () => {
+    if (user.role !== "super_admin") return;
+
+    const result = await declineProject(project.id);
+    if (result.success) {
+      toast.success("Project declined successfully");
+      // Navigate back to dashboard after declining
+      router.push("/dashboard?tab=recu&page=1");
+    } else {
+      toast.error(result.message || "Failed to decline project");
+    }
+  };
+
+  const handleReserve = async () => {
+    if (user.role !== "super_admin") return;
+
+    const result = await reserveProject(project.id);
+    if (result.success) {
+      toast.success("Project reserved successfully");
+      // Navigate back to dashboard after reserving
+      router.push("/dashboard?tab=reserve&page=1");
+    } else {
+      toast.error(result.message || "Failed to reserve project");
+    }
+  };
+
+  const handleAssign = async (adminId: string) => {
+    if (user.role !== "super_admin") return;
+
+    const result = await assignProjectToAdmin(project.id, adminId);
+    if (result.success) {
+      toast.success("Project assigned successfully");
+      // Refresh project data to show updated status
+      await fetchProject();
+    } else {
+      toast.error(result.message || "Failed to assign project");
+    }
   };
 
   const handleRedirect = () => {
@@ -220,6 +247,10 @@ const ProjectDetails = () => {
                   actions={actions}
                   onClaim={handleClaim}
                   onApprove={handleApprove}
+                  onDecline={handleDecline}
+                  onReserve={handleReserve}
+                  onAssign={handleAssign}
+                  projectStatus={project.status}
                 />
               )}
             </span>
@@ -389,7 +420,11 @@ const ProjectDetails = () => {
 
         {/* ===== Claimers ===== */}
         {user.role === "super_admin" && project.claimer && (
-          <ClaimerSection claimer={project.claimer} />
+          <ClaimerSection
+            claimer={project.claimer}
+            projectId={project.id}
+            onRejectSuccess={fetchProject}
+          />
         )}
       </div>
     </div>

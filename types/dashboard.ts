@@ -9,7 +9,7 @@ export const TAB_TO_STATUS: Record<DashboardTab, ProjectStatus> = {
   recu: "submitted",
   "mes-projets": "claimed",
   encours: "in_progress",
-  reserve: "declined",
+  reserve: "reserved",
 };
 
 export interface DashboardFilters {

@@ -118,3 +118,20 @@ export async function fetchClaimedProjects(filters: ProjectFilters) {
   if (error) throw error;
   return data ?? [];
 }
+
+export async function fetchReservedProjects(filters: ProjectFilters) {
+  const supabase = createClient();
+
+  let query = supabase
+    .from("projects")
+    .select("*")
+    .eq("status", "reserved")
+    .order("created_at", { ascending: false });
+
+  query = applyProjectFilters(query, filters);
+
+  const { data, error } = await query;
+
+  if (error) throw error;
+  return data ?? [];
+}

@@ -9,6 +9,7 @@ import {
   fetchInProgressProjects,
   fetchMyProjects,
   fetchReceivedProjects,
+  fetchReservedProjects,
   ProjectFilters,
 } from "@/lib/api/projects";
 import { DashboardFilters, DashboardTab } from "@/types/dashboard";
@@ -59,6 +60,9 @@ export function useProjects({
 
         case "encours":
           return fetchInProgressProjects(projectFilters);
+
+        case "reserve":
+          return fetchReservedProjects(projectFilters);
 
         default:
           return [];

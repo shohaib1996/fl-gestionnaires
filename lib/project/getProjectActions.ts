@@ -1,7 +1,7 @@
 import { UserRole } from "@/types/role";
 import { ProjectStatus } from "@/types/status";
 
-export type ProjectAction = "invite" | "claim" | "approve";
+export type ProjectAction = "invite" | "claim" | "approve" | "decline" | "reserve" | "assign";
 
 export function getProjectActions({
   role,
@@ -20,16 +20,15 @@ export function getProjectActions({
 
   /* ------------ SUPER ADMIN -------------- */
   if (role === "super_admin") {
-    // if (status === "submitted") {
-    //   return ["invite"];
-    // }
+    // Super admin sees different actions based on status
+    const actions: ProjectAction[] = ["approve", "decline", "reserve"];
 
-    if (status === "claimed") {
-      // approve is FINAL — includes internal invite if needed
-      return ["approve"];
+    // Add "assign" for submitted and reserved projects (not claimed)
+    if (status === "submitted" || status === "reserved") {
+      actions.push("assign");
     }
 
-    return [];
+    return actions;
   }
 
   return [];
