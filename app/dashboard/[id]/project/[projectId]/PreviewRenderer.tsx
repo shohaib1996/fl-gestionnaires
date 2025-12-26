@@ -29,16 +29,28 @@ export default function PreviewRenderer({
 
   switch (type) {
     case "image":
+      if (variant === "fullscreen") {
+        return (
+          <div className="relative w-full h-full overflow-hidden">
+            <Image
+              src={url}
+              alt="Preview"
+              fill
+              className="object-contain"
+            />
+          </div>
+        );
+      }
+
       return (
         <div className={`relative w-full ${height} overflow-hidden flex items-center justify-center`}>
           <Image
             src={url}
             alt="Preview"
-            fill={variant === "fullscreen"}
-            width={variant === "inline" ? 400 : undefined}
-            height={variant === "inline" ? 1000 : undefined}
+            width={400}
+            height={400}
             className="object-contain max-w-full max-h-full"
-            style={{ width: 'auto', height: 'auto' }}
+            style={{ width: 'auto', height: 'auto', maxHeight: '44vh' }}
           />
         </div>
       );

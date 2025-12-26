@@ -38,7 +38,7 @@ export default function DashboardPage() {
   );
 
   /* --------------------------------
-   * 3️⃣ INITIAL STATE FROM URL (ONCE)
+   * 3️⃣ SYNC STATE FROM URL PARAMS (ON MOUNT)
    * -------------------------------- */
   useEffect(() => {
     const tabFromUrl = searchParams.get("tab") as DashboardTab | null;
@@ -51,8 +51,7 @@ export default function DashboardPage() {
     if (pageFromUrl && !Number.isNaN(Number(pageFromUrl))) {
       setPage(Number(pageFromUrl));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [searchParams]);
 
   /* --------------------------------
    * 4️⃣ DATA FETCH (STATE DRIVEN)
@@ -68,35 +67,22 @@ export default function DashboardPage() {
   });
 
   /* --------------------------------
-   * 5️⃣ URL SYNC (SIDE EFFECT)
-   * -------------------------------- */
-  useEffect(() => {
-    const params = new URLSearchParams();
-
-    params.set("tab", activeTab);
-    params.set("page", String(page));
-
-    // optional: sync filters to URL (if you want later)
-    // Object.entries(filters).forEach(([key, value]) => {
-    //   if (value) params.set(key, value);
-    // });
-
-    router.replace(`?${params.toString()}`, { scroll: false });
-  }, [activeTab, page, router]);
-
-  /* --------------------------------
-   * 6️⃣ HANDLERS (INSTANT)
+   * 5️⃣ HANDLERS (UPDATE STATE + URL)
    * -------------------------------- */
   const handleTabChange = (tab: DashboardTab) => {
     if (tab === activeTab) return;
     setActiveTab(tab);
     setPage(1);
+    // Update URL immediately
+    router.push(`?tab=${tab}&page=1`, { scroll: false });
   };
 
   const handlePageChange = (nextPage: number) => {
     console.log("📤 Next Page:", nextPage);
     if (nextPage < 1) return;
     setPage(nextPage);
+    // Update URL immediately
+    router.push(`?tab=${activeTab}&page=${nextPage}`, { scroll: false });
   };
 
   const handleFiltersChange = (next: DashboardFilters) => {
