@@ -59,6 +59,10 @@ export function useMyCalendarEvents(params?: UseMyCalendarEventsParams) {
     queryFn: async () => {
       const supabase = createClient();
 
+      if (!supabase) {
+        throw new Error("Supabase client not initialized");
+      }
+
       let query = supabase
         .from("calendar_events")
         .select("*")
@@ -75,13 +79,16 @@ export function useMyCalendarEvents(params?: UseMyCalendarEventsParams) {
       const { data, error } = await query;
 
       if (error) {
+        console.error("Error fetching calendar events:", error);
         throw new Error(error.message);
       }
 
-      return data as CalendarEvent[];
+      return (data as CalendarEvent[]) || [];
     },
     staleTime: 0, // Always refetch when invalidated
     refetchOnMount: true, // Refetch when component mounts
+    retry: 3, // Retry 3 times on failure
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 5000),
   });
 }
 

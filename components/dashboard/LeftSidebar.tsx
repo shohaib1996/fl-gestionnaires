@@ -18,7 +18,12 @@ export default function LeftSidebar() {
   const [openAdd, setOpenAdd] = useState(false);
 
   // Fetch ALL events (no date filter) so we have dots for past/future
-  const { data: events = [], isLoading } = useMyCalendarEvents({});
+  const { data: events = [], isLoading, error, isError } = useMyCalendarEvents({});
+
+  // Log errors for debugging
+  if (isError) {
+    console.error("Calendar events error:", error);
+  }
 
   const eventDates = useMemo(() => {
     const dates = events.map((e) => new Date(e.start_date));
@@ -104,7 +109,13 @@ export default function LeftSidebar() {
         <div className="space-y-4 text-md">
           {isLoading && <p className="text-sm text-gray-400">Chargement…</p>}
 
-          {!isLoading && filteredEvents.length === 0 && (
+          {isError && (
+            <p className="text-sm text-red-500">
+              Erreur lors du chargement des tâches
+            </p>
+          )}
+
+          {!isLoading && !isError && filteredEvents.length === 0 && (
             <p className="text-sm text-gray-400">
               Aucune tâche pour cette date
             </p>
@@ -126,7 +137,9 @@ export default function LeftSidebar() {
                   setOpenDetails(true);
                 }}
               >
-                {e.title}
+                {e.title && e.title.length > 30
+                  ? `${e.title.slice(0, 30)}...`
+                  : e.title}
               </p>
 
               {(e.start_time || e.end_time) && (
