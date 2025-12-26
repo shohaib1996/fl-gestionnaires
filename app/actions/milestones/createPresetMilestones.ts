@@ -3,6 +3,14 @@
 import { createClient } from "@/lib/supabase/server";
 import { ActionResult } from "@/types/actions";
 
+type CreatePresetMilestonesResult = {
+  created: any[];
+  errors: {
+    title: string;
+    error: string;
+  }[];
+};
+
 const PRESET_MILESTONES = [
   { title: "Diagnostic & Mise en conformité", order: 1 },
   { title: "Structuration financière", order: 2 },
@@ -14,17 +22,14 @@ const PRESET_MILESTONES = [
 export async function createPresetMilestones(input: {
   projectId: string;
   managerId: string;
-}): Promise<ActionResult> {
+}): Promise<ActionResult<CreatePresetMilestonesResult>> {
   const supabase = await createClient();
 
   const results = [];
-  const errors = [];
+  const errors: CreatePresetMilestonesResult["errors"] = [];
 
-  // Create milestones sequentially to handle individual failures
   for (const milestone of PRESET_MILESTONES) {
     try {
-      console.log(`Creating milestone: ${milestone.title}`);
-
       const { data, error } = await supabase.rpc("create_milestone", {
         p_project_id: input.projectId,
         p_title: milestone.title,
@@ -38,23 +43,16 @@ export async function createPresetMilestones(input: {
       });
 
       if (error) {
-        console.error(`Failed to create milestone "${milestone.title}":`, error);
         errors.push({ title: milestone.title, error: error.message });
       } else {
-        console.log(`Successfully created milestone: ${milestone.title}`);
         results.push(data);
       }
-    } catch (error) {
-      console.error(`Exception creating milestone "${milestone.title}":`, error);
+    } catch (err) {
       errors.push({
         title: milestone.title,
-        error: error instanceof Error ? error.message : "Unknown error",
+        error: err instanceof Error ? err.message : "Unknown error",
       });
     }
-  }
-
-  if (errors.length > 0) {
-    console.error("Some milestones failed to create:", errors);
   }
 
   return {

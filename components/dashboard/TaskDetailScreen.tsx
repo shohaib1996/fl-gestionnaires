@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft, Calendar, Edit2, Plus } from "lucide-react";
+import { ArrowLeft, Edit2, Plus } from "lucide-react";
 
 type Participant = { id: string | number; img?: string; name?: string };
 
@@ -118,9 +118,7 @@ export default function TaskDetailScreen({
 
         {/* Description */}
         <div className="text-[#333] dark:text-gray-200 text-xl leading-relaxed max-w-md mb-16">
-          {
-            "Gather and validate all legal files required for the design drafts, or updated business registration, and operating licenses. Ensure the team is fully ready before moving to the next stage"
-          }
+          {description}
         </div>
 
         {/* Floating edit button */}

@@ -24,6 +24,10 @@ export interface CalendarEvent {
 
   status: string;
   source?: "user" | "fond_local";
+
+  created_by: string;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface CreateCalendarEventInput {

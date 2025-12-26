@@ -12,7 +12,6 @@ interface Project {
 }
 
 export const HomeCandidate = ({ project }: { project: Project }) => {
-  console.log("project", project);
   const [showEvolution, setShowEvolution] = useState(false);
   const [showTasks, setShowTasks] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);

@@ -1,17 +1,16 @@
 "use client";
 
-import { format, isBefore } from "date-fns";
-import { fr } from "date-fns/locale";
 import { motion } from "framer-motion";
 import { ArrowLeft, List, Plus } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 
-import {
-  CalendarEvent,
-  getProjectEvents,
-} from "@/app/actions/taskEvents/getProjectEvents";
+import type { CalendarEvent } from "@/hooks/useCalendarEvents";
+import { useMyCalendarEvents } from "@/hooks/useCalendarEvents";
 import { useUser } from "@/providers/UserProvider";
+import { format, isBefore } from "date-fns";
+import { fr } from "date-fns/locale";
 import AddTaskScreen from "./AddTaskScreen";
+import TaskDetailScreen from "./TaskDetailScreen";
 
 interface TaskDetailProps {
   onBack: () => void;
@@ -33,67 +32,57 @@ type UITask = {
 export const TaskDetail = ({ onBack, project }: TaskDetailProps) => {
   const [showAddTask, setShowAddTask] = useState(false);
   const [selectedTask, setSelectedTask] = useState<CalendarEvent | null>(null);
-  const [tasks, setTasks] = useState<UITask[]>([]);
-  const [loading, setLoading] = useState(true);
+  // const [tasks, setTasks] = useState<UITask[]>([]);
   const { user } = useUser();
 
-  const projectId = project.id;
+  const { data: tasks = [], isLoading } = useMyCalendarEvents({});
+
   const currentUserId = user?.id ?? "";
 
-  /* -------------------------------
-   * Load & map events
-   * ------------------------------- */
-  useEffect(() => {
-    async function loadTasks() {
-      const res = await getProjectEvents(projectId);
+  const uiTasks: UITask[] = useMemo(() => {
+    if (!tasks.length) return [];
 
-      if (!res.success || !res.data) {
-        setLoading(false);
-        return;
-      }
+    const now = new Date();
 
-      const now = new Date();
-
-      const mapped: UITask[] = res.data.map((e) => {
+    return tasks
+      .filter((e) => e.created_by === currentUserId)
+      .map((e) => {
         const endDateTime = new Date(`${e.end_date}T${e.end_time ?? "23:59"}`);
 
         const isExpired = isBefore(endDateTime, now);
 
-        let status: UITask["status"];
-        if (isExpired) {
-          status = "expired";
-        } else if (e.created_by === currentUserId) {
-          status = "user";
-        } else {
-          status = "fond_local";
-        }
+        const status: UITask["status"] = isExpired
+          ? "expired"
+          : e.created_by && e.created_by === currentUserId
+          ? "user"
+          : "fond_local";
 
         return {
           id: e.id,
+
           date: format(new Date(e.start_date), "dd MMMM yyyy", {
             locale: fr,
           }),
+
           time:
             e.start_time && e.end_time
               ? `${e.start_time} - ${e.end_time}`
               : "Toute la journée",
+
           description:
-            status === "expired"
-              ? "Expired or overdue task or appointment"
+            e.title ||
+            (status === "expired"
+              ? "Tâche expirée"
               : status === "user"
-              ? "Task or appointment set by User"
-              : "Task or appointment set by Fond Local",
+              ? "Tâche créée par vous"
+              : "Tâche créée par Fond Local"),
+
           status,
+
           raw: e,
         };
       });
-
-      setTasks(mapped);
-      setLoading(false);
-    }
-
-    loadTasks();
-  }, [projectId, currentUserId]);
+  }, [tasks, currentUserId]);
 
   /* -------------------------------
    * Navigation states
@@ -102,14 +91,14 @@ export const TaskDetail = ({ onBack, project }: TaskDetailProps) => {
     return <AddTaskScreen onBack={() => setShowAddTask(false)} />;
   }
 
-  // if (selectedTask) {
-  //   return (
-  //     <TaskDetailScreen
-  //       task={selectedTask}
-  //       onBack={() => setSelectedTask(null)}
-  //     />
-  //   );
-  // }
+  if (selectedTask) {
+    return (
+      <TaskDetailScreen
+        task={selectedTask}
+        onBack={() => setSelectedTask(null)}
+      />
+    );
+  }
 
   /* -------------------------------
    * UI
@@ -151,14 +140,14 @@ export const TaskDetail = ({ onBack, project }: TaskDetailProps) => {
       {/* Task List */}
       <div className="flex-1 overflow-y-auto px-4 pb-24 hide-scrollbar">
         <div className="w-full max-w-lg mx-auto space-y-3">
-          {loading ? (
+          {isLoading ? (
             <p className="text-center text-gray-500">Chargement…</p>
-          ) : tasks.length === 0 ? (
+          ) : uiTasks.length === 0 ? (
             <p className="text-center text-gray-500">
               Pas de tâches pour le moment.
             </p>
           ) : (
-            tasks.map((task, index) => (
+            uiTasks.map((task, index) => (
               <motion.div
                 key={task.id}
                 initial={{ opacity: 0, x: -40 }}

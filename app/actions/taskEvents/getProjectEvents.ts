@@ -7,14 +7,14 @@ import type { Tables } from "@/types/supabase";
 export type CalendarEvent = Tables<"calendar_events">;
 
 export async function getProjectEvents(
-  projectId: string
+  userId: string
 ): Promise<ActionResult<CalendarEvent[]>> {
   const supabase = await createClient();
 
   const { data, error } = await supabase
     .from("calendar_events")
     .select("*")
-    .eq("project_id", projectId)
+    .eq("created_by", userId)
     .order("start_date", { ascending: true })
     .order("start_time", { ascending: true });
 
