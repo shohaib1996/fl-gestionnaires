@@ -4,11 +4,12 @@ import AddDocumentModal from "@/components/modals/AddDocumentModal";
 import CreateJalonModal from "@/components/modals/CreateJalonModal";
 import EditDocumentModal from "@/components/modals/EditDocumentModal";
 import JalonDetailsModal from "@/components/modals/JalonDetailsModal";
-import { Ellipsis, Undo2, X, CheckCircle2 } from "lucide-react";
+import { CheckCircle2, Ellipsis, Undo2, X } from "lucide-react";
 import Image from "next/image";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
+import { completeProject } from "@/app/actions/projects/completeProject";
 import { TasksByMilestone } from "@/app/actions/tasks/getTasksByMilestone";
 import DashboardTabs from "@/components/dashboard/DashboardTabs";
 import { Button } from "@/components/ui/button";
@@ -18,15 +19,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { completeProject } from "@/app/actions/projects/completeProject";
 import { useAssignedProjectDetails } from "@/hooks/useAssignedProjectDetails";
 import { useCreateTask } from "@/hooks/useCreateTaks";
 import useEditTask from "@/hooks/useEditTask";
 import { useTasksByMilestone } from "@/hooks/useTasksByMilestone";
 import { getPublicFileUrl } from "@/lib/utils/getPublicFileUrl";
 import { useUser } from "@/providers/UserProvider";
-import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import TaskLists from "../../../../../components/sections/TaskLists";
 import { MilestoneTabs } from "./MilestoneTabas";
 import PreviewCard from "./PreviewCard";
@@ -297,19 +297,21 @@ const ProjectDetails = () => {
 
         {/* Phases */}
         <div className="flex flex-wrap gap-2 mb-4 px-3">
-          <MilestoneTabs
-            activeMilestoneId={activeMilestoneId}
-            milestones={project.milestones}
-            onChange={(milestone) => {
-              router.push(
-                `/dashboard/${projectId}/project/${projectId}?milestone=${milestone.id}`
-              );
-            }}
-            onTitleClick={(milestone) => {
-              setSelectedPhase(milestone);
-              setJalonDetailsModalOpen(true);
-            }}
-          />
+          <div className="flex gap-3 border-b">
+            <MilestoneTabs
+              activeMilestoneId={activeMilestoneId}
+              milestones={project.milestones}
+              onChange={(milestone) => {
+                router.push(
+                  `/dashboard/${projectId}/project/${projectId}?milestone=${milestone.id}`
+                );
+              }}
+              onTitleClick={(milestone) => {
+                setSelectedPhase(milestone);
+                setJalonDetailsModalOpen(true);
+              }}
+            />
+          </div>
           <button
             onClick={() => setJalonModalOpen(true)}
             className="ml-auto bg-[#63A053] text-white px-3 py-1 text-sm font-medium rounded-xs cursor-pointer"
@@ -461,6 +463,7 @@ const ProjectDetails = () => {
           doc={doc}
           milestoneId={activeMilestoneId ?? ""}
           projectId={project.id ?? ""}
+          role={user?.role ?? ""}
         />
       )}
     </div>

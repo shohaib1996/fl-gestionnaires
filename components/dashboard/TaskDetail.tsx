@@ -84,6 +84,8 @@ export const TaskDetail = ({ onBack, project }: TaskDetailProps) => {
       });
   }, [tasks, currentUserId]);
 
+  console.log("📋 UI tasks:", uiTasks, isLoading);
+
   /* -------------------------------
    * Navigation states
    * ------------------------------- */

@@ -16,6 +16,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { taskKeys } from "@/hooks/useTasksByMilestone";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   Building2,
   FileText,
@@ -29,8 +31,6 @@ import {
   UploadCloud,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
-import { taskKeys } from "@/hooks/useTasksByMilestone";
 
 interface DocumentType {
   id: string;
@@ -58,6 +58,7 @@ interface Props {
   doc: DocumentType;
   milestoneId: string;
   projectId: string;
+  role: string;
 }
 
 const FILE_ACCEPT_MAP: Record<string, string> = {
@@ -75,6 +76,7 @@ export default function EditDocumentModal({
   doc,
   milestoneId,
   projectId,
+  role,
 }: Props) {
   const [name, setName] = useState(doc?.goal);
   const [category, setCategory] = useState(doc?.category);
@@ -140,6 +142,8 @@ export default function EditDocumentModal({
     }
   };
 
+  const canEdit = role === "admin" || role === "super_admin";
+
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="p-0 min-w-[30vw] bg-white dark:bg-neutral-900 text-gray-800 dark:text-gray-200 border-none rounded-none">
@@ -161,6 +165,7 @@ export default function EditDocumentModal({
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 className="mt-1 bg-gray-50 dark:bg-neutral-800 border-gray-300 dark:border-neutral-700 h-9 rounded-xs"
+                disabled={!canEdit}
               />
             </div>
 
@@ -168,7 +173,11 @@ export default function EditDocumentModal({
             <div className="col-span-6">
               <label className="block text-sm font-medium">Catégorie</label>
 
-              <Select value={category} onValueChange={setCategory}>
+              <Select
+                value={category}
+                onValueChange={setCategory}
+                disabled={!canEdit}
+              >
                 <SelectTrigger className="w-full mt-1 bg-gray-50 dark:bg-neutral-800 border border-gray-300 dark:border-neutral-700 px-3 py-2 text-gray-700 dark:text-gray-200 rounded-xs">
                   <SelectValue placeholder="Catégorie" />
                 </SelectTrigger>
@@ -212,6 +221,7 @@ export default function EditDocumentModal({
                 value={description ?? ""}
                 onChange={(e) => setDescription(e.target.value)}
                 className="mt-1 bg-gray-50 dark:bg-neutral-800 border-gray-300 dark:border-neutral-700 h-24 rounded-xs"
+                disabled={!canEdit}
               />
             </div>
 
@@ -223,7 +233,11 @@ export default function EditDocumentModal({
                   Format du fichier
                 </label>
 
-                <Select value={fileFormat} onValueChange={setFileFormat}>
+                <Select
+                  value={fileFormat}
+                  onValueChange={setFileFormat}
+                  disabled={!canEdit}
+                >
                   <SelectTrigger className="w-full mt-1 bg-gray-50 dark:bg-neutral-800 border border-gray-300 dark:border-neutral-700 rounded-xs px-3 py-2 text-gray-700 dark:text-gray-200">
                     <SelectValue placeholder="Format du fichier" />
                   </SelectTrigger>
