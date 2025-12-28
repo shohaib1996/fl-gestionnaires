@@ -1,11 +1,21 @@
 "use client";
 
-import { useState } from "react";
-import { format } from "date-fns";
+import { format, isBefore } from "date-fns";
 import { fr } from "date-fns/locale";
-import { Grip, Plus, ArrowLeft } from "lucide-react";
+import { ArrowLeft, Grip, Plus } from "lucide-react";
+import { useMemo, useState } from "react";
 
 import { Calendar } from "@/components/ui/calendar";
+import { useMyCalendarEvents } from "@/hooks/useCalendarEvents";
+import { useUser } from "@/providers/UserProvider";
+
+type UITask = {
+  id: string;
+  date: string;
+  time: string;
+  description: string;
+  status: "expired" | "user" | "fond_local";
+};
 
 interface CalendarScreenProps {
   onBack: () => void;
@@ -18,31 +28,68 @@ export default function CalendarScreen({
 }: CalendarScreenProps) {
   const [date, setDate] = useState<Date | undefined>(new Date());
 
-  // Mock tasks data based on the design
-  const tasks = [
-    {
-      id: 1,
-      time: "11:00 - 12:00",
-      description: "Expired / overdue Task or appointment",
-      type: "expired",
-      color: "#D6D7D8",
-      textColor: "#FFFFFF",
-    },
-    {
-      id: 2,
-      time: "11:00 - 12:00",
-      description: "Task or appointment set by Fond Local",
-      type: "fond-local",
-      color: "#E8AD3F",
-    },
-    {
-      id: 3,
-      time: "11:00 - 12:00",
-      description: "Task or appointment set by Fond Local",
-      type: "fond-local-blue",
-      color: "#499EDB",
-    },
-  ];
+  const { data: tasks = [], isLoading } = useMyCalendarEvents({});
+
+  const { user } = useUser();
+
+  const currentUserId = user?.id ?? "";
+
+  const uiTasks = useMemo(() => {
+    if (!tasks.length) return [];
+
+    const now = new Date();
+
+    return tasks
+      .filter((e) => e.created_by === currentUserId)
+      .map((e) => {
+        const endDateTime = new Date(`${e.end_date}T${e.end_time ?? "23:59"}`);
+
+        const isExpired = isBefore(endDateTime, now);
+
+        const status: UITask["status"] = isExpired
+          ? "expired"
+          : e.created_by && e.created_by === currentUserId
+          ? "user"
+          : "fond_local";
+
+        return {
+          id: e.id,
+
+          date: format(new Date(e.start_date), "dd MMMM yyyy", {
+            locale: fr,
+          }),
+
+          time:
+            e.start_time && e.end_time
+              ? `${e.start_time} - ${e.end_time}`
+              : "Toute la journée",
+
+          description:
+            e.title ||
+            (status === "expired"
+              ? "Tâche expirée"
+              : status === "user"
+              ? "Tâche créée par vous"
+              : "Tâche créée par Fond Local"),
+
+          type: status,
+
+          color:
+            status === "expired"
+              ? "#D6D7D8"
+              : status === "user"
+              ? "#E8AD3F"
+              : "#499EDB",
+
+          textColor:
+            status === "expired"
+              ? "#FFFFFF"
+              : status === "user"
+              ? "#FFFFFF"
+              : "#FFFFFF",
+        };
+      });
+  }, [tasks, currentUserId]);
 
   return (
     <div
@@ -101,7 +148,7 @@ export default function CalendarScreen({
 
         {/* Task List */}
         <div className="space-y-4">
-          {tasks.map((task) => (
+          {uiTasks.map((task) => (
             <div
               key={task.id}
               className="rounded-xs p-0 flex overflow-hidden min-h-[70px]"
