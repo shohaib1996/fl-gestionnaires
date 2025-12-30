@@ -70,18 +70,13 @@ export default function AdminLoginPage() {
 
         <form
           onSubmit={handleSubmit}
-          className="mt-8 w-full flex flex-col gap-4"
+          className="mt-8 w-full flex flex-col gap-6"
           aria-label="Admin login form"
         >
           {/* Email */}
           <div className="flex h-10 w-full overflow-hidden rounded border border-gray-300 bg-white dark:bg-neutral-800 dark:border-neutral-700">
-            <div className="flex h-10 w-10 items-center justify-center bg-gray-200 dark:bg-neutral-700">
-              <Image
-                src="/images/218_1738.png"
-                alt="User icon"
-                width={20}
-                height={20}
-              />
+            <div className="flex h-10 w-10 items-center justify-center bg-gray-200 dark:bg-neutral-700 relative">
+              <Image src="/images/218_1738.png" alt="User icon" fill />
             </div>
             <Input
               type="email"
@@ -95,13 +90,8 @@ export default function AdminLoginPage() {
 
           {/* Password */}
           <div className="flex h-10 w-full overflow-hidden rounded border border-gray-300 bg-white dark:bg-neutral-800 dark:border-neutral-700">
-            <div className="flex h-10 w-10 items-center justify-center bg-gray-200 dark:bg-neutral-700">
-              <Image
-                src="/images/218_1741.png"
-                alt="Password icon"
-                width={20}
-                height={20}
-              />
+            <div className="flex h-10 w-10 items-center justify-center bg-gray-200 dark:bg-neutral-700 relative">
+              <Image src="/images/218_1741.png" alt="Password icon" fill />
             </div>
             <Input
               type="password"
@@ -117,7 +107,7 @@ export default function AdminLoginPage() {
 
           <Button
             type="submit"
-            className="mt-2 w-48 self-center bg-[#63a053] text-white hover:bg-[#528a45]"
+            className="mt-2 w-48 h-[43px] self-center bg-[#63a053] text-white hover:bg-[#528a45] rounded"
             disabled={loading}
           >
             {loading ? "Connexion..." : "CONNEXION"}
