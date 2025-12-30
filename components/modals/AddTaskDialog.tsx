@@ -28,8 +28,9 @@ import { Calendar } from "@/components/ui/calendar";
 
 import { useCreateCalendarEvent } from "@/hooks/useCalendarEvents";
 import { useUsersForParticipants } from "@/hooks/useUsersForParticipants";
-import { Calendar1, Check, ChevronDown, MapPin, User2, X } from "lucide-react";
+import { Calendar1, ChevronDown, MapPin, User2, X } from "lucide-react";
 import { toast } from "sonner";
+import { TimePicker24 } from "../common/TimePicker24";
 
 type Participant = {
   id: string;
@@ -216,14 +217,6 @@ export default function AddTaskDialog({
                         ? "bg-gray-100 text-gray-700"
                         : "bg-gray-200 text-gray-400"
                     }`}
-                    onClick={(e) => {
-                      // If disabled, clicking should ONLY toggle
-                      if (!endDateEnabled) {
-                        e.preventDefault();
-                        setEndDateEnabled(true);
-                        return;
-                      }
-                    }}
                   >
                     <div className="flex items-center gap-3">
                       <Calendar1 className="w-4 h-4" />
@@ -232,15 +225,42 @@ export default function AddTaskDialog({
 
                     {/* RIGHT-SIDE ICON */}
                     {endDateEnabled ? (
-                      <ChevronDown className="w-4 h-4 text-gray-600" />
+                      <svg
+                        width="12"
+                        height="12"
+                        viewBox="0 0 12 12"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          clip-rule="evenodd"
+                          d="M6 12C6.78793 12 7.56815 11.8448 8.2961 11.5433C9.02405 11.2417 9.68549 10.7998 10.2426 10.2426C10.7998 9.68549 11.2417 9.02405 11.5433 8.2961C11.8448 7.56815 12 6.78793 12 6C12 5.21207 11.8448 4.43185 11.5433 3.7039C11.2417 2.97595 10.7998 2.31451 10.2426 1.75736C9.68549 1.20021 9.02405 0.758251 8.2961 0.456723C7.56815 0.155195 6.78793 -1.17411e-08 6 0C4.4087 2.37122e-08 2.88258 0.632141 1.75736 1.75736C0.632141 2.88258 0 4.4087 0 6C0 7.5913 0.632141 9.11742 1.75736 10.2426C2.88258 11.3679 4.4087 12 6 12ZM5.84533 8.42667L9.17867 4.42667L8.15467 3.57333L5.288 7.01267L3.80467 5.52867L2.862 6.47133L4.862 8.47133L5.378 8.98733L5.84533 8.42667Z"
+                          fill="#63A053"
+                        />
+                      </svg>
                     ) : (
-                      <Check
-                        className="w-4 h-4 text-gray-400"
+                      <button
                         onClick={(e) => {
                           e.stopPropagation();
                           setEndDateEnabled(true);
                         }}
-                      />
+                      >
+                        <svg
+                          width="12"
+                          height="12"
+                          viewBox="0 0 12 12"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            fill-rule="evenodd"
+                            clip-rule="evenodd"
+                            d="M6 12C6.78793 12 7.56815 11.8448 8.2961 11.5433C9.02405 11.2417 9.68549 10.7998 10.2426 10.2426C10.7998 9.68549 11.2417 9.02405 11.5433 8.2961C11.8448 7.56815 12 6.78793 12 6C12 5.21207 11.8448 4.43185 11.5433 3.7039C11.2417 2.97595 10.7998 2.31451 10.2426 1.75736C9.68549 1.20021 9.02405 0.758251 8.2961 0.456723C7.56815 0.155195 6.78793 -1.17411e-08 6 0C4.4087 2.37122e-08 2.88258 0.632141 1.75736 1.75736C0.632141 2.88258 0 4.4087 0 6C0 7.5913 0.632141 9.11742 1.75736 10.2426C2.88258 11.3679 4.4087 12 6 12ZM5.84533 8.42667L9.17867 4.42667L8.15467 3.57333L5.288 7.01267L3.80467 5.52867L2.862 6.47133L4.862 8.47133L5.378 8.98733L5.84533 8.42667Z"
+                            fill="#A4A4A4"
+                          />
+                        </svg>
+                      </button>
                     )}
                   </button>
                 </PopoverTrigger>
@@ -262,22 +282,12 @@ export default function AddTaskDialog({
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="text-sm font-medium">Heure de début</label>
-              <Input
-                type="time"
-                value={startTime}
-                onChange={(e) => setStartTime(e.target.value)}
-                className="bg-gray-100 mt-1"
-              />
+              <TimePicker24 value={startTime} onChange={setStartTime} />
             </div>
 
             <div>
               <label className="text-sm font-medium">Heure de fin</label>
-              <Input
-                type="time"
-                value={endTime}
-                onChange={(e) => setEndTime(e.target.value)}
-                className="bg-gray-100 mt-1"
-              />
+              <TimePicker24 value={endTime} onChange={setEndTime} />
             </div>
           </div>
 
@@ -392,7 +402,7 @@ export default function AddTaskDialog({
             <Button
               variant="outline"
               onClick={() => onOpenChange(false)}
-              className="px-6 h-11 bg-red-600 text-white rounded-none"
+              className="px-6 h-11 bg-[#63a053] hover:bg-[#528a45] text-white rounded-none"
             >
               Annuler
             </Button>

@@ -1,12 +1,17 @@
-"use client"
+"use client";
 
 import { MenuIcon, Plus, Search } from "lucide-react";
-import { Input } from "../ui/input";
 import Image from "next/image";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
-import { Button } from "../ui/button";
-import { ModeToggle } from "../ModeToggle/ModeToggle";
 import Link from "next/link";
+import { ModeToggle } from "../ModeToggle/ModeToggle";
+import { Button } from "../ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
+import { Input } from "../ui/input";
 
 const Header = () => {
   return (
@@ -15,10 +20,11 @@ const Header = () => {
         <Link href={`/dashboard`}>
           <div className="flex items-center gap-3">
             <Image
-              src="/images/216_1705.png"
+              src="/images/Logo FL.png"
               alt="FL Logo"
-              width={70}
+              width={72}
               height={70}
+              quality={100}
               className="rounded-full"
             />
             <h1 className="text-lg md:text-xl font-bold text-[#63a053]">
@@ -26,15 +32,16 @@ const Header = () => {
             </h1>
           </div>
         </Link>
-        <div className="h-10 w-px bg-gray-400 mx-2" />
-
-        <Image
-          src="/images/profile.jpeg"
-          alt="User photo"
-          width={48}
-          height={48}
-          className="rounded-full object-cover h-12"
-        />
+        <div className="h-10 w-[0.3px] bg-[#000000] mx-2" />
+        <div className="relative w-[37px] h-[37px] rounded-full overflow-hidden">
+          <Image
+            src="/images/Photo ID.png"
+            alt="User photo"
+            fill
+            className="object-cover"
+            sizes="37px"
+          />
+        </div>
       </div>
 
       <div className="flex items-center gap-3">

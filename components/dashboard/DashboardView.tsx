@@ -31,11 +31,8 @@ export default function DashboardView({
 
   return (
     <>
-      {/* Mobile */}
-      <div className="lg:hidden">{/* <HomeCandidate /> */}</div>
-
       {/* Desktop */}
-      <div className="hidden lg:block">
+      <div className="block">
         <div className="flex flex-col max-h-[71vh]">
           {/* Tabs */}
 

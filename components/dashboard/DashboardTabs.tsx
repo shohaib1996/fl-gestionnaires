@@ -29,7 +29,7 @@ export const DASHBOARD_TABS_BY_ROLE: Record<UserRole, DashboardTab[]> = {
 
   super_admin: [
     { key: "recu", label: "Disponibles" },
-    { key: "mes-projets", label: "Claimed" },
+    { key: "mes-projets", label: "Pris" },
     { key: "encours", label: "En cours" },
     { key: "reserve", label: "Réserve" },
   ],
@@ -48,15 +48,15 @@ export default function DashboardTabs({
   const tabs = DASHBOARD_TABS_BY_ROLE[role];
 
   return (
-    <div className="flex gap-3 py-6 shrink-0">
+    <div className="flex gap-0.5 py-6 shrink-0">
       {tabs.map(({ key, label }) => (
         <Button
           key={key}
           onClick={() => onChange(key)}
           className={`text-white font-medium h-7 rounded-none w-24 transition-all ${
             activeTab === key
-              ? "bg-[#63a053] scale-105 shadow-sm"
-              : "bg-[#326EA6] hover:bg-[#63a053]"
+              ? "bg-[#63a053]"
+              : "bg-[#326EA6] hover:bg-[#528a45]"
           }`}
         >
           {label}

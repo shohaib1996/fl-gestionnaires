@@ -18,7 +18,12 @@ export default function LeftSidebar() {
   const [openAdd, setOpenAdd] = useState(false);
 
   // Fetch ALL events (no date filter) so we have dots for past/future
-  const { data: events = [], isLoading, error, isError } = useMyCalendarEvents({});
+  const {
+    data: events = [],
+    isLoading,
+    error,
+    isError,
+  } = useMyCalendarEvents({});
 
   // Log errors for debugging
   if (isError) {
@@ -46,8 +51,6 @@ export default function LeftSidebar() {
 
   const { data: participants = [], isLoading: loadingParticipants } =
     useEventParticipants(activeEvent?.id);
-
-  console.log("participants", participants);
 
   return (
     <aside className="flex flex-col h-full bg-white dark:bg-neutral-800 shadow-sm border-0.5 border-black/10 rounded-xs overflow-hidden">
@@ -101,8 +104,8 @@ export default function LeftSidebar() {
         />
       </div>
 
-      <h3 className="mt-4.5 mb-2.5 px-4 text-lg font-semibold text-gray-700 dark:text-gray-200">
-        Tâches {!date ? "" : `- ${format(date, "dd MMM", { locale: fr })}`}
+      <h3 className="mt-4.5 mb-2.5 px-4 font-semibold text-[#343E47] dark:text-gray-200 font-sans text-xs">
+        Tâches
       </h3>
 
       <div className="flex-1 overflow-auto px-4 pb-4 hide-scrollbar">
@@ -126,12 +129,12 @@ export default function LeftSidebar() {
               key={e.id}
               className="pb-3 border-b border-gray-200 dark:border-neutral-700"
             >
-              <p className="text-sm text-gray-400">
+              <p className="text-[11px] font-sans font-medium text-[#343E47]">
                 {format(new Date(e.start_date), "dd MMM yyyy", { locale: fr })}
               </p>
 
               <p
-                className="text-blue-600 dark:text-blue-400 hover:underline cursor-pointer"
+                className="text-[#326EA6] hover:text-[#326EA6]/80 hover:underline cursor-pointer font-medium text-[11px] font-sans"
                 onClick={() => {
                   setActiveEvent(e);
                   setOpenDetails(true);
@@ -143,7 +146,7 @@ export default function LeftSidebar() {
               </p>
 
               {(e.start_time || e.end_time) && (
-                <p className="text-sm text-gray-500">
+                <p className="text-[11px] font-sans font-regular text-[#326EA6]">
                   {e.start_time ?? "--"} – {e.end_time ?? "--"}
                 </p>
               )}

@@ -4,7 +4,7 @@ import AddDocumentModal from "@/components/modals/AddDocumentModal";
 import CreateJalonModal from "@/components/modals/CreateJalonModal";
 import EditDocumentModal from "@/components/modals/EditDocumentModal";
 import JalonDetailsModal from "@/components/modals/JalonDetailsModal";
-import { CheckCircle2, Ellipsis, Undo2, X } from "lucide-react";
+import { CheckCircle2, Ellipsis, X } from "lucide-react";
 import Image from "next/image";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
@@ -256,7 +256,20 @@ const ProjectDetails = () => {
           onClick={() => router.back()}
           className="flex items-center justify-center bg-[#326EA6] hover:bg-[#285b8b] text-white rounded-none px-3 h-7"
         >
-          <Undo2 className="h-4 w-4" />
+          <svg
+            width="13"
+            height="11"
+            viewBox="0 0 13 11"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              fillRule="evenodd"
+              clipRule="evenodd"
+              d="M13 10.9469C11.4097 9.01439 9.99743 7.91784 8.7633 7.65729C7.52917 7.39675 6.35418 7.35738 5.23835 7.53921V11L0 5.35279L5.23835 0V3.28932C7.30167 3.3055 9.0558 4.04239 10.5007 5.5C11.9455 6.95761 12.7786 8.77325 13 10.9469Z"
+              fill="white"
+            />
+          </svg>
         </Button>
         <DashboardTabs
           activeTab={null}

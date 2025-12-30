@@ -1,6 +1,7 @@
 "use client";
 
 import { createClient } from "@/lib/supabase/client";
+import { useUser } from "@/providers/UserProvider";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -17,18 +18,13 @@ export default function UserDashboard() {
   const router = useRouter();
   const [projects, setProjects] = useState<UserProject[]>([]);
   const [loading, setLoading] = useState(true);
+  const { user } = useUser();
 
   useEffect(() => {
     const fetchProjects = async () => {
       setLoading(true);
 
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
       if (!user?.email) {
-        toast.error("Utilisateur non authentifié");
-        setLoading(false);
         return;
       }
 
@@ -54,7 +50,7 @@ export default function UserDashboard() {
     };
 
     fetchProjects();
-  }, []);
+  }, [user]);
 
   return (
     <div className="bg-[#e8e8e8] min-h-screen flex flex-col">
@@ -82,7 +78,7 @@ export default function UserDashboard() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
-            onClick={() => router.push(`/project/${project.id}`)}
+            onClick={() => router.push(`/projects/${project.id}`)}
             className="bg-[#63a053] rounded-lg px-6 py-8 shadow-sm cursor-pointer active:scale-[0.98]"
           >
             <p className="text-white/70 text-sm mb-1">Projet</p>

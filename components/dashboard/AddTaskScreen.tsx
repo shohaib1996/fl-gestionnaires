@@ -332,7 +332,7 @@ export default function AddTaskScreen({ onBack }: AddTaskScreenProps) {
       </div>
 
       {/* Save */}
-      <div className="fixed bottom-0 left-0 right-0 bg-[#63a053] z-50">
+      <div className="fixed bottom-0 left-0 right-0 bg-[#63a053] hover:bg-[#528a45] z-50">
         <button
           onClick={handleSave}
           className="w-full h-16 text-white font-semibold text-xl"
