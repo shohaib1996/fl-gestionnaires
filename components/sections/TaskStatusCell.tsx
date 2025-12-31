@@ -31,7 +31,7 @@ export function TaskStatusCell({
 
   return (
     <Select value={status} onValueChange={(v) => onChange(v as TaskStatus)}>
-      <SelectTrigger className="h-8 w-fit text-sm">
+      <SelectTrigger className="h-8 w-fit text-sm  border-0">
         <SelectValue />
       </SelectTrigger>
 

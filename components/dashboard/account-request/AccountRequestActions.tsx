@@ -61,7 +61,7 @@ export function AccountRequestActions({ id }: { id: string }) {
         disabled={isPending}
         variant="destructive"
         onClick={handleReject}
-        className="rounded-none"
+        className="rounded-none bg-[#63a053] hover:bg-[#528a45] text-white"
       >
         Rejeter
       </Button>

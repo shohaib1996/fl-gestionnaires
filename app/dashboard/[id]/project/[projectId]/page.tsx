@@ -310,7 +310,7 @@ const ProjectDetails = () => {
 
         {/* Phases */}
         <div className="flex flex-wrap gap-2 mb-4 px-3">
-          <div className="flex gap-3 border-b">
+          <div className="flex gap-3 ">
             <MilestoneTabs
               activeMilestoneId={activeMilestoneId}
               milestones={project.milestones}
