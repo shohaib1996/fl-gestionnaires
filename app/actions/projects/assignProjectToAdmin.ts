@@ -56,7 +56,31 @@ export async function assignProjectToAdmin(
       };
     }
 
-    // 4. Create preset milestones for the assigned admin
+    // 4. Create project_assignments record so admin can access the project
+    const { error: assignmentError } = await supabase
+      .from("project_assignments")
+      .insert({
+        project_id: projectId,
+        user_id: adminId,
+        is_active: true,
+      });
+
+    if (assignmentError) {
+      console.error("Assignment error:", assignmentError);
+      // Rollback: delete the claim and revert status
+      await supabase.from("claims").delete().eq("project_id", projectId);
+      await supabase
+        .from("projects")
+        .update({ status: "submitted" })
+        .eq("id", projectId);
+
+      return {
+        success: false,
+        message: "Failed to create project assignment record",
+      };
+    }
+
+    // 5. Create preset milestones for the assigned admin
     const milestonesResult = await createPresetMilestones({
       projectId,
       managerId: adminId,
