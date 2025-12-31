@@ -2,6 +2,7 @@
 import { getProjectMilestones } from "@/app/actions/milestones/getProjectMilestones";
 import { motion } from "framer-motion";
 import { ArrowLeft, Check } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 interface Step {
@@ -69,9 +70,11 @@ export const EvolutionDetail = ({ onBack, project }: EvolutionDetailProps) => {
 
         {/* Title */}
         <div className="absolute left-1/2 transform -translate-x-1/2">
-          <h1 className="font-bold text-[#63a053] text-2xl tracking-wide">
-            FOND LOCAL
-          </h1>
+          <Link href="/projects">
+            <h1 className="font-bold text-[#63a053] text-2xl tracking-wide">
+              FOND LOCAL
+            </h1>
+          </Link>
         </div>
 
         {/* Menu Icon */}

@@ -3,6 +3,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
 
+import Link from "next/link";
 import AddTaskScreen from "./AddTaskScreen";
 import CalendarScreen from "./CalendarScreen";
 import Documents from "./Documents";
@@ -67,9 +68,11 @@ export const HomeCandidate = ({ project }: { project: Project }) => {
       <div className="bg-[#e8e8e8] dark:bg-[#121212] min-h-screen">
         {/* Header */}
         <div className="h-24 flex items-center justify-center bg-white dark:bg-[#1e1e1e] shadow-sm mb-8">
-          <h1 className="font-bold text-[#63a053] text-2xl tracking-wide">
-            FOND LOCAL
-          </h1>
+          <Link href="/projects">
+            <h1 className="font-bold text-[#63a053] text-2xl tracking-wide">
+              FOND LOCAL
+            </h1>
+          </Link>
         </div>
 
         {/* Content */}

@@ -30,6 +30,8 @@ import { Textarea } from "@/components/ui/textarea";
 
 import { useCreateCalendarEvent } from "@/hooks/useCalendarEvents";
 import { useUsersForParticipants } from "@/hooks/useUsersForParticipants";
+import Link from "next/link";
+import { TimePicker24 } from "../common/TimePicker24";
 
 interface AddTaskScreenProps {
   onBack: () => void;
@@ -56,7 +58,9 @@ export default function AddTaskScreen({ onBack }: AddTaskScreenProps) {
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
 
-  const [location, setLocation] = useState<string>("Online");
+  const [endDateEnabled, setEndDateEnabled] = useState(false);
+
+  const [location, setLocation] = useState<string>("En ligne");
 
   const [participantQuery, setParticipantQuery] = useState("");
   const [selectedParticipants, setSelectedParticipants] = useState<
@@ -144,9 +148,11 @@ export default function AddTaskScreen({ onBack }: AddTaskScreenProps) {
         </button>
 
         <div className="absolute left-1/2 -translate-x-1/2 w-full px-12 pointer-events-none">
-          <h1 className="font-bold text-white text-xl text-center truncate">
-            Ajouter une tâche ou un rendez-vous
-          </h1>
+          <Link href="/projects">
+            <h1 className="font-bold text-white text-xl text-center truncate">
+              Ajouter une tâche ou un rendez-vous
+            </h1>
+          </Link>
         </div>
 
         <div className="w-10" />
@@ -202,26 +208,81 @@ export default function AddTaskScreen({ onBack }: AddTaskScreenProps) {
               </Popover>
             </div>
 
+            {/* End date with dynamic icon */}
             <div>
-              <label className="text-xl font-medium">Date</label>
+              <label
+                className={`text-xl font-medium ${
+                  endDateEnabled ? "" : "text-gray-400"
+                }`}
+              >
+                Date de fin
+              </label>
+
               <Popover>
                 <PopoverTrigger asChild>
-                  <button className="w-full flex justify-between bg-gray-100 py-3 px-3 rounded text-xl">
+                  <button
+                    className={`w-full flex items-center justify-between py-3 px-3 rounded text-sm transition ${
+                      endDateEnabled
+                        ? "bg-gray-100 text-gray-700"
+                        : "bg-gray-200 text-gray-400"
+                    }`}
+                  >
                     <div className="flex items-center gap-3">
                       <Calendar1 className="w-4 h-4" />
-                      {endDate ? fmt(endDate) : "JJ/MM/AAAA"}
+                      <span>{endDate ? fmt(endDate) : "JJ/MM/AAAA"}</span>
                     </div>
-                    <ChevronDown className="w-4 h-4" />
+
+                    {/* RIGHT-SIDE ICON */}
+                    {endDateEnabled ? (
+                      <svg
+                        width="12"
+                        height="12"
+                        viewBox="0 0 12 12"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          clipRule="evenodd"
+                          d="M6 12C6.78793 12 7.56815 11.8448 8.2961 11.5433C9.02405 11.2417 9.68549 10.7998 10.2426 10.2426C10.7998 9.68549 11.2417 9.02405 11.5433 8.2961C11.8448 7.56815 12 6.78793 12 6C12 5.21207 11.8448 4.43185 11.5433 3.7039C11.2417 2.97595 10.7998 2.31451 10.2426 1.75736C9.68549 1.20021 9.02405 0.758251 8.2961 0.456723C7.56815 0.155195 6.78793 -1.17411e-08 6 0C4.4087 2.37122e-08 2.88258 0.632141 1.75736 1.75736C0.632141 2.88258 0 4.4087 0 6C0 7.5913 0.632141 9.11742 1.75736 10.2426C2.88258 11.3679 4.4087 12 6 12ZM5.84533 8.42667L9.17867 4.42667L8.15467 3.57333L5.288 7.01267L3.80467 5.52867L2.862 6.47133L4.862 8.47133L5.378 8.98733L5.84533 8.42667Z"
+                          fill="#63A053"
+                        />
+                      </svg>
+                    ) : (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setEndDateEnabled(true);
+                        }}
+                      >
+                        <svg
+                          width="12"
+                          height="12"
+                          viewBox="0 0 12 12"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            clipRule="evenodd"
+                            d="M6 12C6.78793 12 7.56815 11.8448 8.2961 11.5433C9.02405 11.2417 9.68549 10.7998 10.2426 10.2426C10.7998 9.68549 11.2417 9.02405 11.5433 8.2961C11.8448 7.56815 12 6.78793 12 6C12 5.21207 11.8448 4.43185 11.5433 3.7039C11.2417 2.97595 10.7998 2.31451 10.2426 1.75736C9.68549 1.20021 9.02405 0.758251 8.2961 0.456723C7.56815 0.155195 6.78793 -1.17411e-08 6 0C4.4087 2.37122e-08 2.88258 0.632141 1.75736 1.75736C0.632141 2.88258 0 4.4087 0 6C0 7.5913 0.632141 9.11742 1.75736 10.2426C2.88258 11.3679 4.4087 12 6 12ZM5.84533 8.42667L9.17867 4.42667L8.15467 3.57333L5.288 7.01267L3.80467 5.52867L2.862 6.47133L4.862 8.47133L5.378 8.98733L5.84533 8.42667Z"
+                            fill="#A4A4A4"
+                          />
+                        </svg>
+                      </button>
+                    )}
                   </button>
                 </PopoverTrigger>
-                <PopoverContent className="p-0">
-                  <Calendar
-                    mode="single"
-                    selected={endDate}
-                    onSelect={setEndDate}
-                    locale={fr}
-                  />
-                </PopoverContent>
+
+                {endDateEnabled && (
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={endDate}
+                      onSelect={(d) => setEndDate(d!)}
+                    />
+                  </PopoverContent>
+                )}
               </Popover>
             </div>
           </div>
@@ -230,21 +291,11 @@ export default function AddTaskScreen({ onBack }: AddTaskScreenProps) {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="text-xl font-medium">Heure de début</label>
-              <Input
-                type="time"
-                value={startTime}
-                onChange={(e) => setStartTime(e.target.value)}
-                className="bg-gray-100 h-14"
-              />
+              <TimePicker24 value={startTime} onChange={setStartTime} />
             </div>
             <div>
               <label className="text-xl font-medium">Heure de fin</label>
-              <Input
-                type="time"
-                value={endTime}
-                onChange={(e) => setEndTime(e.target.value)}
-                className="bg-gray-100 h-14"
-              />
+              <TimePicker24 value={endTime} onChange={setEndTime} />
             </div>
           </div>
 
@@ -262,7 +313,7 @@ export default function AddTaskScreen({ onBack }: AddTaskScreenProps) {
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                {["Online", "Sur site", "Hybride"].map((l) => (
+                {["En ligne", "En présentiel", "Hybride"].map((l) => (
                   <DropdownMenuItem key={l} onSelect={() => setLocation(l)}>
                     {l}
                   </DropdownMenuItem>

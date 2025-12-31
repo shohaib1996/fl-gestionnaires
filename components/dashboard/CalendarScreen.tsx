@@ -8,6 +8,7 @@ import { useMemo, useState } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import { useMyCalendarEvents } from "@/hooks/useCalendarEvents";
 import { useUser } from "@/providers/UserProvider";
+import Link from "next/link";
 
 type UITask = {
   id: string;
@@ -91,6 +92,12 @@ export default function CalendarScreen({
       });
   }, [tasks, currentUserId]);
 
+  const eventDates = useMemo(() => {
+    return tasks
+      .filter((e) => e.created_by === currentUserId)
+      .map((e) => new Date(e.start_date));
+  }, [tasks, currentUserId]);
+
   return (
     <div
       className="bg-[#e8e8e8] dark:bg-[#121212] w-full flex flex-col transition-colors duration-300 relative"
@@ -107,9 +114,11 @@ export default function CalendarScreen({
           <ArrowLeft className="w-6 h-6 text-[#63a053]" />
         </button>
 
-        <h1 className="font-bold text-[#63a053] text-2xl tracking-wide">
-          FOND LOCAL
-        </h1>
+        <Link href="/projects">
+          <h1 className="font-bold text-[#63a053] text-2xl tracking-wide">
+            FOND LOCAL
+          </h1>
+        </Link>
 
         {/* Grid Menu Icon */}
         <button className="p-2 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-full transition-colors">
@@ -127,6 +136,13 @@ export default function CalendarScreen({
             onSelect={setDate}
             locale={fr}
             className="w-full"
+            modifiers={{
+              hasEvent: eventDates,
+            }}
+            modifiersClassNames={{
+              hasEvent:
+                "bg-[#63a053]/20 text-[#2f6f3e] font-semibold rounded-full",
+            }}
             classNames={{
               caption_label: "text-xl font-semibold",
               day_button: "text-xl",

@@ -3,6 +3,7 @@ import { MilestoneTabs } from "@/app/dashboard/[id]/project/[projectId]/Mileston
 import { useAssignedProjectDetails } from "@/hooks/useAssignedProjectDetails";
 import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo } from "react";
 import TaskPreview from "./TaskPreview";
@@ -64,9 +65,11 @@ export default function Documents({ onBack, project: projectProps }: Props) {
 
         {/* Title */}
         <div className="absolute left-1/2 transform -translate-x-1/2">
-          <h1 className="font-bold text-[#63a053] text-2xl tracking-wide">
-            FOND LOCAL
-          </h1>
+          <Link href="/projects">
+            <h1 className="font-bold text-[#63a053] text-2xl tracking-wide">
+              FOND LOCAL
+            </h1>
+          </Link>
         </div>
 
         {/* Menu Icon */}

@@ -9,7 +9,6 @@ export async function proxy(request: NextRequest) {
     },
   });
 
-  // Create Supabase client
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -28,29 +27,53 @@ export async function proxy(request: NextRequest) {
     }
   );
 
-  // Fetch user session
-  const { data } = await supabase.auth.getUser();
-  const user = data?.user;
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   const pathname = request.nextUrl.pathname;
 
-  // ------------------------------------------
-  // 1) User is NOT logged in → Protect dashboard routes
-  // ------------------------------------------
-  if (!user && pathname.startsWith("/dashboard")) {
+  /* ----------------------------------------
+   * 1️⃣ Not logged in → protect dashboard & projects
+   * ---------------------------------------- */
+  if (
+    !user &&
+    (pathname.startsWith("/dashboard") || pathname.startsWith("/projects"))
+  ) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  // ------------------------------------------
-  // 2) User IS logged in → Prevent access to login page
-  // ------------------------------------------
-  if ((user && pathname === "/login") || pathname === "/") {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
+  /* ----------------------------------------
+   * 2️⃣ Dashboard → only admin & super_admin
+   * ---------------------------------------- */
+  if (user && pathname.startsWith("/dashboard")) {
+    const { data: profile, error } = await supabase
+      .from("users")
+      .select("role")
+      .eq("id", user.id)
+      .single();
+
+    if (error || !profile) {
+      return NextResponse.redirect(new URL("/login", request.url));
+    }
+
+    const allowedRoles = ["admin", "super_admin"];
+
+    if (!allowedRoles.includes(profile.role)) {
+      return NextResponse.redirect(new URL("/unauthorized", request.url));
+    }
+  }
+
+  /* ----------------------------------------
+   * 3️⃣ Logged in → prevent login & root
+   * ---------------------------------------- */
+  if (user && (pathname === "/login" || pathname === "/")) {
+    return NextResponse.redirect(new URL("/projects", request.url));
   }
 
   return response;
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/login", "/"],
+  matcher: ["/dashboard/:path*", "/projects/:path*", "/login", "/"],
 };

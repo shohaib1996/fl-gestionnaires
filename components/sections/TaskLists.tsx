@@ -3,7 +3,6 @@ import { useUser } from "@/providers/UserProvider";
 import { EditTaskInput } from "@/types/task";
 import { useEffect, useState } from "react";
 import { DesktopTaskTable } from "./DesktopTaskTable";
-import MobileTaskList from "./MobileTaskLIst";
 
 const LS_KEY = "active_task_row";
 
@@ -44,7 +43,7 @@ export default function TaskLists({
   return (
     <>
       {/* Desktop table */}
-      <div className="hidden md:block">
+      <div className="block">
         <DesktopTaskTable
           tasks={tasks}
           activeIndex={activeIndex}
@@ -58,7 +57,7 @@ export default function TaskLists({
       </div>
 
       {/* Mobile cards */}
-      <div className="block md:hidden">
+      {/* <div className="block md:hidden">
         <MobileTaskList
           tasks={tasks}
           activeIndex={activeIndex}
@@ -69,7 +68,7 @@ export default function TaskLists({
           editTaskAsync={editTaskAsync}
           user={user}
         />
-      </div>
+      </div> */}
     </>
   );
 }

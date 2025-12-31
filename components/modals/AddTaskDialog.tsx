@@ -54,7 +54,7 @@ export default function AddTaskDialog({
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
 
-  const [location, setLocation] = useState<string>("Online");
+  const [location, setLocation] = useState<string>("En ligne");
 
   const createEvent = useCreateCalendarEvent();
 

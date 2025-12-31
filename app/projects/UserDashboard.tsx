@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/client";
 import { useUser } from "@/providers/UserProvider";
 import { motion } from "framer-motion";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -31,7 +32,7 @@ export default function UserDashboard() {
       const { data, error } = await supabase
         .from("projects")
         .select("id, title")
-        .eq("email", user.email); // ✅ schema অনুযায়ী correct
+        .eq("email", user.email);
 
       if (error) {
         toast.error("Impossible de charger les projets");
@@ -56,9 +57,11 @@ export default function UserDashboard() {
     <div className="bg-[#e8e8e8] min-h-screen flex flex-col">
       {/* Header */}
       <div className="w-full h-24 flex items-center justify-center bg-white shadow-sm px-6">
-        <h1 className="font-bold text-[#63a053] text-2xl tracking-wide">
-          FOND LOCAL
-        </h1>
+        <Link href="/projects">
+          <h1 className="font-bold text-[#63a053] text-2xl tracking-wide">
+            FOND LOCAL
+          </h1>
+        </Link>
       </div>
 
       <div className="py-8 text-center">

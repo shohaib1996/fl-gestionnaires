@@ -11,6 +11,7 @@ import { useEventParticipants } from "@/hooks/useEventParticipants";
 import { useUser } from "@/providers/UserProvider";
 import { format, isBefore } from "date-fns";
 import { fr } from "date-fns/locale";
+import Link from "next/link";
 import TaskDetailsModal from "../modals/TaskDetailsModal";
 import AddTaskScreen from "./AddTaskScreen";
 
@@ -126,7 +127,9 @@ export const TaskDetail = ({ onBack, project }: TaskDetailProps) => {
             <ArrowLeft className="w-6 h-6 text-[#63a053]" />
           </button>
 
-          <h1 className="font-bold text-[#63a053] text-2xl">FOND LOCAL</h1>
+          <Link href="/projects">
+            <h1 className="font-bold text-[#63a053] text-2xl">FOND LOCAL</h1>
+          </Link>
 
           <div className="w-6" />
         </div>
