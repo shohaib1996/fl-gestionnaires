@@ -123,7 +123,64 @@ const ProjectDetails = () => {
   };
 
   useEffect(() => {
-    fetchProject();
+    if (!id) return;
+
+    let cancelled = false;
+
+    (async () => {
+      setLoading(true);
+      setErrorMsg(null);
+
+      try {
+        const { data, error } = await getProjectById(id);
+
+        if (cancelled) return;
+
+        if (error || !data || !data.status) {
+          setErrorMsg(error || "Project not found");
+          return;
+        }
+
+        setProject({
+          id: data.id,
+          project_id: data.project_id,
+          first_name: data.first_name ?? "",
+          last_name: data.last_name ?? "",
+          parent_name: data.parent_name ?? "",
+          phone: data.phone ?? "",
+          email: data.email ?? "",
+          project_city: data.project_city ?? "",
+          residence_city: data.residence_city ?? "",
+          province: data.province ?? "",
+          collaborators: data.collaborators ?? null,
+          title: data.title ?? "",
+          description: data.description ?? "",
+          categories: data.categories ?? [],
+          links: data.links ?? [],
+          phase: data.phase ?? "",
+          signature: data.signature ?? "",
+          signer_name: data.signer_name ?? "",
+          logo_urls: data.logo_urls ?? [],
+          claimed: data.claim_count ?? 0,
+          claimer: data.claimer ?? null,
+          status: data.status,
+          created_at: data.created_at ?? "",
+          claim_id: data.claim_id,
+        });
+      } catch (err: any) {
+        if (!cancelled) {
+          setErrorMsg(err.message || "Unexpected error");
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
   }, [id]);
 
   if (userLoading || loading) {
@@ -303,7 +360,7 @@ const ProjectDetails = () => {
                     </DropdownMenuContent>
                   </DropdownMenu>
                 )}
-                {actions?.length > 0 && (
+                {actions?.length > 0 && project.status !== "in_progress" && (
                   <ProjectActionsMenu
                     actions={actions}
                     onClaim={handleClaim}
@@ -370,7 +427,7 @@ const ProjectDetails = () => {
                   </span>
                 </h3>
                 <span className="text-sm font-semibold text-gray-700 dark:text-white">
-                  {project.status}
+                  {project.parent_name || project.status}
                 </span>
               </div>
             </div>

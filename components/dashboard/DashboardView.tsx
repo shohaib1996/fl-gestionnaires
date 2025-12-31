@@ -12,6 +12,7 @@ interface Props {
   filters: any;
   loading: boolean;
   page: number;
+  total: number;
   onTabChange: (tab: any) => void;
   onPageChange: (page: number) => void;
   onFiltersChange: (filters: any) => void;
@@ -23,6 +24,7 @@ export default function DashboardView({
   loading,
   filters,
   page,
+  total,
   onTabChange,
   onPageChange,
   onFiltersChange,
@@ -119,7 +121,11 @@ export default function DashboardView({
           </section>
         </div>
 
-        <DashboardPagination page={page} onChange={onPageChange} />
+        <DashboardPagination
+          page={page}
+          onChange={onPageChange}
+          total={total}
+        />
       </div>
     </>
   );

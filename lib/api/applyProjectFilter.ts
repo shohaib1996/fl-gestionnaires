@@ -60,12 +60,12 @@ export function applyProjectFilters(query: any, filters: ProjectFilters) {
     query = query.lte("created_at", filters.toDate);
   }
 
-  console.log("Filters", filters);
   /* PAGINATION */
   if (filters.page && filters.pageSize) {
     const from = (filters.page - 1) * filters.pageSize;
     const to = from + filters.pageSize - 1;
     query = query.range(from, to);
+    console.log("pagination");
   }
 
   return query;

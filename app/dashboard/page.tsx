@@ -7,7 +7,7 @@ import { useUser } from "@/providers/UserProvider";
 import type { DashboardFilters, DashboardTab } from "@/types/dashboard";
 import { TAB_TO_STATUS } from "@/types/dashboard";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 const DEFAULT_TAB: DashboardTab = "recu";
 const PAGE_SIZE = 8;
@@ -44,7 +44,7 @@ export default function DashboardPage() {
   /* --------------------------------
    * 3️⃣ DATA FETCH
    * -------------------------------- */
-  const { data: projects, isLoading } = useProjects({
+  const { data, isLoading } = useProjects({
     tab: activeTab,
     role: user?.role ?? "admin",
     userId: user?.id,
@@ -52,6 +52,13 @@ export default function DashboardPage() {
     filters: debouncedFilters,
   });
 
+  const projects = data?.data;
+  const total = data?.total;
+
+  const totalPages = useMemo(() => {
+    if (!total) return 0;
+    return Math.ceil(total / PAGE_SIZE);
+  }, [total]);
   /* --------------------------------
    * 4️⃣ NAVIGATION HANDLERS
    * -------------------------------- */
@@ -83,6 +90,7 @@ export default function DashboardPage() {
       onTabChange={handleTabChange}
       onPageChange={handlePageChange}
       onFiltersChange={handleFiltersChange}
+      total={totalPages}
     />
   );
 }

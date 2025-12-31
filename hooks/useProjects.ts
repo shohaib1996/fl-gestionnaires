@@ -35,7 +35,7 @@ export function useProjects({
     userId,
   };
 
-  return useQuery<ProjectRow[], Error>({
+  return useQuery<{ data: ProjectRow[]; total: number }, Error>({
     queryKey: ["projects", tab, role, userId, filters],
     enabled,
 
@@ -65,7 +65,7 @@ export function useProjects({
           return fetchReservedProjects(projectFilters);
 
         default:
-          return [];
+          return { data: [], total: 0 };
       }
     },
 
