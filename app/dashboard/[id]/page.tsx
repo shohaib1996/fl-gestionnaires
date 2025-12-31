@@ -203,8 +203,8 @@ const ProjectDetails = () => {
     return (
       <div className="flex flex-col gap-2 h-full items-center justify-center text-gray-600 dark:text-gray-300">
         <p>Project not found</p>
-        <p className="text-sm text-red-500">{errorMsg}</p>
-        <p className="text-xs text-gray-400">{id}</p>
+        <p className="text-[1rem] text-red-500">{errorMsg}</p>
+        <p className="text-[1rem] text-gray-400">{id}</p>
       </div>
     );
   }
@@ -336,11 +336,11 @@ const ProjectDetails = () => {
             <div className="flex items-center justify-between py-4 px-11 bg-[#D8E7D4] hover:bg-[#63A053] transition group">
               <h2
                 onClick={handleRedirect}
-                className="text-xl text-[#7F7E83] group-hover:text-white font-bold dark:text-white relative inline-block after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-0.5 after:bg-[#326EA6] after:transition-all after:duration-300 hover:after:w-full cursor-pointer font-sans"
+                className="text-[1.5rem] text-[#7F7E83] group-hover:text-white font-bold dark:text-white relative inline-block after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-0.5 after:bg-[#326EA6] after:transition-all after:duration-300 hover:after:w-full cursor-pointer font-sans"
               >
                 {project.title}
               </h2>
-              <span className="text-sm font-medium text-[#7F7E83] group-hover:text-white dark:text-gray-300 flex items-center gap-7">
+              <span className="text-[1rem] font-medium text-[#7F7E83] group-hover:text-white dark:text-gray-300 flex items-center gap-7">
                 {project.project_id}
                 {project.status === "in_progress" && (
                   <DropdownMenu>
@@ -378,22 +378,22 @@ const ProjectDetails = () => {
               <div className="grid grid-cols-3 gap-6">
                 <div className="col-span-2">
                   <label className="block mb-1">
-                    <span className="bg-[#F2F6F8] dark:bg-neutral-700 text-[11px] py-3 px-3 text-[#7F7E83] font-regular font-sans dark:text-white">
+                    <span className="bg-[#F2F6F8] dark:bg-neutral-700 text-[1rem] py-3 px-3 text-[#7F7E83] font-regular font-sans dark:text-white">
                       Catégorie qui décrit le mieux le projet ou produit
                     </span>
                   </label>
-                  <p className="px-3 py-2 rounded text-[11px] font-medium text-[#343E47] font-sans">
+                  <p className="px-3 py-2 rounded text-[1rem] font-medium text-[#343E47] font-sans">
                     {project.categories?.join(", ") || ""}
                   </p>
                 </div>
 
                 <div className="col-start-4">
                   <label className="block mb-1">
-                    <span className="text-[11px] py-3 px-3 text-[#7F7E83] font-regular font-sans bg-[#F2F6F8] dark:bg-neutral-700 dark:text-white">
+                    <span className="text-[1rem] py-3 px-3 text-[#7F7E83] font-regular font-sans bg-[#F2F6F8] dark:bg-neutral-700 dark:text-white">
                       Phase actuelle du projet
                     </span>
                   </label>
-                  <p className="px-3 py-2 rounded text-[11px] font-medium text-[#343E47] font-sans">
+                  <p className="px-3 py-2 rounded text-[1rem] font-medium text-[#343E47] font-sans">
                     {project.phase || ""}
                   </p>
                 </div>
@@ -401,10 +401,10 @@ const ProjectDetails = () => {
 
               {/* Full-width description */}
               <div>
-                <label className="block  bg-[#F2F6F8] dark:bg-neutral-700  text-[11px] py-3 px-3 text-[#7F7E83] font-regular font-sans dark:text-white mb-3">
+                <label className="block  bg-[#F2F6F8] dark:bg-neutral-700  text-[1rem] py-3 px-3 text-[#7F7E83] font-regular font-sans dark:text-white mb-3">
                   Description non confidentielle du projet ou produit
                 </label>
-                <p className="bg-[#FFFFFB] dark:bg-[#262626] px-3 py-3 rounded text-[11px] font-medium text-[#343E47] font-sans leading-relaxed border-b">
+                <p className="bg-[#FFFFFB] dark:bg-[#262626] px-3 py-3 rounded text-[1rem] font-medium text-[#343E47] font-sans leading-relaxed border-b">
                   {project.description || "Aucune description disponible"}
                 </p>
               </div>
@@ -420,30 +420,30 @@ const ProjectDetails = () => {
           <section className=" mt-6 pb-10 bg-card">
             <div className="bg-[#63a053]/25 p-4 mb-6">
               <div className="px-6 flex justify-between items-center">
-                <h3 className="text-xs font-regular font-sans text-[#7F7E83] dark:text-white flex gap-3.5 items-center">
+                <h3 className="text-[1rem] font-regular font-sans text-[#7F7E83] dark:text-white flex gap-3.5 items-center">
                   Entrepreneur{" "}
-                  <span className="font-bold text-xl">
+                  <span className="font-bold text-[1.25rem]">
                     {project.first_name} {project.last_name}
                   </span>
                 </h3>
-                <span className="text-sm font-semibold text-gray-700 dark:text-white">
+                <span className="text-[1rem] font-semibold text-gray-700/60 dark:text-white">
                   {project.parent_name ? "Mineur" : ""}
                 </span>
               </div>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-12 text-sm px-11">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-12 text-[0.875rem] px-11">
               <div>
-                <label className="block text-[#7F7E83] text-[11px] font-sand font-regular mb-1 bg-[#F2F6F8] dark:bg-gray-800/20 p-1.5">
+                <label className="block text-[#7F7E83] text-[0.875rem] font-sand font-regular mb-1 bg-[#F2F6F8] dark:bg-gray-800/20 p-1.5">
                   Tuteur légal
                 </label>
-                <p className="font-medium text-[11px] font-sans p-1.5">
+                <p className="font-medium text-[0.875rem] font-sans p-1.5">
                   {project.parent_name || ""}
                 </p>
               </div>
 
               <div>
-                <label className="block text-[#7F7E83] text-[11px] font-sand font-regular mb-1 bg-[#F2F6F8] dark:bg-gray-800/20 p-1.5">
+                <label className="block text-[#7F7E83] text-[0.875rem] font-sand font-regular mb-1 bg-[#F2F6F8] dark:bg-gray-800/20 p-1.5">
                   Collaborateurs
                 </label>
                 <div>
@@ -456,7 +456,7 @@ const ProjectDetails = () => {
                           return collabs.map((collab: any, idx: number) => (
                             <p
                               key={idx}
-                              className="mb-1 font-medium text-[11px] font-sans p-1.5"
+                              className="mb-1 font-medium text-[0.875rem] font-sans p-1.5"
                             >
                               {collab.firstName} {collab.lastName} (
                               {collab.email})
@@ -473,7 +473,7 @@ const ProjectDetails = () => {
                     project.collaborators.map((collab: any, idx: number) => (
                       <p
                         key={idx}
-                        className="mb-1 font-medium text-[11px] font-sans p-1.5"
+                        className="mb-1 font-medium text-[0.875rem] font-sans p-1.5"
                       >
                         {collab.firstName} {collab.lastName} ({collab.email})
                       </p>
@@ -487,52 +487,52 @@ const ProjectDetails = () => {
               <div></div>
 
               <div>
-                <label className="block text-[#7F7E83] text-[11px] font-sand font-regular mb-1 bg-[#F2F6F8] dark:bg-gray-800/20 p-1.5">
+                <label className="block text-[#7F7E83] text-[0.875rem] font-sand font-regular mb-1 bg-[#F2F6F8] dark:bg-gray-800/20 p-1.5">
                   Ville ou village de résidence
                 </label>
-                <p className="font-medium text-[11px] font-sans p-1.5">
+                <p className="font-medium text-[0.875rem] font-sans p-1.5">
                   {project.residence_city || ""}
                 </p>
               </div>
 
               <div>
-                <label className="block text-[#7F7E83] text-[11px] font-sand font-regular mb-1 bg-[#F2F6F8] dark:bg-gray-800/20 p-1.5">
+                <label className="block text-[#7F7E83] text-[0.875rem] font-sand font-regular mb-1 bg-[#F2F6F8] dark:bg-gray-800/20 p-1.5">
                   Ville / village où se situe le projet
                 </label>
-                <p className="font-medium text-[11px] font-sans p-1.5">
+                <p className="font-medium text-[0.875rem] font-sans p-1.5">
                   {project.project_city || ""}
                 </p>
               </div>
 
               <div>
-                <label className="block text-[#7F7E83] text-[11px] font-sand font-regular mb-1 bg-[#F2F6F8] dark:bg-gray-800/20 p-1.5">
+                <label className="block text-[#7F7E83] text-[0.875rem] font-sand font-regular mb-1 bg-[#F2F6F8] dark:bg-gray-800/20 p-1.5">
                   Province
                 </label>
-                <p className="font-medium text-[11px] font-sans p-1.5">
+                <p className="font-medium text-[0.875rem] font-sans p-1.5">
                   {project.province || ""}
                 </p>
               </div>
 
               <div>
-                <label className="block text-[#7F7E83] text-[11px] font-sand font-regular mb-1 bg-[#F2F6F8] dark:bg-gray-800/20 p-1.5">
+                <label className="block text-[#7F7E83] text-[0.875rem] font-sand font-regular mb-1 bg-[#F2F6F8] dark:bg-gray-800/20 p-1.5">
                   Téléphone
                 </label>
-                <p className="font-medium text-[11px] font-sans p-1.5">
+                <p className="font-medium text-[0.875rem] font-sans p-1.5">
                   {project.phone || ""}
                 </p>
               </div>
 
               <div>
-                <label className="block text-[#7F7E83] text-[11px] font-sand font-regular mb-1 bg-[#F2F6F8] dark:bg-gray-800/20 p-1.5">
+                <label className="block text-[#7F7E83] text-[0.875rem] font-sand font-regular mb-1 bg-[#F2F6F8] dark:bg-gray-800/20 p-1.5">
                   Email
                 </label>
-                <p className="font-medium text-[11px] font-sans p-1.5">
+                <p className="font-medium text-[0.875rem] font-sans p-1.5">
                   {project.email || ""}
                 </p>
               </div>
 
               <div>
-                <label className="block text-[#7F7E83] text-[11px] font-sand font-regular mb-1 bg-[#F2F6F8] dark:bg-gray-800/20 p-1.5">
+                <label className="block text-[#7F7E83] text-[0.875rem] font-sand font-regular mb-1 bg-[#F2F6F8] dark:bg-gray-800/20 p-1.5">
                   Liens
                 </label>
                 <div className="flex gap-4 mt-1">

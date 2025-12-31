@@ -96,7 +96,7 @@ export default function ClaimerSection({
             </div>
 
             {/* Name / Role / City inline */}
-            <div className="flex items-center gap-3 text-sm text-gray-700 dark:text-gray-200 flex-wrap">
+            <div className="flex items-center gap-3 text-[1rem] text-gray-700 dark:text-gray-200 flex-wrap">
               <span className="font-semibold whitespace-nowrap">
                 {claimer.fullName}
               </span>
@@ -111,7 +111,7 @@ export default function ClaimerSection({
           <div className="flex items-center gap-3">
             <Button
               variant="destructive"
-              size="sm"
+              size="lg"
               onClick={() => setShowDialog(true)}
             >
               Reject

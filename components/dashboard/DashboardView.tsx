@@ -47,7 +47,7 @@ export default function DashboardView({
           <DashboardFilters values={filters} onChange={onFiltersChange} />
 
           {/* Cards */}
-          <section className="flex-1 overflow-auto hide-scrollbar">
+          <section className="flex-1 overflow-auto hide-scrollbar min-h-[53vh]">
             {loading ? (
               <Centered text="Chargement des projets..." />
             ) : projects.length === 0 ? (
@@ -70,7 +70,7 @@ export default function DashboardView({
                           href={`/dashboard/${project.id}`}
                           key={project.id}
                         >
-                          <article className="bg-white dark:bg-neutral-800 shadow-sm flex flex-col rounded-sm border-2 border-gray-200 hover:border-[#63A053] hover:scale-[0.97] transition-all duration-300 min-h-62">
+                          <article className="bg-white dark:bg-neutral-800 shadow-sm flex flex-col rounded-sm border-2 border-gray-200 hover:border-[#63A053] hover:scale-[0.97] transition-all duration-300 min-h-[25vh]">
                             {/* Header */}
                             <div
                               className="px-4 py-2 flex justify-between items-center"
@@ -85,21 +85,21 @@ export default function DashboardView({
                                     : "none",
                               }}
                             >
-                              <h4 className="font-semibold text-[#454B53] dark:text-gray-100 text-xs font-sans">
+                              <h4 className="font-semibold text-[#454B53] dark:text-gray-100 text-[1.25rem] font-sans">
                                 {project.title ?? "Untitled Project"}
                               </h4>
 
                               {/* Show claim count ONLY if claimed */}
                               {project.status === "claimed" &&
                                 project.claim_count > 0 && (
-                                  <span className="text-sm text-gray-500">
+                                  <span className="text-[0.875rem] text-gray-500">
                                     {project.claim_count}
                                   </span>
                                 )}
                             </div>
 
                             {/* Body */}
-                            <div className="p-4 text-[11px] text-black dark:text-gray-300">
+                            <div className="p-4 text-[1rem] text-black dark:text-gray-300">
                               <p className="mb-1">
                                 Reçu :{" "}
                                 {new Date(

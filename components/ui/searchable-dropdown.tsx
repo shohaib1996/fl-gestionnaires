@@ -87,9 +87,10 @@ export function SearchableDropdown({
       {/* Trigger Button */}
       <button
         type="button"
+        style={{ fontSize: "1rem" }}
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
-          "w-full flex items-center justify-between px-3 py-2 bg-gray-100 dark:bg-neutral-700 rounded-md text-sm border-0 focus:outline-none focus:ring-1 focus:ring-[#63a053]",
+          "w-full flex items-center justify-between px-3 py-2 bg-gray-100 dark:bg-neutral-700 rounded-md border-0 focus:outline-none focus:ring-1 focus:ring-[#63a053]",
           !value && "text-gray-400"
         )}
       >
@@ -115,7 +116,8 @@ export function SearchableDropdown({
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder={searchPlaceholder}
-                className="w-full pl-8 pr-3 py-1.5 bg-gray-50 dark:bg-neutral-700 border border-gray-200 dark:border-neutral-600 rounded text-sm focus:outline-none focus:ring-1 focus:ring-[#63a053]"
+                className="w-full pl-8 pr-3 py-1.5 bg-gray-50 dark:bg-neutral-700 border border-gray-200 dark:border-neutral-600 rounded focus:outline-none focus:ring-1 focus:ring-[#63a053]"
+                style={{ fontSize: "1rem" }}
               />
             </div>
           </div>
@@ -126,7 +128,8 @@ export function SearchableDropdown({
               <button
                 type="button"
                 onClick={handleClear}
-                className="w-full px-3 py-1.5 text-sm text-left text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-colors"
+                className="w-full px-3 py-1.5 text-left text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-colors"
+                style={{ fontSize: "1rem" }}
               >
                 Effacer la sélection
               </button>
@@ -147,14 +150,14 @@ export function SearchableDropdown({
                     type="button"
                     onClick={() => handleSelect(option.value)}
                     className={cn(
-                      "flex items-center justify-between px-3 py-2 text-sm rounded hover:bg-gray-100 dark:hover:bg-neutral-700 transition-colors text-left",
+                      "flex items-center justify-between px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-neutral-700 transition-colors text-left",
                       value === option.value &&
                         "bg-[#63a053]/10 text-[#63a053] font-medium"
                     )}
                   >
                     <span className="truncate">{option.label}</span>
                     {value === option.value && (
-                      <Check className="w-4 h-4 ml-2 flex-shrink-0" />
+                      <Check className="w-4 h-4 ml-2 shrink-0" />
                     )}
                   </button>
                 ))}

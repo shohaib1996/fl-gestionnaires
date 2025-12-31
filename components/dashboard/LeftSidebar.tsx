@@ -104,22 +104,24 @@ export default function LeftSidebar() {
         />
       </div>
 
-      <h3 className="mt-4.5 mb-2.5 px-4 font-semibold text-[#343E47] dark:text-gray-200 font-sans text-xs">
+      <h3 className="mt-4.5 mb-2.5 px-4 font-semibold text-[#343E47] dark:text-gray-200 font-sans text-[1rem]">
         Tâches
       </h3>
 
       <div className="flex-1 overflow-auto px-4 pb-4 hide-scrollbar">
-        <div className="space-y-4 text-md">
-          {isLoading && <p className="text-sm text-gray-400">Chargement…</p>}
+        <div className="space-y-4 text-[1.05rem]">
+          {isLoading && (
+            <p className="text-[1rem] text-gray-400">Chargement…</p>
+          )}
 
           {isError && (
-            <p className="text-sm text-red-500">
+            <p className="text-[1rem] text-red-500">
               Erreur lors du chargement des tâches
             </p>
           )}
 
           {!isLoading && !isError && filteredEvents.length === 0 && (
-            <p className="text-sm text-gray-400">
+            <p className="text-[1rem] text-gray-400">
               Aucune tâche pour cette date
             </p>
           )}
@@ -129,12 +131,12 @@ export default function LeftSidebar() {
               key={e.id}
               className="pb-3 border-b border-gray-200 dark:border-neutral-700"
             >
-              <p className="text-[11px] font-sans font-medium text-[#343E47]">
+              <p className="text-[1rem] font-sans font-medium text-[#343E47]">
                 {format(new Date(e.start_date), "dd MMM yyyy", { locale: fr })}
               </p>
 
               <p
-                className="text-[#326EA6] hover:text-[#326EA6]/80 hover:underline cursor-pointer font-medium text-[11px] font-sans"
+                className="text-[#326EA6] hover:text-[#326EA6]/80 hover:underline cursor-pointer font-medium text-[1rem] font-sans"
                 onClick={() => {
                   setActiveEvent(e);
                   setOpenDetails(true);

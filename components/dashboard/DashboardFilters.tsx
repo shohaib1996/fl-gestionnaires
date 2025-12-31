@@ -18,7 +18,10 @@ export default function DashboardFilters({ values, onChange }: Props) {
 
   return (
     <div className="bg-white dark:bg-neutral-800 px-12 py-5 shadow-sm mb-[18px]">
-      <p className="text-sm font-medium text-gray-700 dark:text-gray-200 mb-4">
+      <p
+        className="font-medium text-gray-700 dark:text-gray-200 mb-4"
+        style={{ fontSize: "1rem" }}
+      >
         Filtrer par :
       </p>
 
@@ -56,7 +59,7 @@ export default function DashboardFilters({ values, onChange }: Props) {
           <Input
             onChange={(e) => update("name", e.target.value)}
             placeholder="Taper"
-            className="bg-gray-100 dark:bg-neutral-700 border-0 text-sm placeholder:text-gray-400 focus-visible:ring-1 focus-visible:ring-[#63a053]"
+            className="bg-gray-100 placeholder:text-[1rem] text-1rem dark:bg-neutral-700 border-0 text-sm placeholder:text-gray-400 focus-visible:ring-1 focus-visible:ring-[#63a053]"
           />
         </Filter>
 
@@ -64,7 +67,7 @@ export default function DashboardFilters({ values, onChange }: Props) {
           <Input
             onChange={(e) => update("ifl", e.target.value)}
             placeholder="Taper"
-            className="bg-gray-100 dark:bg-neutral-700 border-0 text-sm placeholder:text-gray-400 focus-visible:ring-1 focus-visible:ring-[#63a053]"
+            className="bg-gray-100 placeholder:text-[1rem] text-[1rem] dark:bg-neutral-700 border-0 text-sm placeholder:text-gray-400 focus-visible:ring-1 focus-visible:ring-[#63a053]"
           />
         </Filter>
       </div>
@@ -81,7 +84,10 @@ function Filter({
 }) {
   return (
     <div className="flex flex-col gap-1">
-      <label className="text-sm text-gray-700 dark:text-gray-300">
+      <label
+        className="text-gray-700 dark:text-gray-300"
+        style={{ fontSize: "1rem" }}
+      >
         {label}
       </label>
       {children}

@@ -175,7 +175,7 @@ export default function DashboardLayout({
         </main>
 
         {/* Right Sidebar */}
-        <div className="hidden lg:block flex-none min-w-[14vw] mt-19 mr-10 max-h-[35vh]">
+        <div className="hidden lg:block flex-none min-w-[14vw] mt-19 mr-10 max-h-[30vh]">
           <RightSidebar />
         </div>
       </main>

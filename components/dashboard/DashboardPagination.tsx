@@ -26,7 +26,7 @@ export default function DashboardPagination({
           />
         </svg>
       </button>
-      <span className="font-sans text-xs font-medium text-[#5D5959]">
+      <span className="font-sans text-[1rem] font-medium text-[#5D5959]">
         {page}-{total}
       </span>
       <button onClick={() => onChange(page + 1)} disabled={page === total}>
