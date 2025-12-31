@@ -427,7 +427,7 @@ const ProjectDetails = () => {
                   </span>
                 </h3>
                 <span className="text-sm font-semibold text-gray-700 dark:text-white">
-                  {project.parent_name || ""}
+                  {project.parent_name ? "Mineur" : ""}
                 </span>
               </div>
             </div>
