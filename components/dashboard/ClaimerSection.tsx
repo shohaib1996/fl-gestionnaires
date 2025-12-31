@@ -1,9 +1,6 @@
 "use client";
 
 import { Claimer, rejectClaim } from "@/app/actions/projects/projects.action";
-import { useUser } from "@/providers/UserProvider";
-import { toast } from "sonner";
-import { useTransition, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -13,6 +10,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { useUser } from "@/providers/UserProvider";
+import Image from "next/image";
+import { useState, useTransition } from "react";
+import { toast } from "sonner";
 
 export default function ClaimerSection({
   claimer,
@@ -71,46 +72,53 @@ export default function ClaimerSection({
         </DialogContent>
       </Dialog>
 
-      <section className="mt-6 pb-10 bg-card">
-        <div className="bg-[#63a053]/25 p-4 mb-6">
-          <div className="px-6 flex justify-between items-center">
-            <h3 className="text-lg font-semibold text-gray-800 dark:text-white">
-              Claimer
-            </h3>
-            {claimer && user?.role === "super_admin" && (
-              <Button
-                onClick={() => setShowDialog(true)}
-                disabled={isPending}
-                variant="destructive"
-                size="sm"
-              >
-                Reject Claim
-              </Button>
-            )}
-          </div>
-        </div>
+      <section className="mt-1 ">
+        <div
+          className="
+       flex items-center justify-between gap-4 bg-white border rounded
+    dark:bg-[#0D1514] dark:border-[#1F2A27] px-11 py-[18px]
+     cursor-pointer 
+      "
+        >
+          {/* LEFT SIDE: Avatar + Info */}
+          <div className="flex items-center gap-4 min-w-0">
+            {/* Avatar */}
+            <div className="relative p-1 rounded-full shrink-0">
+              <div className="w-12 h-12 rounded-full border-4 border-[#A9C5A1] dark:border-[#4F6D47] overflow-hidden">
+                <Image
+                  src={claimer.avatarURL || "/images/manager.png"}
+                  alt={claimer.fullName}
+                  width={48}
+                  height={48}
+                  className="rounded-full object-cover"
+                />
+              </div>
+            </div>
 
-      <div className="px-11">
-        {!claimer ? (
-          <p className="text-sm text-gray-500 dark:text-gray-300">
-            Aucun utilisateur n’a encore réclamé ce projet.
-          </p>
-        ) : (
-          <div className="flex items-center justify-between bg-white dark:bg-neutral-800 border border-border rounded-xs px-4 py-3">
-            {/* Claimer info */}
-            <div className="space-y-1">
-              <p className="font-medium text-gray-800 dark:text-white">
-                {claimer.fullName || "Unnamed User"}
-              </p>
+            {/* Name / Role / City inline */}
+            <div className="flex items-center gap-3 text-sm text-gray-700 dark:text-gray-200 flex-wrap">
+              <span className="font-semibold whitespace-nowrap">
+                {claimer.fullName}
+              </span>
 
-              <p className="text-sm text-gray-500 dark:text-gray-400">
-                {claimer.email}
-              </p>
+              <span className="text-gray-400 dark:text-gray-500">|</span>
+
+              <span className="whitespace-nowrap">{claimer.email}</span>
             </div>
           </div>
-        )}
-      </div>
-    </section>
+
+          {/* RIGHT SIDE: Actions */}
+          <div className="flex items-center gap-3">
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={() => setShowDialog(true)}
+            >
+              Reject
+            </Button>
+          </div>
+        </div>
+      </section>
     </>
   );
 }

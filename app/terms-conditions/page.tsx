@@ -1,12 +1,11 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Menu, Search } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { Search } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu } from "lucide-react";
 
 import Footer from "@/components/Footer";
 
@@ -22,7 +21,6 @@ const TermsConditions = () => {
                 alt="FL Logo"
                 width={125}
                 height={100}
-                className="rounded-full w-20 h-auto md:w-28 lg:w-[125px]"
               />
             </Link>
 

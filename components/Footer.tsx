@@ -12,8 +12,8 @@ const Footer = () => {
           <div className="relative w-24 h-24 md:w-24 md:h-24">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="250"
-              height="250"
+              width="146"
+              height="142"
               viewBox="0 0 367 361"
               fill="none"
               className="absolute -bottom-6 right-1/2 translate-x-1/2 w-52 h-52 md:static md:bottom-auto md:right-auto md:translate-x-0 md:w-auto md:h-auto"

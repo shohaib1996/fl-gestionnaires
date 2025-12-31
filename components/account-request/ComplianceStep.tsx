@@ -1,9 +1,10 @@
-import React, { useRef, useEffect } from "react";
-import SignatureCanvas from "react-signature-canvas";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import Link from "next/link";
+import React, { useEffect, useRef } from "react";
+import SignatureCanvas from "react-signature-canvas";
 import { AccountRequestFormData } from "./types";
 
 interface ComplianceStepProps {
@@ -56,9 +57,9 @@ export const ComplianceStep: React.FC<ComplianceStepProps> = ({
               Politique de confidentialité
             </a>{" "}
             et nos{" "}
-            <a href="#" className="underline">
+            <Link href="/terms-conditions" className="underline">
               Terme et conditions
-            </a>
+            </Link>
           </p>
         </div>
 

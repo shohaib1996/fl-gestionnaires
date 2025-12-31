@@ -337,7 +337,7 @@ const ProjectDetails = () => {
         <div className="flex justify-between items-start mb-6 px-6">
           <div>
             <p className="text-sm text-gray-700 dark:text-gray-300">
-              <span className="inline-block w-2 h-2 rounded-full bg-green-500 mr-2"></span>
+              <span className="inline-block w-2 h-2 rounded-full bg-[#a2cf96] mr-2"></span>
               <strong>Goal:</strong>{" "}
               {activeMilestone?.description
                 ? truncateDescription(activeMilestone.description)

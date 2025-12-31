@@ -75,7 +75,7 @@ export default function DashboardLayout({
             <Input
               type="text"
               placeholder="Candidat, contact, activité, étiquette...ect"
-              className="pl-9 bg-gray-100 border-0 text-sm text-[#A4A4A4] placeholder:text-gray-500 focus-visible:ring-1 focus-visible:ring-[#63a053]"
+              className="pl-9 h-[37px] bg-gray-100 border-0 text-sm text-[#A4A4A4] placeholder:text-gray-500 focus-visible:ring-1 focus-visible:ring-[#63a053]"
             />
           </div>
 
@@ -168,7 +168,7 @@ export default function DashboardLayout({
         </div>
 
         {/* Middle Section (Main Content) */}
-        <main className="flex-1 flex flex-col lg:max-w-[70vw] overflow-hidden lg:px-4.5">
+        <main className="flex-1 flex flex-col lg:max-w-[70vw] overflow-hidden ps-5 pe-4">
           <div className="flex-1 overflow-y-auto hide-scrollbar">
             {children}
           </div>

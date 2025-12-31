@@ -147,7 +147,7 @@ const ProjectDetails = () => {
       <div className="flex flex-col gap-2 h-full items-center justify-center text-gray-600 dark:text-gray-300">
         <p>Project not found</p>
         <p className="text-sm text-red-500">{errorMsg}</p>
-        <p className="text-xs text-gray-400">ID: {id}</p>
+        <p className="text-xs text-gray-400">{id}</p>
       </div>
     );
   }
@@ -238,7 +238,7 @@ const ProjectDetails = () => {
 
   return (
     // make this a column so header stays fixed and the content below scrolls
-    <div className="h-[calc(100vh-120px)] flex flex-col">
+    <div className="h-[calc(100vh-120px)] flex flex-col font-sans">
       {/* Header Tabs - keep styles but prevent it from shrinking/scrolling */}
       <header className="flex items-center gap-0.5 py-0 shrink-0">
         {/* Back Button */}
@@ -272,211 +272,233 @@ const ProjectDetails = () => {
       </header>
 
       {/* Make THIS container the scroller (fills remaining height) */}
-      <div className="flex-1 bg-background rounded-xs border-0.5 border-black/20 overflow-y-auto hide-scrollbar">
-        {/* Project Header */}
-        <section className="bg-white dark:bg-neutral-800 rounded-xs ">
-          <div className="flex items-center justify-between py-4 px-11 bg-[#63a053]/25">
-            <h2
-              onClick={handleRedirect}
-              className="text-2xl text-[#7F7E83] font-bold dark:text-white relative inline-block after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-0.5 after:bg-[#326EA6] after:transition-all after:duration-300 hover:after:w-full cursor-pointer"
-            >
-              {project.title}
-            </h2>
-            <span className="text-sm font-medium text-gray-600 dark:text-gray-300 flex items-center gap-7">
-              ID: {project.project_id}
-              {project.status === "in_progress" && (
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <button className="hover:bg-gray-100 dark:hover:bg-neutral-700 rounded-full p-1 transition-colors">
-                      <Ellipsis className="h-5 w-5" />
-                    </button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-56">
-                    <DropdownMenuItem
-                      onClick={handleSendEmail}
-                      className="flex gap-2 cursor-pointer"
-                    >
-                      <Mail className="h-4 w-4" />
-                      Envoyer demande / approuver
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              )}
-              {actions?.length > 0 && (
-                <ProjectActionsMenu
-                  actions={actions}
-                  onClaim={handleClaim}
-                  onApprove={handleApprove}
-                  onDecline={handleDecline}
-                  onReserve={handleReserve}
-                  onAssign={handleAssign}
-                  projectStatus={project.status}
-                />
-              )}
-            </span>
-          </div>
-          <div className="px-11 py-5 space-y-6">
-            {/* Category + Phase in grid */}
-            <div className="grid grid-cols-3 gap-6">
-              <div className="col-span-2">
-                <label className="block mb-1">
-                  <span className="bg-[#F2F6F8] dark:bg-neutral-700 text-sm py-3 px-3 text-gray-500 dark:text-white">
-                    Catégorie qui décrit le mieux le projet ou produit
-                  </span>
-                </label>
-                <p className="px-3 py-2 rounded text-sm">
-                  {project.categories?.join(", ") || "Non spécifié"}
-                </p>
-              </div>
-
-              <div className="col-start-4">
-                <label className="block mb-1">
-                  <span className="text-sm bg-[#F2F6F8] dark:bg-neutral-700 py-3 px-3 text-gray-500 dark:text-white">
-                    Phase actuelle du projet
-                  </span>
-                </label>
-                <p className="px-3 py-2 rounded text-sm">
-                  {project.phase || "Non spécifié"}
-                </p>
-              </div>
-            </div>
-
-            {/* Full-width description */}
-            <div>
-              <label className="block text-xs bg-[#F2F6F8] dark:bg-neutral-700 py-3 px-3 text-gray-500 dark:text-white mb-3">
-                Description non confidentielle du projet ou produit
-              </label>
-              <p className="bg-[#FFFFFB] dark:bg-[#262626] px-3 py-3 rounded text-sm leading-relaxed border-b">
-                {project.description || "Aucune description disponible"}
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* Image Gallery */}
-        {project.logo_urls && project.logo_urls.length > 0 && (
-          <ImageGallery images={project.logo_urls} />
-        )}
-
-        {/* Entrepreneur Info */}
-        <section className=" mt-6 pb-10 bg-card">
-          <div className="bg-[#63a053]/25 p-4 mb-6">
-            <div className="px-6 flex justify-between items-center">
-              <h3 className="text-lg font-semibold text-gray-800 dark:text-white">
-                Entrepreneur{" "}
-                <span className="font-normal ">
-                  {project.first_name} {project.last_name}
-                </span>
-              </h3>
-              <span className="text-sm font-semibold text-gray-700 dark:text-white">
-                {project.status}
+      <div className="flex-1 rounded-xs border-0.5 border-black/20 overflow-y-auto hide-scrollbar">
+        <div className="bg-white">
+          {/* Project Header */}
+          <section className="bg-white dark:bg-neutral-800 rounded-xs ">
+            <div className="flex items-center justify-between py-4 px-11 bg-[#D8E7D4] hover:bg-[#63A053] transition group">
+              <h2
+                onClick={handleRedirect}
+                className="text-xl text-[#7F7E83] group-hover:text-white font-bold dark:text-white relative inline-block after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-0.5 after:bg-[#326EA6] after:transition-all after:duration-300 hover:after:w-full cursor-pointer font-sans"
+              >
+                {project.title}
+              </h2>
+              <span className="text-sm font-medium text-[#7F7E83] group-hover:text-white dark:text-gray-300 flex items-center gap-7">
+                {project.project_id}
+                {project.status === "in_progress" && (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <button className="hover:bg-gray-100 hover:text-black dark:hover:bg-neutral-700 rounded-full p-1 transition-colors">
+                        <Ellipsis className="h-5 w-5" />
+                      </button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-56">
+                      <DropdownMenuItem
+                        onClick={handleSendEmail}
+                        className="flex gap-2 cursor-pointer focus:bg-[#E0EFFF] focus:text-[#2085F4] group rounded-xs"
+                      >
+                        <Mail className="h-4 w-4 group-focus:text-[#2085F4]" />
+                        Prendre
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                )}
+                {actions?.length > 0 && (
+                  <ProjectActionsMenu
+                    actions={actions}
+                    onClaim={handleClaim}
+                    onApprove={handleApprove}
+                    onDecline={handleDecline}
+                    onReserve={handleReserve}
+                    onAssign={handleAssign}
+                    projectStatus={project.status}
+                  />
+                )}
               </span>
             </div>
-          </div>
+            <div className="px-11 py-5 space-y-6">
+              {/* Category + Phase in grid */}
+              <div className="grid grid-cols-3 gap-6">
+                <div className="col-span-2">
+                  <label className="block mb-1">
+                    <span className="bg-[#F2F6F8] dark:bg-neutral-700 text-[11px] py-3 px-3 text-[#7F7E83] font-regular font-sans dark:text-white">
+                      Catégorie qui décrit le mieux le projet ou produit
+                    </span>
+                  </label>
+                  <p className="px-3 py-2 rounded text-[11px] font-medium text-[#343E47] font-sans">
+                    {project.categories?.join(", ") || ""}
+                  </p>
+                </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-12 text-sm px-11">
-            <div>
-              <label className="block text-gray-500 mb-1 bg-gray-500/20 dark:bg-gray-800/20">
-                Tuteur légal
-              </label>
-              <p>{project.parent_name || "Non spécifié"}</p>
-            </div>
+                <div className="col-start-4">
+                  <label className="block mb-1">
+                    <span className="text-[11px] py-3 px-3 text-[#7F7E83] font-regular font-sans bg-[#F2F6F8] dark:bg-neutral-700 dark:text-white">
+                      Phase actuelle du projet
+                    </span>
+                  </label>
+                  <p className="px-3 py-2 rounded text-[11px] font-medium text-[#343E47] font-sans">
+                    {project.phase || ""}
+                  </p>
+                </div>
+              </div>
 
-            <div>
-              <label className="block text-gray-500 mb-1 bg-gray-500/20 dark:bg-gray-800/20">
-                Collaborateurs
-              </label>
+              {/* Full-width description */}
               <div>
-                {project.collaborators &&
-                typeof project.collaborators === "string" ? (
-                  (() => {
-                    try {
-                      const collabs = JSON.parse(project.collaborators);
-                      if (Array.isArray(collabs) && collabs.length > 0) {
-                        return collabs.map((collab: any, idx: number) => (
-                          <p key={idx} className="mb-1">
-                            {collab.firstName} {collab.lastName} ({collab.email}
-                            )
-                          </p>
-                        ));
+                <label className="block  bg-[#F2F6F8] dark:bg-neutral-700  text-[11px] py-3 px-3 text-[#7F7E83] font-regular font-sans dark:text-white mb-3">
+                  Description non confidentielle du projet ou produit
+                </label>
+                <p className="bg-[#FFFFFB] dark:bg-[#262626] px-3 py-3 rounded text-[11px] font-medium text-[#343E47] font-sans leading-relaxed border-b">
+                  {project.description || "Aucune description disponible"}
+                </p>
+              </div>
+            </div>
+          </section>
+
+          {/* Image Gallery */}
+          {project.logo_urls && project.logo_urls.length > 0 && (
+            <ImageGallery images={project.logo_urls} />
+          )}
+
+          {/* Entrepreneur Info */}
+          <section className=" mt-6 pb-10 bg-card">
+            <div className="bg-[#63a053]/25 p-4 mb-6">
+              <div className="px-6 flex justify-between items-center">
+                <h3 className="text-xs font-regular font-sans text-[#7F7E83] dark:text-white flex gap-3.5 items-center">
+                  Entrepreneur{" "}
+                  <span className="font-bold text-xl">
+                    {project.first_name} {project.last_name}
+                  </span>
+                </h3>
+                <span className="text-sm font-semibold text-gray-700 dark:text-white">
+                  {project.status}
+                </span>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-12 text-sm px-11">
+              <div>
+                <label className="block text-[#7F7E83] text-[11px] font-sand font-regular mb-1 bg-[#F2F6F8] dark:bg-gray-800/20 p-1.5">
+                  Tuteur légal
+                </label>
+                <p className="font-medium text-[11px] font-sans p-1.5">
+                  {project.parent_name || ""}
+                </p>
+              </div>
+
+              <div>
+                <label className="block text-[#7F7E83] text-[11px] font-sand font-regular mb-1 bg-[#F2F6F8] dark:bg-gray-800/20 p-1.5">
+                  Collaborateurs
+                </label>
+                <div>
+                  {project.collaborators &&
+                  typeof project.collaborators === "string" ? (
+                    (() => {
+                      try {
+                        const collabs = JSON.parse(project.collaborators);
+                        if (Array.isArray(collabs) && collabs.length > 0) {
+                          return collabs.map((collab: any, idx: number) => (
+                            <p
+                              key={idx}
+                              className="mb-1 font-medium text-[11px] font-sans p-1.5"
+                            >
+                              {collab.firstName} {collab.lastName} (
+                              {collab.email})
+                            </p>
+                          ));
+                        }
+                        return <p></p>;
+                      } catch {
+                        return <p></p>;
                       }
-                      return <p>Aucun</p>;
-                    } catch {
-                      return <p>Aucun</p>;
-                    }
-                  })()
-                ) : Array.isArray(project.collaborators) &&
-                  project.collaborators.length > 0 ? (
-                  project.collaborators.map((collab: any, idx: number) => (
-                    <p key={idx} className="mb-1">
-                      {collab.firstName} {collab.lastName} ({collab.email})
-                    </p>
-                  ))
-                ) : (
-                  <p>Aucun</p>
-                )}
+                    })()
+                  ) : Array.isArray(project.collaborators) &&
+                    project.collaborators.length > 0 ? (
+                    project.collaborators.map((collab: any, idx: number) => (
+                      <p
+                        key={idx}
+                        className="mb-1 font-medium text-[11px] font-sans p-1.5"
+                      >
+                        {collab.firstName} {collab.lastName} ({collab.email})
+                      </p>
+                    ))
+                  ) : (
+                    <p></p>
+                  )}
+                </div>
+              </div>
+
+              <div></div>
+
+              <div>
+                <label className="block text-[#7F7E83] text-[11px] font-sand font-regular mb-1 bg-[#F2F6F8] dark:bg-gray-800/20 p-1.5">
+                  Ville ou village de résidence
+                </label>
+                <p className="font-medium text-[11px] font-sans p-1.5">
+                  {project.residence_city || ""}
+                </p>
+              </div>
+
+              <div>
+                <label className="block text-[#7F7E83] text-[11px] font-sand font-regular mb-1 bg-[#F2F6F8] dark:bg-gray-800/20 p-1.5">
+                  Ville / village où se situe le projet
+                </label>
+                <p className="font-medium text-[11px] font-sans p-1.5">
+                  {project.project_city || ""}
+                </p>
+              </div>
+
+              <div>
+                <label className="block text-[#7F7E83] text-[11px] font-sand font-regular mb-1 bg-[#F2F6F8] dark:bg-gray-800/20 p-1.5">
+                  Province
+                </label>
+                <p className="font-medium text-[11px] font-sans p-1.5">
+                  {project.province || ""}
+                </p>
+              </div>
+
+              <div>
+                <label className="block text-[#7F7E83] text-[11px] font-sand font-regular mb-1 bg-[#F2F6F8] dark:bg-gray-800/20 p-1.5">
+                  Téléphone
+                </label>
+                <p className="font-medium text-[11px] font-sans p-1.5">
+                  {project.phone || ""}
+                </p>
+              </div>
+
+              <div>
+                <label className="block text-[#7F7E83] text-[11px] font-sand font-regular mb-1 bg-[#F2F6F8] dark:bg-gray-800/20 p-1.5">
+                  Email
+                </label>
+                <p className="font-medium text-[11px] font-sans p-1.5">
+                  {project.email || ""}
+                </p>
+              </div>
+
+              <div>
+                <label className="block text-[#7F7E83] text-[11px] font-sand font-regular mb-1 bg-[#F2F6F8] dark:bg-gray-800/20 p-1.5">
+                  Liens
+                </label>
+                <div className="flex gap-4 mt-1">
+                  {project.links && project.links.length > 0 ? (
+                    project.links.map((link, index) => (
+                      <a
+                        key={index}
+                        href={link}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-blue-600 hover:underline p-1.5"
+                      >
+                        {link}
+                      </a>
+                    ))
+                  ) : (
+                    <p className="text-[#7F7E83]">Aucun lien disponible</p>
+                  )}
+                </div>
               </div>
             </div>
-
-            <div>
-              <label className="block text-gray-500 mb-1 bg-gray-500/20 dark:bg-gray-800/20">
-                Ville ou village de résidence
-              </label>
-              <p>{project.residence_city || "Non spécifié"}</p>
-            </div>
-
-            <div>
-              <label className="block text-gray-500 mb-1 bg-gray-500/20 dark:bg-gray-800/20">
-                Ville / village où se situe le projet
-              </label>
-              <p>{project.project_city || "Non spécifié"}</p>
-            </div>
-
-            <div>
-              <label className="block text-gray-500 mb-1 bg-gray-500/20 dark:bg-gray-800/20">
-                Province
-              </label>
-              <p>{project.province || "Non spécifié"}</p>
-            </div>
-
-            <div>
-              <label className="block text-gray-500 mb-1 bg-gray-500/20 dark:bg-gray-800/20">
-                Téléphone
-              </label>
-              <p>{project.phone || "Non spécifié"}</p>
-            </div>
-
-            <div>
-              <label className="block text-gray-500 mb-1 bg-gray-500/20 dark:bg-gray-800/20">
-                Email
-              </label>
-              <p>{project.email || "Non spécifié"}</p>
-            </div>
-
-            <div>
-              <label className="block text-gray-500 mb-1 bg-gray-500/20 dark:bg-gray-800/20">
-                Liens
-              </label>
-              <div className="flex gap-4 mt-1">
-                {project.links && project.links.length > 0 ? (
-                  project.links.map((link, index) => (
-                    <a
-                      key={index}
-                      href={link}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-blue-600 hover:underline"
-                    >
-                      {link}
-                    </a>
-                  ))
-                ) : (
-                  <p className="text-gray-500">Aucun lien disponible</p>
-                )}
-              </div>
-            </div>
-          </div>
-        </section>
+          </section>
+        </div>
 
         {/* ===== Claimers ===== */}
         {user.role === "super_admin" && project.claimer && (

@@ -47,7 +47,7 @@ export function MilestoneTabs({
       >
         <span
           onClick={() => onChange(m)}
-          className="bg-[#A2CF96] p-2.5 border-r text-white cursor-pointer"
+          className="bg-[#A2CF96] py-1.5 px-[5px] text-white cursor-pointer"
         >
           {ind + 1}.
         </span>
@@ -60,7 +60,7 @@ export function MilestoneTabs({
               onChange(m);
             }
           }}
-          className="px-2.5 py-2 text-white capitalize cursor-pointer"
+          className="py-1.5 px-2 text-white capitalize cursor-pointer"
         >
           {m.title}
         </span>

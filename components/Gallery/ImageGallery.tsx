@@ -1,7 +1,7 @@
 "use client";
-import { useState } from "react";
-import Image from "next/image";
 import { Eye } from "lucide-react";
+import Image from "next/image";
+import { useState } from "react";
 import { Button } from "../ui/button";
 
 export default function ImageGallery({ images }: { images: string[] }) {
@@ -11,7 +11,7 @@ export default function ImageGallery({ images }: { images: string[] }) {
     <>
       {/* Image Section */}
       <section className="bg-white dark:bg-neutral-800 px-11 py-6">
-        <h3 className="text-sm font-medium text-gray-700 dark:text-gray-200 mb-4">
+        <h3 className="text-[11px] py-3 px-3 text-[#7F7E83] font-regular font-sans dark:text-gray-200 mb-4">
           Images
         </h3>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-3">

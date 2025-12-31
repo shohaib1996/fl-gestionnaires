@@ -1,5 +1,5 @@
-import React from "react";
 import { cn } from "@/lib/utils";
+import React from "react";
 
 interface StepperProps {
   currentStep: number;
@@ -7,7 +7,7 @@ interface StepperProps {
 
 const steps = [
   "Informations personnelles",
-  "Nom et catégorie de votre projet",
+  " Nom et catégorie",
   "Description de votre projet",
   "Signature",
   "Vérification",

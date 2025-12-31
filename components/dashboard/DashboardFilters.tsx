@@ -1,9 +1,9 @@
-import { Input } from "@/components/ui/input";
-import { SearchableDropdown } from "@/components/ui/searchable-dropdown";
-import { MultiSelectDropdown } from "@/components/ui/multi-select-dropdown";
 import { DatePicker } from "@/components/ui/date-picker";
-import { PROVINCE_OPTIONS } from "@/lib/location-data";
+import { Input } from "@/components/ui/input";
+import { MultiSelectDropdown } from "@/components/ui/multi-select-dropdown";
+import { SearchableDropdown } from "@/components/ui/searchable-dropdown";
 import { CATEGORY_OPTIONS } from "@/lib/categories-data";
+import { PROVINCE_OPTIONS } from "@/lib/location-data";
 import type { DashboardFilters } from "@/types/dashboard";
 
 interface Props {
@@ -17,7 +17,7 @@ export default function DashboardFilters({ values, onChange }: Props) {
   };
 
   return (
-    <div className="bg-white dark:bg-neutral-800 px-12 py-5 shadow-sm mb-3">
+    <div className="bg-white dark:bg-neutral-800 px-12 py-5 shadow-sm mb-[18px]">
       <p className="text-sm font-medium text-gray-700 dark:text-gray-200 mb-4">
         Filtrer par :
       </p>

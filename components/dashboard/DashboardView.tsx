@@ -33,7 +33,7 @@ export default function DashboardView({
     <>
       {/* Desktop */}
       <div className="block">
-        <div className="flex flex-col max-h-[71vh]">
+        <div className="flex flex-col ">
           {/* Tabs */}
 
           <DashboardTabs
@@ -59,7 +59,7 @@ export default function DashboardView({
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                  <div className="grid gap-x-1.5 gap-y-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                     {projects.map((project) => {
                       const headerStyle = getHeaderStyles(project);
 
@@ -83,7 +83,7 @@ export default function DashboardView({
                                     : "none",
                               }}
                             >
-                              <h4 className="font-semibold text-gray-800 dark:text-gray-100 text-xl">
+                              <h4 className="font-semibold text-[#454B53] dark:text-gray-100 text-xs font-sans">
                                 {project.title ?? "Untitled Project"}
                               </h4>
 
@@ -97,8 +97,8 @@ export default function DashboardView({
                             </div>
 
                             {/* Body */}
-                            <div className="p-4 text-md text-gray-700 dark:text-gray-300">
-                              <p className="text-sm text-gray-500 mb-1">
+                            <div className="p-4 text-[11px] text-black dark:text-gray-300">
+                              <p className="mb-1">
                                 Reçu :{" "}
                                 {new Date(
                                   project.created_at

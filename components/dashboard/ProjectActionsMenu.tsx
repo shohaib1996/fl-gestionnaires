@@ -16,13 +16,21 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { CheckCircle, Ellipsis, Send, ShieldCheck, XCircle, Archive, UserPlus } from "lucide-react";
-import { useState, useEffect } from "react";
+import {
+  Archive,
+  CheckCircle,
+  Ellipsis,
+  Send,
+  ShieldCheck,
+  UserPlus,
+  XCircle,
+} from "lucide-react";
+import { useEffect, useState } from "react";
 
+import { AdminUser, getAdmins } from "@/app/actions/users/getAdmins";
+import { AdminSelect } from "@/components/ui/admin-select";
 import { ProjectAction } from "@/lib/project/getProjectActions";
 import { ProjectStatus } from "@/types/status";
-import { AdminSelect } from "@/components/ui/admin-select";
-import { AdminUser, getAdmins } from "@/app/actions/users/getAdmins";
 
 interface ProjectActionsMenuProps {
   onInvite?: () => void;
@@ -87,9 +95,9 @@ export default function ProjectActionsMenu({
           {actions.includes("invite") && (
             <DropdownMenuItem
               onClick={() => setDialog("invite")}
-              className="flex gap-2"
+              className="flex gap-2 focus:bg-[#E0EFFF] group focus:text-[#2085F4] rounded-xs"
             >
-              <Send className="h-4 w-4" />
+              <Send className="h-4 w-4 group-focus:text-[#2085F4]" />
               Envoyer une invitation
             </DropdownMenuItem>
           )}
@@ -97,20 +105,20 @@ export default function ProjectActionsMenu({
           {actions.includes("claim") && (
             <DropdownMenuItem
               onClick={() => setDialog("claim")}
-              className="flex gap-2"
+              className="flex gap-2 focus:bg-[#E0EFFF] focus:text-[#2085F4] rounded-xs group"
             >
-              <ShieldCheck className="h-4 w-4" />
-              Revendiquer
+              <ShieldCheck className="h-4 w-4 group-focus:text-[#2085F4]" />
+              Prendre
             </DropdownMenuItem>
           )}
 
           {actions.includes("approve") && (
             <DropdownMenuItem
               onClick={() => setDialog("approve")}
-              className="flex gap-2"
+              className="flex gap-2 group focus:bg-[#E0EFFF] focus:text-[#2085F4] rounded-xs"
               disabled={projectStatus !== "claimed"}
             >
-              <CheckCircle className="h-4 w-4" />
+              <CheckCircle className="h-4 w-4 group-focus:text-[#2085F4]" />
               Approuver
             </DropdownMenuItem>
           )}
@@ -118,30 +126,30 @@ export default function ProjectActionsMenu({
           {actions.includes("decline") && (
             <DropdownMenuItem
               onClick={() => setDialog("decline")}
-              className="flex gap-2"
+              className="flex gap-2 group focus:bg-[#E0EFFF] focus:text-[#2085F4] rounded-xs"
             >
-              <XCircle className="h-4 w-4" />
-              Declined
+              <XCircle className="h-4 w-4 group-focus:text-[#2085F4]" />
+              Retourner
             </DropdownMenuItem>
           )}
 
           {actions.includes("reserve") && (
             <DropdownMenuItem
               onClick={() => setDialog("reserve")}
-              className="flex gap-2"
+              className="flex gap-2 group focus:bg-[#E0EFFF] focus:text-[#2085F4] rounded-xs"
             >
-              <Archive className="h-4 w-4" />
-              Reserved
+              <Archive className="h-4 w-4 group-focus:text-[#2085F4]" />
+              Réserver
             </DropdownMenuItem>
           )}
 
           {actions.includes("assign") && (
             <DropdownMenuItem
               onClick={() => setDialog("assign")}
-              className="flex gap-2"
+              className="flex gap-2 group focus:bg-[#E0EFFF] focus:text-[#2085F4] rounded-xs"
             >
-              <UserPlus className="h-4 w-4" />
-              Assign to Admin
+              <UserPlus className="h-4 w-4 group-focus:text-[#2085F4]" />
+              Attribuer
             </DropdownMenuItem>
           )}
         </DropdownMenuContent>
@@ -160,10 +168,16 @@ export default function ProjectActionsMenu({
             </DialogTitle>
 
             <DialogDescription>
-              {dialog === "decline" && "This will mark the project as declined and it will appear in the Declined tab."}
-              {dialog === "reserve" && "This will mark the project as reserved and it will appear in the Reserved tab."}
-              {dialog === "assign" && "Select an admin to assign this project. The project status will be changed to 'in_progress' and the admin can start working immediately."}
-              {(dialog === "invite" || dialog === "claim" || dialog === "approve") && "Cette action nécessite une confirmation."}
+              {dialog === "decline" &&
+                "This will mark the project as declined and it will appear in the Declined tab."}
+              {dialog === "reserve" &&
+                "This will mark the project as reserved and it will appear in the Reserved tab."}
+              {dialog === "assign" &&
+                "Select an admin to assign this project. The project status will be changed to 'in_progress' and the admin can start working immediately."}
+              {(dialog === "invite" ||
+                dialog === "claim" ||
+                dialog === "approve") &&
+                "Cette action nécessite une confirmation."}
             </DialogDescription>
           </DialogHeader>
 
