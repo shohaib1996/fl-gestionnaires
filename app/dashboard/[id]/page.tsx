@@ -24,6 +24,7 @@ import { getProjectActions } from "@/lib/project/getProjectActions";
 import { useUser } from "@/providers/UserProvider";
 import { ProjectStatus } from "@/types/status";
 import { Ellipsis, Mail } from "lucide-react";
+import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -337,12 +338,13 @@ const ProjectDetails = () => {
               onClick={handleRedirect}
               className="flex items-center justify-between py-4 px-11 bg-[#D8E7D4] dark:bg-[#2A3926] hover:bg-[#63A053] dark:hover:bg-[#3d5235] transition group cursor-pointer"
             >
-              <h2
-                className="text-[1.5rem] text-[#7F7E83] group-hover:text-white font-bold dark:text-gray-200 relative inline-block after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-0.5 after:bg-[#326EA6] after:transition-all after:duration-300 hover:after:w-full cursor-pointer font-sans"
-              >
+              <h2 className="text-[1.5rem] text-[#7F7E83] group-hover:text-white font-bold dark:text-gray-200 relative inline-block after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-0.5 after:bg-[#326EA6] after:transition-all after:duration-300 hover:after:w-full cursor-pointer font-sans">
                 {project.title}
               </h2>
-              <span className="text-[1rem] font-medium text-[#7F7E83] group-hover:text-white dark:text-gray-300 flex items-center gap-7" onClick={(e) => e.stopPropagation()}>
+              <span
+                className="text-[1rem] font-medium text-[#7F7E83] group-hover:text-white dark:text-gray-300 flex items-center gap-7"
+                onClick={(e) => e.stopPropagation()}
+              >
                 {project.project_id}
                 {project.status === "in_progress" && (
                   <DropdownMenu>
@@ -537,18 +539,18 @@ const ProjectDetails = () => {
                 <label className="block text-[#7F7E83] text-[0.875rem] font-sand font-regular mb-1 bg-[#F2F6F8] dark:bg-gray-800/20 p-1.5">
                   Liens
                 </label>
-                <div className="flex gap-4 mt-1">
+                <div className="flex flex-col gap-0 mt-1">
                   {project.links && project.links.length > 0 ? (
                     project.links.map((link, index) => (
-                      <a
+                      <Link
                         key={index}
                         href={link}
                         target="_blank"
                         rel="noreferrer"
-                        className="text-blue-600 hover:underline p-1.5"
+                        className="text-blue-600 hover:underline p-1"
                       >
                         {link}
-                      </a>
+                      </Link>
                     ))
                   ) : (
                     <p className="text-[#7F7E83]">Aucun lien disponible</p>
