@@ -59,10 +59,10 @@ export default function PreviewRenderer({
 
     case "pdf":
       return (
-        <div className={`w-full ${height} overflow-hidden`}>
+        <div className={`w-full ${height} overflow-hidden flex items-center justify-center bg-gray-100 dark:bg-neutral-800 rounded`}>
           <iframe
-            src={`${url}#toolbar=0&navpanes=0&scrollbar=0`}
-            className="w-full h-[120%] scale-[0.9] origin-top border rounded"
+            src={`${url}#toolbar=0&navpanes=0&scrollbar=1&view=FitH`}
+            className="w-full h-full border-0"
           />
         </div>
       );

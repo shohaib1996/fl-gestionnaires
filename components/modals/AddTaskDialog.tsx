@@ -175,7 +175,7 @@ export default function AddTaskDialog({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Brève description"
-              className="mt-1 bg-gray-100 min-h-[100px] rounded-xs"
+              className="mt-1 bg-gray-100 h-[150px] max-h-[150px] resize-none overflow-y-auto rounded-xs"
             />
           </div>
 

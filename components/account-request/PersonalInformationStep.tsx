@@ -1,6 +1,14 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar1, ChevronDown } from "lucide-react";
+import { format } from "date-fns";
 import React from "react";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
@@ -65,13 +73,36 @@ export const PersonalInformationStep: React.FC<
           <label className="text-sm text-gray-600">
             4. Date de naissance <span className="text-red-500">*</span>
           </label>
-          <Input
-            type="date"
-            value={formData.birthDate}
-            onChange={(e) => updateFormData({ birthDate: e.target.value })}
-            placeholder="JJ/MM/AAAA"
-            className="bg-[#F0F6F4] border-b border-black/60 rounded-none border-t-0 border-x-0 h-12 text-base placeholder:text-gray-400 focus-visible:ring-0 focus-visible:border-black"
-          />
+          <Popover>
+            <PopoverTrigger asChild>
+              <button className="w-full flex items-center justify-between bg-[#F0F6F4] border-b border-black/60 rounded-none border-t-0 border-x-0 h-12 px-3 text-base text-gray-600">
+                <div className="flex items-center gap-3">
+                  <Calendar1 className="w-4 h-4 text-gray-500" />
+                  <span className={formData.birthDate ? "text-black" : "text-gray-400"}>
+                    {formData.birthDate
+                      ? format(new Date(formData.birthDate), "dd/MM/yyyy")
+                      : "JJ/MM/AAAA"}
+                  </span>
+                </div>
+                <ChevronDown className="w-4 h-4 text-gray-500" />
+              </button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+              <Calendar
+                mode="single"
+                selected={formData.birthDate ? new Date(formData.birthDate) : undefined}
+                onSelect={(date) =>
+                  updateFormData({
+                    birthDate: date ? format(date, "yyyy-MM-dd") : "",
+                  })
+                }
+                disabled={(date) => date > new Date() || date < new Date("1900-01-01")}
+                captionLayout="dropdown"
+                startMonth={new Date(1900, 0)}
+                endMonth={new Date()}
+              />
+            </PopoverContent>
+          </Popover>
         </div>
 
         <div className="space-y-2">
