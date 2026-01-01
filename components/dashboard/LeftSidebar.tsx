@@ -131,7 +131,7 @@ export default function LeftSidebar() {
               key={e.id}
               className="pb-3 border-b border-gray-200 dark:border-neutral-700"
             >
-              <p className="text-[1rem] font-sans font-medium text-[#343E47]">
+              <p className="text-[1rem] font-sans font-medium text-[#343E47] dark:text-gray-200">
                 {format(new Date(e.start_date), "dd MMM yyyy", { locale: fr })}
               </p>
 
