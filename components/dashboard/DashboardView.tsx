@@ -64,7 +64,7 @@ export default function DashboardView({
                   <div className="grid gap-x-1.5 gap-y-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                     {projects.map((project) => (
                       <Link href={`/dashboard/${project.id}`} key={project.id}>
-                        <article className="bg-white dark:bg-neutral-800 shadow-sm dark:shadow-neutral-700/30 flex flex-col rounded-sm border-2 border-gray-200 dark:border-neutral-700 hover:border-[#63A053] dark:hover:border-[#7CB86D] hover:scale-[0.97] transition-all duration-300 min-h-[29vh]">
+                        <article className="bg-white dark:bg-neutral-800 shadow-sm dark:shadow-neutral-700/30 flex flex-col rounded-sm border-2 border-gray-200 dark:border-neutral-700 hover:border-[#63A053] dark:hover:border-[#7CB86D] hover:scale-[0.97] transition-all duration-300 min-h-[28vh]">
                           {/* Header */}
                           <div
                             className={`px-4 py-2 flex justify-between items-center ${
@@ -100,7 +100,7 @@ export default function DashboardView({
                             </p>
                             <p className="text-gray-800 dark:text-gray-300">
                               {project.description
-                                ? project.description.slice(0, 200) + "..."
+                                ? project.description.slice(0, 190) + "..."
                                 : "No description available"}
                             </p>
                           </div>

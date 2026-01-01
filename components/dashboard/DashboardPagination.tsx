@@ -8,7 +8,7 @@ export default function DashboardPagination({
   total: number;
 }) {
   return (
-    <div className="flex justify-center items-center gap-2.5 text-sm mt-5 text-gray-500">
+    <div className="flex justify-center items-center gap-2.5 text-sm mt-0 text-gray-500">
       <button
         onClick={() => onChange(Math.max(1, page - 1))}
         disabled={page === 1}

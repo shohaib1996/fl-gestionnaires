@@ -29,39 +29,40 @@ export default function DashboardLayout({
   return (
     <div className="h-screen w-screen flex flex-col bg-background text-gray-800 dark:bgbackround dark:text-gray-100 overflow-hidden">
       {/* Header */}
-      <header className="hidden lg:flex items-center justify-between border-b bg-white px-6 py-3 shadow-sm dark:bg-neutral-800 shrink-0">
+      <header className="hidden lg:flex items-center h-28 justify-between border-b bg-white px-6 py-3 shadow-sm dark:bg-neutral-800 shrink-0">
         <div className="flex items-center gap-3">
           <Link href={`/dashboard`}>
             <div className="flex items-center gap-3">
               <Image
                 src="/images/Logo FL.png"
                 alt="FL Logo"
-                width={72}
-                height={70}
+                width={90}
+                height={90}
                 quality={100}
                 className="rounded-full"
               />
-              <h1 className="text-lg md:text-xl font-bold text-[#63a053]">
+              <h1 className="text-lg md:text-[1.5rem] font-bold text-[#63a053]">
                 Gestionnaires
               </h1>
             </div>
           </Link>
           <div className="h-10 w-[0.3px] bg-[#000000] mx-2" />
-          <div className="relative w-[37px] h-[37px] rounded-full overflow-hidden">
+          <div className="relative w-[65px] h-[65px] rounded-full overflow-hidden">
             <Image
               src="/images/Photo ID.png"
               alt="User photo"
-              fill
+              width={65}
+              height={65}
               className="object-cover"
-              sizes="37px"
+              sizes="65px"
             />
           </div>
           {user && (
             <div className="flex flex-col">
-              <span className="text-sm font-medium leading-none">
+              <span className="text-[1.125rem] font-medium leading-none">
                 {user?.fullName || ""}
               </span>
-              <span className="text-xs leading-none text-muted-foreground">
+              <span className="text-[1rem] leading-none text-muted-foreground">
                 {user.email}
               </span>
             </div>
@@ -75,7 +76,7 @@ export default function DashboardLayout({
             <Input
               type="text"
               placeholder="Candidat, contact, activité, étiquette...ect"
-              className="pl-9 h-[37px] bg-gray-100 border-0 text-sm text-[#A4A4A4] placeholder:text-gray-500 focus-visible:ring-1 focus-visible:ring-[#63a053]"
+              className="pl-9 h-10 bg-gray-100 border-0 text-sm text-[#A4A4A4] placeholder:text-gray-500 focus-visible:ring-1 focus-visible:ring-[#63a053]"
             />
           </div>
 
