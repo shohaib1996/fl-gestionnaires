@@ -4,6 +4,7 @@ import PreviewRenderer, { getPreviewKind } from "./PreviewRenderer";
 
 interface Props {
   previewURL: string | null;
+  fileFormat: string | null;
   handleDownload: (url: string, filename?: string) => void;
   handlePrint: (url: string, type: string) => void;
   setFullscreenOpen: (open: boolean) => void;
@@ -14,50 +15,51 @@ export default function PreviewCard({
   handleDownload,
   handlePrint,
   setFullscreenOpen,
+  fileFormat,
 }: Props) {
   return (
     <div className="border border-gray-200 dark:border-neutral-700 rounded-md p-3 flex flex-col items-center h-[52vh]">
       {previewURL ? (
         <>
-          <PreviewRenderer
-            url={getPublicFileUrl(previewURL) || ""}
-            variant="inline"
-          />
-          <div className="flex justify-center gap-3 mt-3">
-            <button
-              onClick={() =>
-                handleDownload(
-                  getPublicFileUrl(previewURL) || "",
-                  "preview-download"
-                )
-              }
-              className="bg-[#E0EFFF] dark:bg-[#275883] p-2 rounded-full hover:bg-gray-200 transition cursor-pointer"
-              title="Download"
-            >
-              <Download className="w-5 h-5" />
-            </button>
+          <PreviewRenderer url={previewURL} variant="inline" />
 
-            <button
-              onClick={() =>
-                handlePrint(
-                  getPublicFileUrl(previewURL) || "",
-                  getPreviewKind(previewURL)
-                )
-              }
-              className="bg-[#E0EFFF] dark:bg-[#275883] p-2 rounded-full hover:bg-gray-200 transition cursor-pointer"
-              title="Print"
-            >
-              <Printer className="w-5 h-5" />
-            </button>
+          {fileFormat !== "web" && fileFormat !== "external" && (
+            <div className="flex justify-center gap-3 mt-3">
+              <button
+                onClick={() =>
+                  handleDownload(
+                    getPublicFileUrl(previewURL) || "",
+                    "preview-download"
+                  )
+                }
+                className="bg-[#E0EFFF] dark:bg-[#275883] p-2 rounded-full hover:bg-gray-200 transition cursor-pointer"
+                title="Download"
+              >
+                <Download className="w-5 h-5" />
+              </button>
 
-            {/* FULLSCREEN CLICK */}
-            <button
-              onClick={() => setFullscreenOpen(true)}
-              className="bg-[#E0EFFF] dark:bg-[#275883] p-2 rounded-full hover:bg-gray-200 transition cursor-pointer"
-            >
-              <Fullscreen className="h-5 w-5" />
-            </button>
-          </div>
+              <button
+                onClick={() =>
+                  handlePrint(
+                    getPublicFileUrl(previewURL) || "",
+                    getPreviewKind(previewURL)
+                  )
+                }
+                className="bg-[#E0EFFF] dark:bg-[#275883] p-2 rounded-full hover:bg-gray-200 transition cursor-pointer"
+                title="Print"
+              >
+                <Printer className="w-5 h-5" />
+              </button>
+
+              {/* FULLSCREEN CLICK */}
+              <button
+                onClick={() => setFullscreenOpen(true)}
+                className="bg-[#E0EFFF] dark:bg-[#275883] p-2 rounded-full hover:bg-gray-200 transition cursor-pointer"
+              >
+                <Fullscreen className="h-5 w-5" />
+              </button>
+            </div>
+          )}
         </>
       ) : (
         <div className="flex justify-center items-center h-full">

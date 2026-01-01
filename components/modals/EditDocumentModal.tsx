@@ -83,6 +83,7 @@ export default function EditDocumentModal({
   const [description, setDescription] = useState(doc?.description);
   const [fileFormat, setFileFormat] = useState(doc?.file_format);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [externalValue, setExternalValue] = useState<string>("");
 
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
@@ -101,6 +102,7 @@ export default function EditDocumentModal({
 
   useEffect(() => {
     setSelectedFile(null);
+    setExternalValue("");
   }, [fileFormat]);
 
   const handleSave = async () => {
@@ -115,13 +117,20 @@ export default function EditDocumentModal({
 
       const payload = {
         taskId: doc.id,
-        milestoneId: milestoneId,
-        projectId: projectId,
+        milestoneId,
+        projectId,
         name,
         description: description ?? null,
         category: category ?? null,
         file_format: fileFormat ?? null,
-        file: selectedFile || undefined,
+        file:
+          fileFormat === "web" || fileFormat === "external"
+            ? undefined
+            : selectedFile || undefined,
+        file_path:
+          fileFormat === "web" || fileFormat === "external"
+            ? externalValue
+            : null,
       };
 
       const res = await editTaskWithDocument(payload);
@@ -277,70 +286,88 @@ export default function EditDocumentModal({
                 </Select>
               </div>
 
-              {/* Upload Field */}
+              {/* Upload / Link Field */}
               <div>
-                <label
-                  htmlFor="dropzone-file"
-                  className="flex flex-col items-center justify-center w-full h-24 border-2 border-dashed rounded-lg cursor-pointer
-             border-gray-300 bg-gray-50 hover:bg-gray-100
-             dark:bg-neutral-800 dark:border-neutral-700 dark:hover:bg-neutral-700"
-                >
-                  {selectedFile ? (
-                    // ✅ File selected state
-                    <div className="text-center px-4 overflow-hidden max-w-60">
-                      <UploadCloud className="w-6 h-6 mb-2 text-green-600 mx-auto" />
+                {fileFormat === "web" || fileFormat === "external" ? (
+                  <>
+                    <label className="block text-sm font-medium">
+                      {fileFormat === "web"
+                        ? "Lien de la page web"
+                        : "Lien ou référence externe"}
+                    </label>
 
-                      <p className="text-sm font-medium text-green-700 dark:text-green-400 truncate ">
-                        {selectedFile.name}
-                      </p>
-
-                      <p className="text-xs text-gray-500 mt-1">
-                        Cliquez pour changer le fichier
-                      </p>
-                    </div>
-                  ) : (
-                    // ⬆️ Default state
-                    <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                      <UploadCloud className="w-6 h-6 mb-2 text-gray-500 dark:text-gray-400" />
-                      <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
-                        <span className="font-semibold">
-                          Cliquez pour télécharger
-                        </span>{" "}
-                        ou glisser-déposer
-                      </p>
-                    </div>
-                  )}
-
-                  <input
-                    id="dropzone-file"
-                    type="file"
-                    className="hidden"
-                    accept={acceptedTypes}
-                    onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      if (!file) return;
-
-                      const error = validateFile(file);
-                      if (error) {
-                        setUploadError(error);
-                        return;
+                    <Input
+                      placeholder={
+                        fileFormat === "web"
+                          ? "https://exemple.com"
+                          : "Lien Google Drive, SharePoint, etc."
                       }
+                      value={externalValue}
+                      onChange={(e) => setExternalValue(e.target.value)}
+                      className="mt-1 bg-gray-50 dark:bg-neutral-800 border-gray-300 dark:border-neutral-700 h-9 rounded-xs"
+                      disabled={!canEdit}
+                    />
+                  </>
+                ) : (
+                  <div>
+                    <label
+                      htmlFor="dropzone-file"
+                      className="flex flex-col items-center justify-center w-full h-24 border-2 border-dashed rounded-lg cursor-pointer
+        border-gray-300 bg-gray-50 hover:bg-gray-100
+        dark:bg-neutral-800 dark:border-neutral-700 dark:hover:bg-neutral-700"
+                    >
+                      {selectedFile ? (
+                        <div className="text-center px-4 overflow-hidden max-w-60">
+                          <UploadCloud className="w-6 h-6 mb-2 text-green-600 mx-auto" />
+                          <p className="text-sm font-medium text-green-700 dark:text-green-400 truncate">
+                            {selectedFile.name}
+                          </p>
+                          <p className="text-xs text-gray-500 mt-1">
+                            Cliquez pour changer le fichier
+                          </p>
+                        </div>
+                      ) : (
+                        <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                          <UploadCloud className="w-6 h-6 mb-2 text-gray-500 dark:text-gray-400" />
+                          <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
+                            <span className="font-semibold">
+                              Cliquez pour télécharger
+                            </span>{" "}
+                            ou glisser-déposer
+                          </p>
+                        </div>
+                      )}
 
-                      setUploadError(null);
-                      setSelectedFile(file);
-                    }}
-                  />
-                </label>
-                {
-                  // Error message
-                  uploadError ? (
-                    <p className="text-xs text-red-500 mt-1">{uploadError}</p>
-                  ) : (
-                    <p className="text-xs text-gray-400 mt-1">
-                      Formats acceptés: {acceptedTypes}
-                    </p>
-                  )
-                }
+                      <input
+                        id="dropzone-file"
+                        type="file"
+                        className="hidden"
+                        accept={acceptedTypes}
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (!file) return;
+
+                          const error = validateFile(file);
+                          if (error) {
+                            setUploadError(error);
+                            return;
+                          }
+
+                          setUploadError(null);
+                          setSelectedFile(file);
+                        }}
+                      />
+                    </label>
+
+                    {uploadError ? (
+                      <p className="text-xs text-red-500 mt-1">{uploadError}</p>
+                    ) : (
+                      <p className="text-xs text-gray-400 mt-1">
+                        Formats acceptés: {acceptedTypes}
+                      </p>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           </div>

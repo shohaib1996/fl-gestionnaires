@@ -409,6 +409,7 @@ const ProjectDetails = () => {
             handlePrint={handlePrint}
             setFullscreenOpen={setFullscreenOpen}
             previewURL={selectedTask?.document?.file_path || null}
+            fileFormat={selectedTask?.document?.file_format || null}
           />
         </div>
       </div>

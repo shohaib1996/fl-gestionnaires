@@ -13,6 +13,7 @@ interface EditTaskWithDocumentInput {
   category?: string | null;
   file_format?: string | null;
   file?: File;
+  file_path?: string | null;
 }
 
 export async function editTaskWithDocument(
@@ -33,7 +34,7 @@ export async function editTaskWithDocument(
     return { success: false, message: fetchError.message };
   }
 
-  let newFilePath: string | null = null;
+  let newFilePath: string | null = input?.file_path ?? null;
 
   // 2️⃣ Upload file
   if (file) {

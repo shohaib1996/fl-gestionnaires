@@ -1,4 +1,5 @@
-import { FileText } from "lucide-react";
+import { getPublicFileUrl } from "@/lib/utils/getPublicFileUrl";
+import { FileText, Globe } from "lucide-react";
 import Image from "next/image";
 
 type PreviewVariant = "inline" | "fullscreen";
@@ -8,15 +9,35 @@ interface PreviewRendererProps {
   variant?: PreviewVariant;
 }
 
+export function isValidUrl(value: string) {
+  try {
+    // auto-fix missing protocol
+    new URL(value.startsWith("http") ? value : `https://${value}`);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export function getPreviewKind(url: string) {
-  const ext = url.split(".").pop()?.toLowerCase();
+  const clean = url.trim().toLowerCase();
 
-  if (!ext) return "other";
-  if (["jpg", "jpeg", "png", "webp"].includes(ext)) return "image";
-  if (["mp4", "webm"].includes(ext)) return "video";
-  if (ext === "pdf") return "pdf";
-  if (["mp3", "wav"].includes(ext)) return "audio";
+  const ext = clean.split(".").pop();
 
+  // 1️⃣ File previews first (strong signal)
+  if (ext) {
+    if (["jpg", "jpeg", "png", "webp"].includes(ext)) return "image";
+    if (["mp4", "webm"].includes(ext)) return "video";
+    if (ext === "pdf") return "pdf";
+    if (["mp3", "wav"].includes(ext)) return "audio";
+  }
+
+  // 2️⃣ URL or external reference
+  if (isValidUrl(clean)) {
+    return "link";
+  }
+
+  // 3️⃣ Fallback
   return "other";
 }
 
@@ -26,13 +47,19 @@ export default function PreviewRenderer({
 }: PreviewRendererProps) {
   const type = getPreviewKind(url);
   const height = variant === "fullscreen" ? "h-full" : "h-[52vh]";
+  const previewURL = getPublicFileUrl(url);
 
   switch (type) {
     case "image":
       if (variant === "fullscreen") {
         return (
           <div className="relative w-full h-full overflow-hidden">
-            <Image src={url} alt="Preview" fill className="object-contain" />
+            <Image
+              src={previewURL}
+              alt="Preview"
+              fill
+              className="object-contain"
+            />
           </div>
         );
       }
@@ -42,7 +69,7 @@ export default function PreviewRenderer({
           className={`relative w-full ${height} overflow-hidden flex items-center justify-center`}
         >
           <Image
-            src={url}
+            src={previewURL}
             alt="Preview"
             width={400}
             height={400}
@@ -54,21 +81,47 @@ export default function PreviewRenderer({
 
     case "video":
       return (
-        <video src={url} controls className={`w-full ${height} rounded grow`} />
+        <video
+          src={previewURL}
+          controls
+          className={`w-full ${height} rounded grow`}
+        />
       );
 
     case "pdf":
       return (
-        <div className={`w-full ${height} overflow-hidden flex items-center justify-center bg-gray-100 dark:bg-neutral-800 rounded`}>
+        <div
+          className={`w-full ${height} overflow-hidden flex items-center justify-center bg-gray-100 dark:bg-neutral-800 rounded`}
+        >
           <iframe
-            src={`${url}#toolbar=0&navpanes=0&scrollbar=1&view=FitH`}
+            src={`${previewURL}#toolbar=0&navpanes=0&scrollbar=1&view=FitH`}
             className="w-full h-full border-0"
           />
         </div>
       );
 
     case "audio":
-      return <audio src={url} controls className="w-full" />;
+      return <audio src={previewURL} controls className="w-full" />;
+
+    case "link":
+      return (
+        <div className="flex flex-col items-center justify-center h-full p-6 text-center">
+          <Globe className="w-10 h-10 mb-3 text-[#326EA6]" />
+
+          <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">
+            Lien externe
+          </p>
+
+          <a
+            href={url.startsWith("http") ? url : `https://${url}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 dark:text-blue-400 underline break-all"
+          >
+            {url}
+          </a>
+        </div>
+      );
 
     default:
       return (
