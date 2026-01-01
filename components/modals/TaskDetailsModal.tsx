@@ -113,8 +113,8 @@ export default function TaskDetailsModal({
 
   console.log(task);
 
-  const WIDTH = 512;
-  const HEIGHT = 539;
+  const WIDTH = "35rem";
+  const HEIGHT = "30rem";
 
   const handleUpdate = async (payload: Payload) => {
     await mutateAsync({
@@ -150,7 +150,7 @@ export default function TaskDetailsModal({
               style={{
                 background: "#63A053",
                 height: 250,
-                marginBottom: -50, // pulls green downward over the curve
+                marginBottom: -98, // pulls green downward to meet the curves
                 color: "white",
                 padding: "28px 24px 12px",
                 display: "flex",
@@ -163,14 +163,14 @@ export default function TaskDetailsModal({
             >
               {/* Title + subtitle */}
               <div style={{ textAlign: "center" }}>
-                <h3 style={{ margin: 0, fontSize: 18, fontWeight: 600 }}>
+                <h3 style={{ margin: 0, fontSize: "1rem", fontWeight: 600 }}>
                   {title}
                 </h3>
                 {subtitle && (
                   <div
                     style={{
                       marginTop: 6,
-                      fontSize: 12,
+                      fontSize: "0.875rem",
                       opacity: 0.95,
                     }}
                   >
@@ -216,10 +216,10 @@ export default function TaskDetailsModal({
                 </div>
 
                 <div style={{ textAlign: "left" }}>
-                  <div style={{ fontSize: 13, opacity: 0.95 }}>
+                  <div style={{ fontSize: "0.875rem", opacity: 0.95 }}>
                     {displayDate}
                   </div>
-                  <div style={{ fontWeight: 700, fontSize: 16 }}>
+                  <div style={{ fontWeight: 700, fontSize: "1rem" }}>
                     {timeFrom} — {timeTo}
                   </div>
                 </div>
@@ -230,9 +230,8 @@ export default function TaskDetailsModal({
             <div
               style={{
                 background: "white",
-                height: 308,
-                borderTopLeftRadius: 40,
-                borderTopRightRadius: 40,
+                height: 335,
+                borderRadius: "24px 24px 8px 8px",
                 padding: "18px 20px",
                 boxSizing: "border-box",
                 position: "relative",
@@ -246,10 +245,45 @@ export default function TaskDetailsModal({
                 gap: 16,
               }}
             >
+              {/* Top left green curved extension */}
+              <svg
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: 50,
+                  height: 50,
+                }}
+                viewBox="0 0 50 50"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M0 0V50C0 22.3858 22.3858 0 50 0H0Z" fill="#63A053" />
+              </svg>
+
+              {/* Top right green curved extension */}
+              <svg
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  right: 0,
+                  width: 50,
+                  height: 50,
+                }}
+                viewBox="0 0 50 50"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M50 0V50C50 22.3858 27.6142 0 0 0H50Z"
+                  fill="#63A053"
+                />
+              </svg>
+
               {/* Participants label */}
               <div
                 style={{
-                  fontSize: 13,
+                  fontSize: "0.875rem",
                   color: "#9B9B9B",
                   display: "flex",
                   alignItems: "center",
@@ -262,7 +296,7 @@ export default function TaskDetailsModal({
                     background: "#FFF2CC",
                     borderRadius: 999,
                     padding: "2px 8px",
-                    fontSize: 12,
+                    fontSize: "0.875rem",
                     color: "#6B4D00",
                   }}
                 >
@@ -320,9 +354,9 @@ export default function TaskDetailsModal({
               <div
                 style={{
                   color: "#333",
-                  fontSize: 13,
+                  fontSize: "0.875rem",
                   lineHeight: 1.5,
-                  maxWidth: 460,
+                  maxWidth: 600,
                 }}
               >
                 {description ||
@@ -335,7 +369,7 @@ export default function TaskDetailsModal({
                 style={{
                   position: "absolute",
                   right: 18,
-                  bottom: 18,
+                  bottom: 0,
                   width: 40,
                   height: 40,
                   borderRadius: 999,
@@ -357,7 +391,7 @@ export default function TaskDetailsModal({
         {mode === "edit" && (
           <div className="flex flex-col h-full bg-white rounded-lg overflow-hidden">
             <div className="w-full h-20 flex items-center justify-center bg-[#63a053] relative shrink-0">
-              <h2 className="text-white text-lg font-bold">
+              <h2 className="text-white text-[1rem] font-bold">
                 Modifier la tâche
               </h2>
               <button

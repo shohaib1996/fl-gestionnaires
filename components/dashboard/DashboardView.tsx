@@ -62,58 +62,51 @@ export default function DashboardView({
                   transition={{ duration: 0.3 }}
                 >
                   <div className="grid gap-x-1.5 gap-y-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                    {projects.map((project) => {
-                      const headerStyle = getHeaderStyles(project);
+                    {projects.map((project) => (
+                      <Link href={`/dashboard/${project.id}`} key={project.id}>
+                        <article className="bg-white dark:bg-neutral-800 shadow-sm dark:shadow-neutral-700/30 flex flex-col rounded-sm border-2 border-gray-200 dark:border-neutral-700 hover:border-[#63A053] dark:hover:border-[#7CB86D] hover:scale-[0.97] transition-all duration-300 min-h-[29vh]">
+                          {/* Header */}
+                          <div
+                            className={`px-4 py-2 flex justify-between items-center ${
+                              project.status === "in_progress"
+                                ? "bg-[#AECDFF] dark:bg-blue-900/40"
+                                : "bg-[#F3F7FF] dark:bg-blue-950/30"
+                            } ${
+                              project.status === "claimed"
+                                ? "border-t-[2.5px] border-t-[#CEE1FF] dark:border-t-blue-800/60"
+                                : ""
+                            }`}
+                          >
+                            <h4 className="font-semibold text-[#454B53] dark:text-gray-100 text-[1.25rem] font-sans">
+                              {project.title ?? "Untitled Project"}
+                            </h4>
 
-                      return (
-                        <Link
-                          href={`/dashboard/${project.id}`}
-                          key={project.id}
-                        >
-                          <article className="bg-white dark:bg-neutral-800 shadow-sm flex flex-col rounded-sm border-2 border-gray-200 hover:border-[#63A053] hover:scale-[0.97] transition-all duration-300 min-h-[29vh]">
-                            {/* Header */}
-                            <div
-                              className="px-4 py-2 flex justify-between items-center"
-                              style={{
-                                backgroundColor:
-                                  project.status === "in_progress"
-                                    ? "#AECDFF"
-                                    : "#F3F7FF",
-                                borderTop:
-                                  project.status === "claimed"
-                                    ? "2.5px solid #CEE1FF"
-                                    : "none",
-                              }}
-                            >
-                              <h4 className="font-semibold text-[#454B53] dark:text-gray-100 text-[1.25rem] font-sans">
-                                {project.title ?? "Untitled Project"}
-                              </h4>
+                            {/* Show claim count ONLY if claimed */}
+                            {project.status === "claimed" &&
+                              project.claim_count > 0 && (
+                                <span className="text-[0.875rem] text-gray-500 dark:text-gray-400">
+                                  {project.claim_count}
+                                </span>
+                              )}
+                          </div>
 
-                              {/* Show claim count ONLY if claimed */}
-                              {project.status === "claimed" &&
-                                project.claim_count > 0 && (
-                                  <span className="text-[0.875rem] text-gray-500">
-                                    {project.claim_count}
-                                  </span>
-                                )}
-                            </div>
-
-                            {/* Body */}
-                            <div className="p-4 text-[1rem] text-black dark:text-gray-300">
-                              <p className="mb-1">
-                                Reçu :{" "}
-                                {new Date(
-                                  project.created_at
-                                ).toLocaleDateString("fr-FR")}
-                              </p>
+                          {/* Body */}
+                          <div className="p-4 text-[1rem] text-black dark:text-gray-300">
+                            <p className="mb-1 text-gray-700 dark:text-gray-400">
+                              Reçu :{" "}
+                              {new Date(project.created_at).toLocaleDateString(
+                                "fr-FR"
+                              )}
+                            </p>
+                            <p className="text-gray-800 dark:text-gray-300">
                               {project.description
-                                ? project.description.slice(0, 230) + "..."
+                                ? project.description.slice(0, 200) + "..."
                                 : "No description available"}
-                            </div>
-                          </article>
-                        </Link>
-                      );
-                    })}
+                            </p>
+                          </div>
+                        </article>
+                      </Link>
+                    ))}
                   </div>
                 </motion.div>
               </AnimatePresence>
@@ -137,14 +130,4 @@ function Centered({ text }: { text: string }) {
       <p className="text-gray-600 dark:text-gray-300">{text}</p>
     </div>
   );
-}
-
-function getHeaderStyles(project: any) {
-  const isClaimed = project.claim_count > 0; // or project.status === "claimed"
-  const isInProgress = project.status === "in_progress";
-
-  return {
-    bg: isInProgress ? "#AECDFF" : "#F3F7FF",
-    borderBottom: isClaimed ? "2.5px solid #CEE1FF" : "none",
-  };
 }

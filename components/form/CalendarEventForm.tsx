@@ -178,7 +178,7 @@ export default function CalendarEventForm({
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Brève description"
-          className="mt-1 bg-gray-100 min-h-[100px] rounded-xs"
+          className="mt-1 bg-gray-100 h-[150px] min-h-[150px] rounded-xs"
         />
       </div>
 
