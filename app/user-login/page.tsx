@@ -134,13 +134,13 @@ const UserLoginPage = () => {
         </div>
 
         <div className="w-full max-w-md space-y-8">
-          <h2 className="text-[#63A053] text-3xl font-medium text-center">
+          <h2 className="text-[#63A053] text-[2.5rem] font-medium text-center">
             Connexion
           </h2>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
-              <label className="text-white md:text-gray-500 text-sm ml-1">
+              <label className="text-white md:text-gray-500 text-[1.125rem] ml-1">
                 Email
               </label>
               <Input
@@ -149,12 +149,12 @@ const UserLoginPage = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={loading}
-                className="h-12 bg-[#F5F5F5] border-none text-black rounded-sm"
+                className="h-12 bg-[#F5F5F5] border-none text-black rounded-sm text-[1.125rem]"
               />
             </div>
 
             <div className="space-y-2">
-              <label className="text-white md:text-gray-500 text-sm ml-1">
+              <label className="text-white md:text-gray-500 text-[1.125rem] ml-1">
                 Mot de passe
               </label>
               <Input
@@ -163,7 +163,7 @@ const UserLoginPage = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 disabled={loading}
-                className="h-12 bg-[#F5F5F5] border-none text-black rounded-sm"
+                className="h-12 bg-[#F5F5F5] border-none text-black rounded-sm text-[1.125rem]"
               />
             </div>
 

@@ -3,31 +3,15 @@ import Image from "next/image";
 
 export const ConfirmationStep: React.FC = () => {
   return (
-    <div className="w-full max-w-6xl mx-auto py-12 md:py-20">
+    <div className="w-full max-w-6xl mx-auto py-12 md:py-32">
       <div className="flex flex-col md:flex-row items-center justify-between gap-12 md:gap-24">
-        {/* Left Side - Text Content */}
-        <div className="flex-1 space-y-8">
-          <div className="mb-8">
-            <h2 className="text-lg font-bold text-black border-b-2 border-[#C8E6C9] pb-1 inline-block">
-              Confirmation
-            </h2>
-          </div>
-
-          <p className="text-base md:text-lg text-black leading-relaxed">
-            C'est envoyé ! Notre équipe examinera votre soumission avec
-            attention et vous contactera après l'évaluation.
-            <br />
-            Merci pour votre participation !
-          </p>
-        </div>
-
         {/* Right Side - Image */}
         <div className="flex-1 flex justify-center md:justify-end">
-          <div className="relative w-64 h-64 md:w-96 md:h-96">
+          <div className="">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="367"
-              height="361"
+              width="25rem"
+              height="25rem"
               viewBox="0 0 367 361"
               fill="none"
             >
@@ -133,6 +117,21 @@ export const ConfirmationStep: React.FC = () => {
               />
             </svg>
           </div>
+        </div>
+        {/* right Side - Text Content */}
+        <div className="flex-2 space-y-8">
+          <div className="mb-6">
+            <h2 className="text-[1.5rem] font-bold text-black border-b-2 border-[#C8E6C9] pb-1 inline-block">
+              Confirmation
+            </h2>
+          </div>
+
+          <p className="text-[1.25rem] text-black leading-relaxed">
+            C'est envoyé ! Notre équipe examinera votre soumission avec
+            attention et vous contactera après l'évaluation.
+            <br />
+            Merci pour votre participation !
+          </p>
         </div>
       </div>
     </div>

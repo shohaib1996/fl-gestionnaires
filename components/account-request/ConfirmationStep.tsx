@@ -1,32 +1,17 @@
+import Link from "next/link";
 import React from "react";
 
 export const ConfirmationStep: React.FC = () => {
   return (
-    <div className="w-full max-w-6xl mx-auto py-12 md:py-20">
+    <div className="max-w-7xl mx-auto py-12 md:py-36">
       <div className="flex flex-col md:flex-row items-center justify-between gap-12 md:gap-24">
-        {/* Left Side - Text Content */}
-        <div className="flex-1 space-y-8">
-          <div className="mb-8">
-            <h2 className="text-lg font-bold text-black border-b-2 border-[#C8E6C9] pb-1 inline-block">
-              Confirmation
-            </h2>
-          </div>
-
-          <p className="text-base md:text-lg text-black leading-relaxed">
-            C'est envoyé ! Notre équipe examinera votre soumission avec
-            attention et vous contactera après l'évaluation.
-            <br />
-            Merci pour votre participation !
-          </p>
-        </div>
-
         {/* Right Side - Image */}
         <div className="flex-1 flex justify-center md:justify-end">
-          <div className="relative w-64 h-64 md:w-96 md:h-96">
+          <div className="relative">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="367"
-              height="361"
+              width="30rem"
+              height="30rem"
               viewBox="0 0 367 361"
               fill="none"
             >
@@ -131,6 +116,42 @@ export const ConfirmationStep: React.FC = () => {
                 fill="#63A053"
               />
             </svg>
+          </div>
+        </div>
+        {/* Right Side - Text Content */}
+        <div className="flex-2 space-y-6">
+          <h2 className="text-2xl md:text-3xl font-bold text-black">
+            Félicitations !
+          </h2>
+
+          <p className="text-base md:text-lg text-black leading-relaxed">
+            Votre compte Fond Local a été créé avec succès.
+          </p>
+
+          <p className="text-base md:text-lg text-black leading-relaxed">
+            Vous pouvez désormais vous connecter en utilisant l'adresse email et
+            le mot de passe que vous avez définis lors de la création de votre
+            compte.
+          </p>
+
+          <p className="text-base md:text-lg text-black leading-relaxed">
+            Votre projet est désormais intégré au processus Fond Local. Un
+            Organisateur vous contactera pour vous accompagner dans les
+            prochaines étapes. Nous vous souhaitons plein succès dans le
+            développement de votre projet et vous remercions pour votre
+            confiance.
+          </p>
+
+          <div className="pt-4">
+            <p className="text-base md:text-lg text-black font-semibold">
+              Accéder à mon compte
+            </p>
+            <Link
+              href="https://www.fondlocal.com/user-login"
+              className="text-base md:text-lg text-blue-600 underline"
+            >
+              www.fondlocal.com
+            </Link>
           </div>
         </div>
       </div>

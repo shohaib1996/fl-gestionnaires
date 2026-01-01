@@ -77,7 +77,7 @@ export const ComplianceStep: React.FC<ComplianceStepProps> = ({
               16. Acceptez-vous les termes et conditions ?
             </label>
             <RadioGroup
-              className="flex gap-6 bg-white p-1"
+              className="flex gap-6 p-1"
               value={formData.termsAccepted ? "yes" : "no"}
               onValueChange={(val) =>
                 updateFormData({ termsAccepted: val === "yes" })
@@ -104,7 +104,7 @@ export const ComplianceStep: React.FC<ComplianceStepProps> = ({
               17. Acceptez-vous la politique de confidentialité ?
             </label>
             <RadioGroup
-              className="flex gap-6 bg-white p-1"
+              className="flex gap-6 p-1"
               value={formData.privacyAccepted ? "yes" : "no"}
               onValueChange={(val) =>
                 updateFormData({ privacyAccepted: val === "yes" })
@@ -132,7 +132,7 @@ export const ComplianceStep: React.FC<ComplianceStepProps> = ({
               proviennent de sources légales ?
             </label>
             <RadioGroup
-              className="flex gap-6 bg-white p-1"
+              className="flex gap-6 p-1"
               value={formData.fundsSourceConfirmed ? "yes" : "no"}
               onValueChange={(val) =>
                 updateFormData({ fundsSourceConfirmed: val === "yes" })
