@@ -16,14 +16,14 @@ export default function PreviewCard({
   setFullscreenOpen,
 }: Props) {
   return (
-    <div className="border border-gray-200 dark:border-neutral-700 rounded-md p-3 flex flex-col items-center h-full">
+    <div className="border border-gray-200 dark:border-neutral-700 rounded-md p-3 flex flex-col items-center h-[52vh]">
       {previewURL ? (
         <>
           <PreviewRenderer
             url={getPublicFileUrl(previewURL) || ""}
             variant="inline"
           />
-          <div className="flex justify-center gap-3 mt-5">
+          <div className="flex justify-center gap-3 mt-3">
             <button
               onClick={() =>
                 handleDownload(

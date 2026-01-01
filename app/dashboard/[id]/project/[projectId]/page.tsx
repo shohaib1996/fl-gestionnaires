@@ -281,7 +281,7 @@ const ProjectDetails = () => {
       </div>
 
       {/* Project Section */}
-      <div className="bg-white dark:bg-neutral-800 rounded-md shadow-sm border border-gray-200 dark:border-neutral-700 max-h-[80vh]">
+      <div className="bg-white dark:bg-neutral-800 rounded-md shadow-sm border border-gray-200 dark:border-neutral-700 max-h-[72vh]">
         {/* Header */}
         <div className="flex items-center justify-between border-b pb-3 mb-4 bg-[#63a053]/25 p-4">
           <h1 className="text-2xl font-bold text-gray-700 dark:text-white">
@@ -370,7 +370,7 @@ const ProjectDetails = () => {
           {/* Table */}
           <div className="lg:col-span-2 flex flex-col">
             <div className="px-3">
-              <div className="border-t max-h-[48vh] min-h-[56.5vh] overflow-y-auto hide-scrollbar">
+              <div className="border-t max-h-[48vh] min-h-[48.5vh] overflow-y-auto hide-scrollbar">
                 {tasksLoading ? (
                   <p className="p-6 text-gray-500">Loading tasks…</p>
                 ) : null}

@@ -34,7 +34,7 @@ export default function DashboardLayout({
           <Link href={`/dashboard`}>
             <div className="flex items-center gap-3">
               <Image
-                src="/images/Logo FL.png"
+                src="/images/FLLogo.svg"
                 alt="FL Logo"
                 width={90}
                 height={90}
@@ -47,9 +47,9 @@ export default function DashboardLayout({
             </div>
           </Link>
           <div className="h-10 w-[0.3px] bg-[#000000] mx-2" />
-          <div className="relative w-[65px] h-[65px] rounded-full overflow-hidden">
+          <div className="relative w-12 h-12 rounded-full overflow-hidden">
             <Image
-              src="/images/Photo ID.png"
+              src="/images/christina.jpg"
               alt="User photo"
               width={65}
               height={65}
@@ -87,10 +87,10 @@ export default function DashboardLayout({
                 style={{
                   padding: "10px",
                 }}
-                className="bg-[#63a053] hover:bg-[#528a45] rounded-xs cursor-pointer text-white text-sm  w-[43px] h-[31px] flex items-center gap-1"
+                className="bg-[#63a053] hover:bg-[#528a45] rounded-xs cursor-pointer text-white text-sm  w-10 h-8 flex items-center gap-1"
               >
                 <svg
-                  className="w-[23px] h-[11px]"
+                  className="w-full h-full"
                   viewBox="0 0 26 14"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
@@ -164,7 +164,7 @@ export default function DashboardLayout({
 
       {/* Main layout */}
       <main className="flex w-screen h-screen bg-[#ebebeb] dark:bg-card overflow-hidden">
-        <div className="hidden lg:block flex-none min-w-[14vw] h-full mt-19 ml-10 max-h-[80vh]">
+        <div className="hidden lg:block flex-none min-w-[14vw] h-full mt-19 ml-10 max-h-[72vh]">
           <LeftSidebar />
         </div>
 
