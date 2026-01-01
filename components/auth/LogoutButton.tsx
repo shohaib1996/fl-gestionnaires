@@ -8,6 +8,7 @@ export default function LogoutButton() {
 
   return (
     <button
+      className="text-[#343E47] dark:text-gray-200"
       onClick={async () => {
         try {
           queryClient.clear();
@@ -18,7 +19,7 @@ export default function LogoutButton() {
         }
       }}
     >
-      Se déconnecter
+      Déconnexion
     </button>
   );
 }
