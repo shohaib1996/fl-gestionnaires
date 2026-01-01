@@ -27,6 +27,19 @@ export async function createTask(
 ): Promise<ActionResult<{ id: string }>> {
   const supabase = await createClient();
 
+  // Get the highest order_index for this milestone
+  const { data: existingTasks } = await supabase
+    .from("tasks")
+    .select("order_index")
+    .eq("milestone_id", input.milestoneId)
+    .order("order_index", { ascending: false })
+    .limit(1);
+
+  const nextOrderIndex =
+    existingTasks && existingTasks.length > 0
+      ? (existingTasks[0].order_index ?? 0) + 1
+      : 0;
+
   const { data, error } = await supabase
     .from("tasks")
     .insert({
@@ -35,6 +48,7 @@ export async function createTask(
       description: input.description ?? null,
       category: input.category ?? null,
       file_format: input.file_format ?? "",
+      order_index: nextOrderIndex,
     })
     .select("id")
     .single();

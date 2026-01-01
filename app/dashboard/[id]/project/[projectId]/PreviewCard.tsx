@@ -23,7 +23,7 @@ export default function PreviewCard({
             url={getPublicFileUrl(previewURL) || ""}
             variant="inline"
           />
-          <div className="flex justify-center gap-3 mt-3">
+          <div className="flex justify-center gap-3 mt-5">
             <button
               onClick={() =>
                 handleDownload(

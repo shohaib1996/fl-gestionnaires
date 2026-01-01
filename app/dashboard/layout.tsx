@@ -163,7 +163,7 @@ export default function DashboardLayout({
 
       {/* Main layout */}
       <main className="flex w-screen h-screen bg-[#ebebeb] dark:bg-card overflow-hidden">
-        <div className="hidden lg:block flex-none min-w-[14vw] h-full mt-19 ml-10 max-h-[72vh]">
+        <div className="hidden lg:block flex-none min-w-[14vw] h-full mt-19 ml-10 max-h-[80vh]">
           <LeftSidebar />
         </div>
 

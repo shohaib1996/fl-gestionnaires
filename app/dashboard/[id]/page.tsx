@@ -329,18 +329,20 @@ const ProjectDetails = () => {
       </header>
 
       {/* Make THIS container the scroller (fills remaining height) */}
-      <div className="flex-1 rounded-xs border-0.5 border-black/20 overflow-y-auto hide-scrollbar">
-        <div className="bg-white">
+      <div className="flex-1 rounded-xs border-0.5 border-black/20 dark:border-gray-700 overflow-y-auto hide-scrollbar">
+        <div className="bg-white dark:bg-neutral-900">
           {/* Project Header */}
           <section className="bg-white dark:bg-neutral-800 rounded-xs ">
-            <div className="flex items-center justify-between py-4 px-11 bg-[#D8E7D4] hover:bg-[#63A053] transition group">
+            <div
+              onClick={handleRedirect}
+              className="flex items-center justify-between py-4 px-11 bg-[#D8E7D4] dark:bg-[#2A3926] hover:bg-[#63A053] dark:hover:bg-[#3d5235] transition group cursor-pointer"
+            >
               <h2
-                onClick={handleRedirect}
-                className="text-[1.5rem] text-[#7F7E83] group-hover:text-white font-bold dark:text-white relative inline-block after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-0.5 after:bg-[#326EA6] after:transition-all after:duration-300 hover:after:w-full cursor-pointer font-sans"
+                className="text-[1.5rem] text-[#7F7E83] group-hover:text-white font-bold dark:text-gray-200 relative inline-block after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-0.5 after:bg-[#326EA6] after:transition-all after:duration-300 hover:after:w-full cursor-pointer font-sans"
               >
                 {project.title}
               </h2>
-              <span className="text-[1rem] font-medium text-[#7F7E83] group-hover:text-white dark:text-gray-300 flex items-center gap-7">
+              <span className="text-[1rem] font-medium text-[#7F7E83] group-hover:text-white dark:text-gray-300 flex items-center gap-7" onClick={(e) => e.stopPropagation()}>
                 {project.project_id}
                 {project.status === "in_progress" && (
                   <DropdownMenu>
@@ -382,7 +384,7 @@ const ProjectDetails = () => {
                       Catégorie qui décrit le mieux le projet ou produit
                     </span>
                   </label>
-                  <p className="px-3 py-2 rounded text-[1rem] font-medium text-[#343E47] font-sans">
+                  <p className="px-3 py-2 rounded text-[1rem] font-medium text-[#343E47] dark:text-gray-300 font-sans">
                     {project.categories?.join(", ") || ""}
                   </p>
                 </div>
@@ -393,7 +395,7 @@ const ProjectDetails = () => {
                       Phase actuelle du projet
                     </span>
                   </label>
-                  <p className="px-3 py-2 rounded text-[1rem] font-medium text-[#343E47] font-sans">
+                  <p className="px-3 py-2 rounded text-[1rem] font-medium text-[#343E47] dark:text-gray-300 font-sans">
                     {project.phase || ""}
                   </p>
                 </div>
@@ -404,7 +406,7 @@ const ProjectDetails = () => {
                 <label className="block  bg-[#F2F6F8] dark:bg-neutral-700  text-[1rem] py-3 px-3 text-[#7F7E83] font-regular font-sans dark:text-white mb-3">
                   Description non confidentielle du projet ou produit
                 </label>
-                <p className="bg-[#FFFFFB] dark:bg-[#262626] px-3 py-3 rounded text-[1rem] font-medium text-[#343E47] font-sans leading-relaxed border-b">
+                <p className="bg-[#FFFFFB] dark:bg-neutral-800 px-3 py-3 rounded text-[1rem] font-medium text-[#343E47] dark:text-gray-300 font-sans leading-relaxed border-b dark:border-gray-600">
                   {project.description || "Aucune description disponible"}
                 </p>
               </div>

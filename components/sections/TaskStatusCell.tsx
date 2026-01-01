@@ -25,13 +25,29 @@ export function TaskStatusCell({
 }: TaskStatusCellProps) {
   const editable = canEditStatus(role);
 
+  // Get the label for the current status
+  const currentOption = TASK_STATUS_OPTIONS.find((opt) => opt.value === status);
+  const label = currentOption?.label || status.replace("_", " ");
+
+  // Get color based on status
+  const getStatusColor = (status: TaskStatus) => {
+    switch (status) {
+      case "completed":
+        return "text-[#63A053] font-semibold";
+      case "in_progress":
+        return "text-[#197b8d] font-semibold";
+      default:
+        return "text-gray-700 dark:text-gray-300";
+    }
+  };
+
   if (!editable) {
-    return <>{status.replace("_", " ")}</>;
+    return <span className={getStatusColor(status)}>{label}</span>;
   }
 
   return (
     <Select value={status} onValueChange={(v) => onChange(v as TaskStatus)}>
-      <SelectTrigger className="h-8 w-fit text-sm  border-0">
+      <SelectTrigger className={`h-8 w-fit text-sm border-0 ${getStatusColor(status)}`}>
         <SelectValue />
       </SelectTrigger>
 

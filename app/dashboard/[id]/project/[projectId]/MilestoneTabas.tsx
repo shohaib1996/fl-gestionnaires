@@ -60,7 +60,7 @@ export function MilestoneTabs({
               onChange(m);
             }
           }}
-          className="py-1.5 px-2 text-white capitalize cursor-pointer"
+          className="py-1.5 px-2 text-white capitalize cursor-pointer text-[0.875rem]"
         >
           {m.title}
         </span>

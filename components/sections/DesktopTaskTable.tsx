@@ -1,6 +1,7 @@
 import { TasksByMilestone } from "@/app/actions/tasks/getTasksByMilestone";
 import { iconMap } from "../common/FileIconMap";
 import { TaskStatusCell } from "./TaskStatusCell";
+import { FileText } from "lucide-react";
 
 import { EditTaskInput } from "@/types/task";
 
@@ -44,7 +45,7 @@ export function DesktopTaskTable({
 
       <tbody>
         {tasks.map((task, i) => {
-          const Icon = iconMap[task.file_format];
+          const Icon = iconMap[task.file_format] || FileText;
           return (
             <tr
               key={i}

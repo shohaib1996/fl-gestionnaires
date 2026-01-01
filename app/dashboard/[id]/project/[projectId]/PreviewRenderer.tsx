@@ -25,32 +25,29 @@ export default function PreviewRenderer({
   variant = "inline",
 }: PreviewRendererProps) {
   const type = getPreviewKind(url);
-  const height = variant === "fullscreen" ? "h-full" : "h-[44vh]";
+  const height = variant === "fullscreen" ? "h-full" : "h-[52vh]";
 
   switch (type) {
     case "image":
       if (variant === "fullscreen") {
         return (
           <div className="relative w-full h-full overflow-hidden">
-            <Image
-              src={url}
-              alt="Preview"
-              fill
-              className="object-contain"
-            />
+            <Image src={url} alt="Preview" fill className="object-contain" />
           </div>
         );
       }
 
       return (
-        <div className={`relative w-full ${height} overflow-hidden flex items-center justify-center`}>
+        <div
+          className={`relative w-full ${height} overflow-hidden flex items-center justify-center`}
+        >
           <Image
             src={url}
             alt="Preview"
             width={400}
             height={400}
             className="object-contain max-w-full max-h-full"
-            style={{ width: 'auto', height: 'auto', maxHeight: '44vh' }}
+            style={{ width: "auto", height: "auto", maxHeight: "44vh" }}
           />
         </div>
       );

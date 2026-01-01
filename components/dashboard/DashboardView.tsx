@@ -47,7 +47,7 @@ export default function DashboardView({
           <DashboardFilters values={filters} onChange={onFiltersChange} />
 
           {/* Cards */}
-          <section className="flex-1 overflow-auto hide-scrollbar min-h-[53vh]">
+          <section className="flex-1 overflow-auto hide-scrollbar min-h-[60vh]">
             {loading ? (
               <Centered text="Chargement des projets..." />
             ) : projects.length === 0 ? (
@@ -70,7 +70,7 @@ export default function DashboardView({
                           href={`/dashboard/${project.id}`}
                           key={project.id}
                         >
-                          <article className="bg-white dark:bg-neutral-800 shadow-sm flex flex-col rounded-sm border-2 border-gray-200 hover:border-[#63A053] hover:scale-[0.97] transition-all duration-300 min-h-[25vh]">
+                          <article className="bg-white dark:bg-neutral-800 shadow-sm flex flex-col rounded-sm border-2 border-gray-200 hover:border-[#63A053] hover:scale-[0.97] transition-all duration-300 min-h-[29vh]">
                             {/* Header */}
                             <div
                               className="px-4 py-2 flex justify-between items-center"
@@ -107,7 +107,7 @@ export default function DashboardView({
                                 ).toLocaleDateString("fr-FR")}
                               </p>
                               {project.description
-                                ? project.description.slice(0, 150) + "..."
+                                ? project.description.slice(0, 230) + "..."
                                 : "No description available"}
                             </div>
                           </article>

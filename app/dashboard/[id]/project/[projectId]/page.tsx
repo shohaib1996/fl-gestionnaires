@@ -243,8 +243,8 @@ const ProjectDetails = () => {
   // Helper function to truncate description
   const truncateDescription = (text: string | null | undefined) => {
     if (!text) return "";
-    if (text.length <= 150) return text;
-    return `${text.slice(0, 150)}...`;
+    if (text.length <= 140) return text;
+    return `${text.slice(0, 140)}...`;
   };
 
   return (
@@ -281,7 +281,7 @@ const ProjectDetails = () => {
       </div>
 
       {/* Project Section */}
-      <div className="bg-white dark:bg-neutral-800 rounded-md shadow-sm border border-gray-200 dark:border-neutral-700 max-h-[72vh]">
+      <div className="bg-white dark:bg-neutral-800 rounded-md shadow-sm border border-gray-200 dark:border-neutral-700 max-h-[80vh]">
         {/* Header */}
         <div className="flex items-center justify-between border-b pb-3 mb-4 bg-[#63a053]/25 p-4">
           <h1 className="text-2xl font-bold text-gray-700 dark:text-white">
@@ -336,7 +336,7 @@ const ProjectDetails = () => {
         {/* Goal + Lead */}
         <div className="flex justify-between items-start mb-6 px-6">
           <div>
-            <p className="text-sm text-gray-700 dark:text-gray-300">
+            <p className="text-[0.875rem] text-gray-700 dark:text-gray-300">
               <span className="inline-block w-2 h-2 rounded-full bg-[#a2cf96] mr-2"></span>
               <strong>Goal:</strong>{" "}
               {activeMilestone?.description
@@ -350,7 +350,7 @@ const ProjectDetails = () => {
               alt={managerName || "Manager"}
               width={40}
               height={40}
-              className="rounded-full object-cover h-10"
+              className="rounded-full object-cover h-10 w-10"
             />
             <div>
               <p className="text-sm font-semibold text-gray-800 dark:text-gray-100">
@@ -370,7 +370,7 @@ const ProjectDetails = () => {
           {/* Table */}
           <div className="lg:col-span-2 flex flex-col">
             <div className="px-3">
-              <div className="border-t max-h-[48vh] min-h-[48vh] overflow-y-auto hide-scrollbar">
+              <div className="border-t max-h-[48vh] min-h-[56.5vh] overflow-y-auto hide-scrollbar">
                 {tasksLoading ? (
                   <p className="p-6 text-gray-500">Loading tasks…</p>
                 ) : null}
@@ -393,7 +393,7 @@ const ProjectDetails = () => {
             </div>
 
             {/* Action Bar */}
-            <div className="flex items-center gap-3 mt-3">
+            <div className="flex items-center gap-3 mt-2.5">
               <button
                 onClick={() => setOpenAddDoc(true)}
                 className="bg-[#63A053] text-white px-2.5 rounded-xs text-xl cursor-pointer"

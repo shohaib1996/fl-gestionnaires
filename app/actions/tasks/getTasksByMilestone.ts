@@ -89,7 +89,8 @@ export async function getTasksByMilestone(
       `
     )
     .eq("milestone_id", milestoneId)
-    .order("order_index", { ascending: true })
+    .order("order_index", { ascending: true, nullsFirst: false })
+    .order("created_at", { ascending: true })
     .returns<TaskWithDocumentRow[]>();
 
   if (error) {

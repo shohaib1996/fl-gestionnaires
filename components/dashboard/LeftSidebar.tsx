@@ -148,7 +148,7 @@ export default function LeftSidebar() {
               </p>
 
               {(e.start_time || e.end_time) && (
-                <p className="text-[11px] font-sans font-regular text-[#326EA6]">
+                <p className="text-[0.75rem] font-sans font-regular text-[#326EA6]">
                   {e.start_time ?? "--"} – {e.end_time ?? "--"}
                 </p>
               )}
