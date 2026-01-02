@@ -23,7 +23,6 @@ import { useAssignedProjectDetails } from "@/hooks/useAssignedProjectDetails";
 import { useCreateTask } from "@/hooks/useCreateTaks";
 import useEditTask from "@/hooks/useEditTask";
 import { useTasksByMilestone } from "@/hooks/useTasksByMilestone";
-import { getPublicFileUrl } from "@/lib/utils/getPublicFileUrl";
 import { useUser } from "@/providers/UserProvider";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -281,7 +280,7 @@ const ProjectDetails = () => {
       </div>
 
       {/* Project Section */}
-      <div className="bg-white dark:bg-neutral-800 rounded-md shadow-sm border border-gray-200 dark:border-neutral-700 max-h-[72vh]">
+      <div className="bg-white dark:bg-neutral-800 rounded-md shadow-sm border border-gray-200 dark:border-neutral-700 max-h-[72vh] min-h-[72vh] flex flex-col">
         {/* Header */}
         <div className="flex items-center justify-between border-b pb-3 mb-4 bg-[#63a053]/25 p-4">
           <h1 className="text-2xl font-bold text-gray-700 dark:text-white">
@@ -311,19 +310,21 @@ const ProjectDetails = () => {
         {/* Phases */}
         <div className="flex flex-wrap gap-2 mb-4 px-3">
           <div className="flex gap-3 ">
-            <MilestoneTabs
-              activeMilestoneId={activeMilestoneId}
-              milestones={project.milestones}
-              onChange={(milestone) => {
-                router.push(
-                  `/dashboard/${projectId}/project/${projectId}?milestone=${milestone.id}`
-                );
-              }}
-              onTitleClick={(milestone) => {
-                setSelectedPhase(milestone);
-                setJalonDetailsModalOpen(true);
-              }}
-            />
+            {project.milestones && project.milestones.length > 0 && (
+              <MilestoneTabs
+                activeMilestoneId={activeMilestoneId}
+                milestones={project.milestones}
+                onChange={(milestone) => {
+                  router.push(
+                    `/dashboard/${projectId}/project/${projectId}?milestone=${milestone.id}`
+                  );
+                }}
+                onTitleClick={(milestone) => {
+                  setSelectedPhase(milestone);
+                  setJalonDetailsModalOpen(true);
+                }}
+              />
+            )}
           </div>
           <button
             onClick={() => setJalonModalOpen(true)}
@@ -334,53 +335,50 @@ const ProjectDetails = () => {
         </div>
 
         {/* Goal + Lead */}
-        <div className="flex justify-between items-start mb-6 px-6">
-          <div>
-            <p className="text-[0.875rem] text-gray-700 dark:text-gray-300">
-              <span className="inline-block w-2 h-2 rounded-full bg-[#a2cf96] mr-2"></span>
-              <strong>Goal:</strong>{" "}
-              {activeMilestone?.description
-                ? truncateDescription(activeMilestone.description)
-                : "No description available"}
-            </p>
-          </div>
-          <div className="flex items-center gap-2">
-            <Image
-              src={currentManager?.avatarURL || "/images/profile.jpeg"}
-              alt={managerName || "Manager"}
-              width={40}
-              height={40}
-              className="rounded-full object-cover h-10 w-10"
-            />
+        {activeMilestone && (
+          <div className="flex justify-between items-start mb-6 px-6">
             <div>
-              <p className="text-sm font-semibold text-gray-800 dark:text-gray-100">
-                {currentManager?.role || "Admin"}
-              </p>
-              <p className="text-xs text-gray-500">
-                {managerName || managerEmail || "Manager"}
+              <p className="text-[0.875rem] text-gray-700 dark:text-gray-300">
+                <span className="inline-block w-2 h-2 rounded-full bg-[#a2cf96] mr-2"></span>
+                {activeMilestone?.description ? "Goal:" : ""}
+                {activeMilestone?.description
+                  ? truncateDescription(activeMilestone.description)
+                  : ""}
               </p>
             </div>
+            <div className="flex items-center gap-2">
+              <Image
+                src={currentManager?.avatarURL || "/images/profile.jpeg"}
+                alt={managerName || "Manager"}
+                width={40}
+                height={40}
+                className="rounded-full object-cover h-10 w-10"
+              />
+              <div>
+                <p className="text-sm font-semibold text-gray-800 dark:text-gray-100">
+                  {currentManager?.role || "Admin"}
+                </p>
+                <p className="text-xs text-gray-500">
+                  {managerName || managerEmail || "Manager"}
+                </p>
+              </div>
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Table + Preview */}
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 px-6 pb-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 px-6 flex-1 min-h-0">
           {/* Documents Table */}
           {/* Table */}
-          <div className="lg:col-span-2 flex flex-col">
-            <div className="px-3">
-              <div className="border-t max-h-[48vh] min-h-[48.5vh] overflow-y-auto hide-scrollbar">
-                {tasksLoading ? (
-                  <p className="p-6 text-gray-500">Loading tasks…</p>
-                ) : null}
-                {!tasksLoading && tasks?.length === 0 ? (
-                  <p className="p-6 text-gray-500">
-                    No tasks for this milestone.
-                  </p>
-                ) : null}
-
-                {!tasksLoading && tasks?.length ? (
+          <div className="lg:col-span-2 flex flex-col min-h-0">
+            <div className="flex-1 overflow-y-auto hide-scrollbar">
+              {tasksLoading ? (
+                <p className="p-6 text-gray-500">Loading tasks…</p>
+              ) : !tasksLoading && tasks?.length === 0 ? (
+                <p className="p-6 text-gray-500"></p>
+              ) : !tasksLoading && tasks?.length ? (
+                <div className="border-t">
                   <TaskLists
                     tasks={tasks}
                     setSelectedTask={setSelectedTask}
@@ -388,12 +386,12 @@ const ProjectDetails = () => {
                     setDoc={setDoc}
                     editTaskAsync={editTaskAsync}
                   />
-                ) : null}
-              </div>
+                </div>
+              ) : null}
             </div>
 
             {/* Action Bar */}
-            <div className="flex items-center gap-3 mt-2.5">
+            <div className="py-4 shrink-0">
               <button
                 onClick={() => setOpenAddDoc(true)}
                 className="bg-[#63A053] text-white px-2.5 rounded-xs text-xl cursor-pointer"
@@ -404,13 +402,15 @@ const ProjectDetails = () => {
           </div>
 
           {/* Preview card */}
-          <PreviewCard
-            handleDownload={handleDownload}
-            handlePrint={handlePrint}
-            setFullscreenOpen={setFullscreenOpen}
-            previewURL={selectedTask?.document?.file_path || null}
-            fileFormat={selectedTask?.document?.file_format || null}
-          />
+          {selectedTask && (
+            <PreviewCard
+              handleDownload={handleDownload}
+              handlePrint={handlePrint}
+              setFullscreenOpen={setFullscreenOpen}
+              previewURL={selectedTask?.document?.file_path || null}
+              fileFormat={selectedTask?.document?.file_format || null}
+            />
+          )}
         </div>
       </div>
 
@@ -420,25 +420,23 @@ const ProjectDetails = () => {
 
       {fullscreenOpen && (
         <div
-          className="fixed inset-0 z-9999 bg-black/70 backdrop-blur-sm"
+          className="fixed inset-0 z-[9999] bg-black/70 backdrop-blur-sm flex items-center justify-center"
           onClick={() => setFullscreenOpen(false)}
         >
           {/* Viewer container */}
           <div
-            className="absolute inset-6 bg-transparent rounded-lg overflow-hidden"
+            className="relative w-[90vw] h-[90vh] bg-transparent rounded-lg overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
             <PreviewRenderer
               variant="fullscreen"
-              url={
-                getPublicFileUrl(selectedTask?.document?.file_path || "") || ""
-              }
+              url={selectedTask?.document?.file_path || ""}
             />
 
             {/* Close button */}
             <button
               onClick={() => setFullscreenOpen(false)}
-              className="absolute top-4 right-4 bg-black/70 text-white p-2 rounded-full hover:bg-black transition"
+              className="absolute top-4 right-4 bg-black/70 text-white p-2 rounded-full hover:bg-black transition z-10"
               aria-label="Close preview"
             >
               <X className="w-6 h-6" />

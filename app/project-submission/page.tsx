@@ -158,11 +158,11 @@ const ProjectSubmission = () => {
             {currentStep !== 5 && (
               <Link href="/" className="flex items-center">
                 <Image
-                  src="/images/216_1705.png"
+                  src="/images/FLLogo.svg"
                   alt="FL Logo"
                   width={125}
                   height={100}
-                  className="rounded-full w-20 h-auto md:w-28 lg:w-[125px]"
+                  className="rounded-full w-20 h-auto md:w-28 lg:w-[125px] object-fill"
                 />
               </Link>
             )}

@@ -46,7 +46,7 @@ export default function PreviewRenderer({
   variant = "inline",
 }: PreviewRendererProps) {
   const type = getPreviewKind(url);
-  const height = variant === "fullscreen" ? "h-full" : "h-[52vh]";
+  const height = variant === "fullscreen" ? "h-full" : "h-full";
   const previewURL = getPublicFileUrl(url);
 
   switch (type) {
@@ -74,7 +74,7 @@ export default function PreviewRenderer({
             width={400}
             height={400}
             className="object-contain max-w-full max-h-full"
-            style={{ width: "auto", height: "auto", maxHeight: "44vh" }}
+            style={{ width: "auto", height: "auto" }}
           />
         </div>
       );

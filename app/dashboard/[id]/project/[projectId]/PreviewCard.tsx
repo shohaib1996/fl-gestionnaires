@@ -18,13 +18,15 @@ export default function PreviewCard({
   fileFormat,
 }: Props) {
   return (
-    <div className="border border-gray-200 dark:border-neutral-700 rounded-md p-3 flex flex-col items-center h-[52vh]">
+    <div className="border border-gray-200 dark:border-neutral-700 rounded-md flex flex-col items-center min-h-0 h-full">
       {previewURL ? (
         <>
-          <PreviewRenderer url={previewURL} variant="inline" />
+          <div className="flex-1 w-full overflow-hidden min-h-0 p-3">
+            <PreviewRenderer url={previewURL} variant="inline" />
+          </div>
 
           {fileFormat !== "web" && fileFormat !== "external" && (
-            <div className="flex justify-center gap-3 mt-3">
+            <div className="flex justify-center gap-3 p-4 shrink-0">
               <button
                 onClick={() =>
                   handleDownload(
@@ -63,7 +65,7 @@ export default function PreviewCard({
         </>
       ) : (
         <div className="flex justify-center items-center h-full">
-          <p className="p-6 text-gray-500">No preview available.</p>
+          <p className="p-6 text-gray-500"></p>
         </div>
       )}
     </div>

@@ -98,7 +98,7 @@ export default function DashboardView({
                                 "fr-FR"
                               )}
                             </p>
-                            <p className="text-gray-800 dark:text-gray-300">
+                            <p className="text-gray-800 dark:text-gray-300 text-[0.875rem]">
                               {project.description
                                 ? project.description.slice(0, 170) + "..."
                                 : "No description available"}

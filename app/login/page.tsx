@@ -271,7 +271,7 @@ export default function AdminLoginPage() {
             className="mt-2 w-48 self-center bg-[#63a053] text-white hover:bg-[#528a45] rounded"
             disabled={loading}
           >
-            {loading ? "Connexion..." : "CONNEXION"}
+            {loading ? "CONNEXION..." : "CONNEXION"}
           </Button>
 
           {/* Forgot password links */}
