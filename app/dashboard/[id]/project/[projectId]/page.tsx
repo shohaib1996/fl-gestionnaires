@@ -420,7 +420,7 @@ const ProjectDetails = () => {
 
       {fullscreenOpen && (
         <div
-          className="fixed inset-0 z-[9999] bg-black/70 backdrop-blur-sm flex items-center justify-center"
+          className="fixed inset-0 z-9999 bg-black/70 backdrop-blur-sm flex items-center justify-center"
           onClick={() => setFullscreenOpen(false)}
         >
           {/* Viewer container */}
