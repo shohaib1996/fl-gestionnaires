@@ -14,6 +14,78 @@ export type Database = {
   };
   public: {
     Tables: {
+      admin_account_requests: {
+        Row: {
+          address: string;
+          birth_date: string;
+          created_at: string | null;
+          email: string;
+          first_name: string;
+          id: string;
+          id_back_image: string | null;
+          id_front_image: string | null;
+          id_number: string | null;
+          id_type: string[];
+          last_name: string;
+          other_id_type: string | null;
+          phone_number: string;
+          postnom: string | null;
+          privacy_accepted: boolean | null;
+          signature_url: string | null;
+          signer_name: string | null;
+          status: string | null;
+          terms_accepted: boolean | null;
+          updated_at: string | null;
+          user_id: string;
+        };
+        Insert: {
+          address: string;
+          birth_date: string;
+          created_at?: string | null;
+          email: string;
+          first_name: string;
+          id?: string;
+          id_back_image?: string | null;
+          id_front_image?: string | null;
+          id_number?: string | null;
+          id_type: string[];
+          last_name: string;
+          other_id_type?: string | null;
+          phone_number: string;
+          postnom?: string | null;
+          privacy_accepted?: boolean | null;
+          signature_url?: string | null;
+          signer_name?: string | null;
+          status?: string | null;
+          terms_accepted?: boolean | null;
+          updated_at?: string | null;
+          user_id?: string;
+        };
+        Update: {
+          address?: string;
+          birth_date?: string;
+          created_at?: string | null;
+          email?: string;
+          first_name?: string;
+          id?: string;
+          id_back_image?: string | null;
+          id_front_image?: string | null;
+          id_number?: string | null;
+          id_type?: string[];
+          last_name?: string;
+          other_id_type?: string | null;
+          phone_number?: string;
+          postnom?: string | null;
+          privacy_accepted?: boolean | null;
+          signature_url?: string | null;
+          signer_name?: string | null;
+          status?: string | null;
+          terms_accepted?: boolean | null;
+          updated_at?: string | null;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
       account_requests: {
         Row: {
           address: string;
