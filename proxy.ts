@@ -44,36 +44,45 @@ export async function proxy(request: NextRequest) {
   }
 
   /* ----------------------------------------
-   * 2️⃣ Dashboard → only admin & super_admin
+   * 2️⃣ Get user profile for logged-in users
    * ---------------------------------------- */
-  if (user && pathname.startsWith("/dashboard")) {
-    const { data: profile, error } = await supabase
+  let userRole = null;
+  if (user) {
+    const { data: profile } = await supabase
       .from("users")
       .select("role")
       .eq("id", user.id)
       .single();
 
-    if (error || !profile) {
-      return NextResponse.redirect(new URL("/login", request.url));
-    }
+    userRole = profile?.role;
+  }
 
+  /* ----------------------------------------
+   * 3️⃣ Dashboard → only admin & super_admin
+   * ---------------------------------------- */
+  if (user && pathname.startsWith("/dashboard")) {
     const allowedRoles = ["admin", "super_admin"];
 
-    if (!allowedRoles.includes(profile.role)) {
-      return NextResponse.redirect(new URL("/unauthorized", request.url));
+    if (!userRole || !allowedRoles.includes(userRole)) {
+      return NextResponse.redirect(new URL("/projects", request.url));
     }
   }
 
   /* ----------------------------------------
-   * 3️⃣ Logged in → prevent login & root
+   * 4️⃣ Logged in → redirect from root based on role
    * ---------------------------------------- */
-  if (user && (pathname === "/login" || pathname === "/")) {
-    return NextResponse.redirect(new URL("/projects", request.url));
+  if (user && pathname === "/") {
+    // Redirect based on role
+    if (userRole === "admin" || userRole === "super_admin") {
+      return NextResponse.redirect(new URL("/dashboard", request.url));
+    } else {
+      return NextResponse.redirect(new URL("/projects", request.url));
+    }
   }
 
   return response;
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/projects/:path*", "/login", "/"],
+  matcher: ["/dashboard/:path*", "/projects/:path*", "/"],
 };

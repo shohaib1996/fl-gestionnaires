@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { UserDetailsModal } from "./UserDetailsModal";
 
 type AdminAccountRequest = Tables<"admin_account_requests">;
 
@@ -45,6 +46,10 @@ export function AdminRequestsClient({
   const [isAddUserDialogOpen, setIsAddUserDialogOpen] = useState(false);
   const [newUserName, setNewUserName] = useState("");
   const [newUserEmail, setNewUserEmail] = useState("");
+  const [selectedUser, setSelectedUser] = useState<AdminAccountRequest | null>(
+    null
+  );
+  const [isUserDetailsModalOpen, setIsUserDetailsModalOpen] = useState(false);
 
   // Debounced search effect
   useEffect(() => {
@@ -98,6 +103,11 @@ export function AdminRequestsClient({
     setIsAddUserDialogOpen(false);
     setNewUserName("");
     setNewUserEmail("");
+  };
+
+  const handleRowClick = (request: AdminAccountRequest) => {
+    setSelectedUser(request);
+    setIsUserDetailsModalOpen(true);
   };
 
   return (
@@ -285,7 +295,8 @@ export function AdminRequestsClient({
                 requests.map((request) => (
                   <tr
                     key={request.id}
-                    className="border-t border-gray-200 dark:border-neutral-700 hover:bg-[#E0EFFF] dark:hover:bg-neutral-700 transition-colors"
+                    onClick={() => handleRowClick(request)}
+                    className="border-t border-gray-200 dark:border-neutral-700 hover:bg-[#E0EFFF] dark:hover:bg-neutral-700 transition-colors cursor-pointer"
                   >
                     <td className="px-6 py-3">
                       <div className="flex items-center">
@@ -329,11 +340,12 @@ export function AdminRequestsClient({
                     <td className="px-6 py-3">
                       <div className="relative">
                         <button
-                          onClick={() =>
+                          onClick={(e) => {
+                            e.stopPropagation();
                             setOpenDropdownId(
                               openDropdownId === request.id ? null : request.id
-                            )
-                          }
+                            );
+                          }}
                           disabled={isUpdating}
                           className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 flex items-center gap-2 disabled:opacity-50"
                         >
@@ -365,9 +377,15 @@ export function AdminRequestsClient({
                             {/* Backdrop to close dropdown */}
                             <div
                               className="fixed inset-0 z-10"
-                              onClick={() => setOpenDropdownId(null)}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setOpenDropdownId(null);
+                              }}
                             />
-                            <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-md shadow-lg z-20">
+                            <div
+                              onClick={(e) => e.stopPropagation()}
+                              className="absolute right-0 mt-2 w-56 bg-white dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-md shadow-lg z-20"
+                            >
                               <div className="py-1">
                                 <button
                                   onClick={() =>
@@ -408,6 +426,16 @@ export function AdminRequestsClient({
           </table>
         </div>
       </div>
+
+      {/* User Details Modal */}
+      <UserDetailsModal
+        isOpen={isUserDetailsModalOpen}
+        onClose={() => {
+          setIsUserDetailsModalOpen(false);
+          setSelectedUser(null);
+        }}
+        user={selectedUser}
+      />
     </>
   );
 }
