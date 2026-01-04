@@ -7,15 +7,21 @@ export default function UserLIst({ req }: any) {
   return (
     <tr
       onClick={() => router.push(`/dashboard/account-requests/${req.id}`)}
-      className="border-t border-[#989898]/80 dark:border-neutral-700 hover:bg-[#E0EFFF] dark:hover:bg-neutral-700 cursor-pointer transition-colors"
+      className="border-t border-gray-200 dark:border-neutral-700 hover:bg-[#E0EFFF] dark:hover:bg-neutral-700 cursor-pointer transition-colors"
     >
-      <td className="px-4 py-3 font-medium text-gray-900 dark:text-gray-100">
+      <td className="px-6 py-3 font-normal text-gray-900 dark:text-gray-100">
         {req.first_name} {req.last_name}
       </td>
-      <td className="px-4 py-3 text-gray-700 dark:text-gray-300">{req.email}</td>
-      <td className="px-4 py-3 text-gray-700 dark:text-gray-300">{req.phone_number}</td>
-      <td className="px-4 py-3 text-gray-700 dark:text-gray-300">{req.occupation}</td>
-      <td className="px-4 py-3">
+      <td className="px-6 py-3 font-normal text-gray-700 dark:text-gray-300">
+        {req.occupation}
+      </td>
+      <td className="px-6 py-3 font-normal text-gray-700 dark:text-gray-300">
+        {req.email}
+      </td>
+      <td className="px-6 py-3 font-normal text-gray-700 dark:text-gray-300">
+        {req.phone_number}
+      </td>
+      <td className="px-6 py-3">
         <StatusBadge status={req.status} />
       </td>
     </tr>
