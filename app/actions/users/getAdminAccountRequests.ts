@@ -2,15 +2,25 @@
 
 import { createClient } from "@/lib/supabase/server";
 
-export async function getAdminAccountRequests() {
+export async function getAdminAccountRequests(searchQuery?: string) {
   const supabase = await createClient();
 
   try {
-    // Get ALL admin account requests (pending, approved, rejected)
-    const { data: requests, error } = await supabase
+    // Build query with optional search
+    let query = supabase
       .from("admin_account_requests")
       .select("*")
       .order("created_at", { ascending: false });
+
+    // Add search filters if query is provided
+    if (searchQuery && searchQuery.trim()) {
+      const search = searchQuery.trim();
+      query = query.or(
+        `first_name.ilike.%${search}%,last_name.ilike.%${search}%,email.ilike.%${search}%`
+      );
+    }
+
+    const { data: requests, error } = await query;
 
     if (error) {
       console.error("Error fetching admin account requests:", error);

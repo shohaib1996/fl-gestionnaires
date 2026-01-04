@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 
 export async function approveAdminWithRole(
   requestId: string,
-  assignedRole: "admin" | "super_admin"
+  assignedRole: "admin" | "super_admin" | "onterpeoner"
 ) {
   const supabase = await createClient();
 

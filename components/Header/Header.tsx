@@ -117,6 +117,13 @@ const Header = () => {
               <Link href="/dashboard/account-requests">Demande de compte</Link>
             </DropdownMenuItem>
 
+            {/* Comptes - Only visible to super_admin */}
+            {user?.role === "super_admin" && (
+              <DropdownMenuItem className="cursor-pointer rounded-xs focus:bg-[#326EA6] focus:text-white">
+                <Link href="/dashboard/users">Comptes</Link>
+              </DropdownMenuItem>
+            )}
+
             <Link href="/dashboard">
               <DropdownMenuItem className="cursor-pointer rounded-xs focus:bg-[#326EA6] focus:text-white">
                 Projet
