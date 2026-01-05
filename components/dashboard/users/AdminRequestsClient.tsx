@@ -15,6 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { UserDetailsModal } from "./UserDetailsModal";
+import Link from "next/link";
 
 type AdminAccountRequest = Tables<"admin_account_requests">;
 
@@ -23,14 +24,14 @@ interface AdminRequestsClientProps {
 }
 
 const roleLabels: Record<string, string> = {
-  admin: "Administrateur",
-  super_admin: "Super Administrateur",
+  admin: "Chef de file",
+  super_admin: "Allié",
   onterpeoner: "Organisateur",
 };
 
 const roleBadgeColors: Record<string, string> = {
   admin: "bg-[#239E98] text-white",
-  super_admin: "bg-purple-600 text-white",
+  super_admin: "bg-[#417EDA] text-white",
   onterpeoner: "bg-[#2E586D] text-white",
 };
 
@@ -70,7 +71,15 @@ export function AdminRequestsClient({
     newRole: "admin" | "super_admin" | "onterpeoner"
   ) => {
     setIsUpdating(true);
+    setOpenDropdownId(null);
+
+    // Show loading toast
+    toast.loading("Mise à jour du rôle en cours...");
+
     const result = await approveAdminWithRole(request.id, newRole);
+
+    // Dismiss loading toast
+    toast.dismiss();
 
     if (result.ok) {
       toast.success("Rôle mis à jour avec succès!");
@@ -83,8 +92,6 @@ export function AdminRequestsClient({
             : r
         )
       );
-
-      setOpenDropdownId(null);
     } else {
       toast.error(result.error || "Erreur lors de la mise à jour du rôle");
     }
@@ -115,22 +122,24 @@ export function AdminRequestsClient({
       {/* Top Bar - Back button, Search, and Add Button */}
       <div className="py-5 flex justify-between items-center gap-4">
         {/* Back Button */}
-        <button className="p-2 rounded-xs bg-[#326EA6] hover:bg-[#326EA6]/80 text-white transition-colors">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="18"
-            height="11"
-            viewBox="0 0 13 11"
-            fill="none"
-          >
-            <path
-              fill-rule="evenodd"
-              clip-rule="evenodd"
-              d="M13 10.9469C11.4097 9.01439 9.99743 7.91784 8.7633 7.65729C7.52917 7.39675 6.35418 7.35738 5.23835 7.53921V11L0 5.35279L5.23835 0V3.28932C7.30167 3.3055 9.0558 4.04239 10.5007 5.5C11.9455 6.95761 12.7786 8.77325 13 10.9469Z"
-              fill="white"
-            />
-          </svg>
-        </button>
+        <Link href="/dashboard">
+          <button className="p-2 rounded-xs bg-[#326EA6] hover:bg-[#326EA6]/80 text-white transition-colors">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="11"
+              viewBox="0 0 13 11"
+              fill="none"
+            >
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M13 10.9469C11.4097 9.01439 9.99743 7.91784 8.7633 7.65729C7.52917 7.39675 6.35418 7.35738 5.23835 7.53921V11L0 5.35279L5.23835 0V3.28932C7.30167 3.3055 9.0558 4.04239 10.5007 5.5C11.9455 6.95761 12.7786 8.77325 13 10.9469Z"
+                fill="white"
+              />
+            </svg>
+          </button>
+        </Link>
 
         <div className="flex justify-center gap-3">
           {/* Search Input */}
@@ -238,16 +247,16 @@ export function AdminRequestsClient({
       </Dialog>
 
       {/* Main Content Container */}
-      <div className="min-h-[72vh] max-h-[72vh]">
+      <div className="h-[72vh] border border-[#000000]/15 rounded-xs flex flex-col">
         {/* Header - Fixed */}
-        <div className="border bg-[#E6E6E6] dark:bg-neutral-700 dark:border-neutral-600 py-[13px] px-5">
+        <div className="bg-[#E6E6E6] dark:bg-neutral-700 dark:border-neutral-600 py-[13px] px-5 shrink-0">
           <h1 className="text-2xl font-bold text-foreground dark:text-white">
             Gestion des utilisateurs
           </h1>
         </div>
 
         {/* Table - Scrollable */}
-        <div className="bg-card border border-border overflow-hidden max-h-[calc(72vh-4rem)] min-h-[calc(72vh-4rem)] overflow-y-auto hide-scrollbar px-8">
+        <div className="bg-card overflow-hidden flex-1 overflow-y-auto hide-scrollbar px-8">
           <table className="w-full text-sm">
             <thead className="sticky top-0 bg-white dark:bg-neutral-800 z-10 border-b border-gray-200 dark:border-neutral-700">
               <tr className="text-left">
@@ -391,7 +400,8 @@ export function AdminRequestsClient({
                                   onClick={() =>
                                     handleRoleChange(request, "onterpeoner")
                                   }
-                                  className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-neutral-700 flex items-center gap-2"
+                                  disabled={isUpdating}
+                                  className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-neutral-700 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                   <span className="w-3 h-3 rounded-full bg-[#2E586D]"></span>
                                   Organisateur
@@ -400,19 +410,21 @@ export function AdminRequestsClient({
                                   onClick={() =>
                                     handleRoleChange(request, "admin")
                                   }
-                                  className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-neutral-700 flex items-center gap-2"
+                                  disabled={isUpdating}
+                                  className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-neutral-700 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                   <span className="w-3 h-3 rounded-full bg-[#239E98]"></span>
-                                  Administrateur
+                                  Chef de file
                                 </button>
                                 <button
                                   onClick={() =>
                                     handleRoleChange(request, "super_admin")
                                   }
-                                  className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-neutral-700 flex items-center gap-2"
+                                  disabled={isUpdating}
+                                  className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-neutral-700 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
-                                  <span className="w-3 h-3 rounded-full bg-purple-600"></span>
-                                  Super Administrateur
+                                  <span className="w-3 h-3 rounded-full bg-[#417EDA]"></span>
+                                  Allié
                                 </button>
                               </div>
                             </div>

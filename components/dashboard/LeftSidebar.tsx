@@ -129,14 +129,14 @@ export default function LeftSidebar() {
           {filteredEvents.map((e) => (
             <div
               key={e.id}
-              className="pb-3 border-b border-gray-200 dark:border-neutral-700"
+              className="pb-3 px-1 border-b border-gray-200 dark:border-neutral-700"
             >
-              <p className="text-[1rem] font-sans font-medium text-[#343E47] dark:text-gray-200">
+              <p className="text-[0.875rem] font-sans font-medium text-[#343E47] dark:text-gray-200">
                 {format(new Date(e.start_date), "dd MMM yyyy", { locale: fr })}
               </p>
 
               <p
-                className="text-[#326EA6] hover:text-[#326EA6]/80 hover:underline cursor-pointer font-medium text-[1rem] font-sans"
+                className="text-[#326EA6] hover:text-[#326EA6]/80 hover:underline cursor-pointer font-medium text-[0.875rem] font-sans"
                 onClick={() => {
                   setActiveEvent(e);
                   setOpenDetails(true);
@@ -148,7 +148,7 @@ export default function LeftSidebar() {
               </p>
 
               {(e.start_time || e.end_time) && (
-                <p className="text-[1rem] font-sans font-regular text-[#326EA6]">
+                <p className="text-[0.875rem] font-sans font-regular text-[#326EA6]">
                   {e.start_time ?? "--"} – {e.end_time ?? "--"}
                 </p>
               )}

@@ -45,28 +45,31 @@ export default function ClaimerSection({
   return (
     <>
       <Dialog open={showDialog} onOpenChange={setShowDialog}>
-        <DialogContent showCloseButton={!isPending}>
+        <DialogContent className="rounded-xs" showCloseButton={!isPending}>
           <DialogHeader>
-            <DialogTitle>Reject this claim?</DialogTitle>
+            <DialogTitle>Retourner ce projet?</DialogTitle>
             <DialogDescription>
-              This action will remove the claimer from this project and reset
-              the project status to "submitted". This action cannot be undone.
+              Cette action retirera l’organisateur du projet et rendra ce projet
+              à nouveau disponible pour tous les autres organisateurs. Cette
+              action est irréversible.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button
-              variant="outline"
+              className="rounded-xs bg-[#63A053] text-white"
+              variant="default"
               onClick={() => setShowDialog(false)}
               disabled={isPending}
             >
-              Cancel
+              Rejeter
             </Button>
             <Button
-              variant="destructive"
+              variant="default"
               onClick={handleReject}
               disabled={isPending}
+              className="rounded-xs bg-[#63A053] text-white"
             >
-              {isPending ? "Rejecting..." : "Reject Claim"}
+              {isPending ? "En cours..." : "Approuver"}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -110,11 +113,12 @@ export default function ClaimerSection({
           {/* RIGHT SIDE: Actions */}
           <div className="flex items-center gap-3">
             <Button
-              variant="destructive"
+              className="rounded-xs bg-[#63A053] text-white hover:bg-[#63A053]/80"
+              variant="default"
               size="lg"
               onClick={() => setShowDialog(true)}
             >
-              Reject
+              Retourner
             </Button>
           </div>
         </div>

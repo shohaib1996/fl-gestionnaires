@@ -38,7 +38,7 @@ export function UserDetailsModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[600px] w-[90vw] rounded-xs p-0 max-h-[85vh] overflow-y-auto">
+      <DialogContent className="max-w-250 w-250 rounded-xs p-0 max-h-[85vh] overflow-y-auto hide-scrollbar">
         <DialogHeader className="bg-[#326EA6] p-6 rounded-t-xs sticky top-0 z-10">
           <DialogTitle className="text-white text-xl font-semibold">
             Détails de l&apos;utilisateur
@@ -47,7 +47,7 @@ export function UserDetailsModal({
 
         <div className="p-6 space-y-6">
           {/* Personal Information Section */}
-          <div>
+          <div className="pb-6 border-b border-gray-200 dark:border-neutral-700">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
               Informations personnelles
             </h3>
@@ -93,7 +93,7 @@ export function UserDetailsModal({
           </div>
 
           {/* Contact Information Section */}
-          <div>
+          <div className="pb-6 border-b border-gray-200 dark:border-neutral-700">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
               Coordonnées
             </h3>
@@ -128,7 +128,7 @@ export function UserDetailsModal({
           </div>
 
           {/* ID Information Section */}
-          <div>
+          <div className="pb-6 border-b border-gray-200 dark:border-neutral-700">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
               Pièce d&apos;identité
             </h3>
@@ -205,7 +205,7 @@ export function UserDetailsModal({
 
           {/* Signature Section */}
           {user.signature_url && (
-            <div>
+            <div className="pb-6 border-b border-gray-200 dark:border-neutral-700">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
                 Signature
               </h3>

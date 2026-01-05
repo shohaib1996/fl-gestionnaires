@@ -7,7 +7,7 @@ export default function UserLIst({ req }: any) {
   return (
     <tr
       onClick={() => router.push(`/dashboard/account-requests/${req.id}`)}
-      className="border-t border-gray-200 dark:border-neutral-700 hover:bg-[#E0EFFF] dark:hover:bg-neutral-700 cursor-pointer transition-colors"
+      className="h-15 border-t border-gray-200 dark:border-neutral-700 hover:bg-[#E0EFFF] dark:hover:bg-neutral-700 cursor-pointer transition-colors"
     >
       <td className="px-6 py-3 font-normal text-gray-900 dark:text-gray-100">
         {req.first_name} {req.last_name}
@@ -22,7 +22,9 @@ export default function UserLIst({ req }: any) {
         {req.phone_number}
       </td>
       <td className="px-6 py-3">
-        <StatusBadge status={req.status} />
+        <div className="flex justify-end">
+          <StatusBadge status={req.status} />
+        </div>
       </td>
     </tr>
   );

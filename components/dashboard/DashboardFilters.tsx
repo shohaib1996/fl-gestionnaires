@@ -32,7 +32,7 @@ export default function DashboardFilters({ values, onChange }: Props) {
             value={values.location}
             onChange={(value) => update("location", value)}
             placeholder="Taper ou sélectionner"
-            searchPlaceholder="Rechercher une province..."
+            searchPlaceholder=""
             columns={1}
           />
         </Filter>
@@ -43,7 +43,7 @@ export default function DashboardFilters({ values, onChange }: Props) {
             value={values.categories || []}
             onChange={(value) => update("categories", value)}
             placeholder="Sélectionner"
-            searchPlaceholder="Rechercher une catégorie..."
+            searchPlaceholder=""
           />
         </Filter>
 
