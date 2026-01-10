@@ -169,7 +169,7 @@ export default function AdminLoginPage() {
           className="text-gray-400 pt-8 pb-2 tracking-wide dark:text-gray-500"
           style={{ fontSize: "1.125rem" }}
         >
-          ADMIN
+          FL GESTIONNAIRE
         </p>
 
         <form

@@ -125,7 +125,7 @@ export default function TaskDetailsModal({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTitle className="sr-only">Détails de la tâche</DialogTitle>
       <DialogContent
-        className="p-0 w-204 min-h-144 overflow-hidden rounded-t-lg"
+        className="p-0 w-204 min-h-144 overflow-hidden rounded-t-lg border-none bg-transparent shadow-none"
         showCloseButton={false}
         style={{
           borderRadius:
@@ -133,7 +133,7 @@ export default function TaskDetailsModal({
         }}
       >
         {mode === "view" ? (
-          <div className="relative w-full h-full bg-[#63A053] dark:bg-[#4a7a3d] overflow-hidden flex flex-col rounded-b-3xl rounded-t-lg">
+          <div className="relative w-full h-full bg-[#63A053] dark:bg-[#4a7a3d] overflow-hidden flex flex-col rounded-b-3xl rounded-t-lg shadow-xl">
             {/* Close Button */}
             <button
               onClick={() => onOpenChange(false)}
@@ -241,7 +241,7 @@ export default function TaskDetailsModal({
             </div>
           </div>
         ) : (
-          <div className="flex flex-col h-full bg-white dark:bg-gray-900 overflow-hidden">
+          <div className="flex flex-col h-full bg-white dark:bg-gray-900 overflow-hidden rounded-lg shadow-xl">
             <div className="w-full h-20 flex items-center justify-center bg-[#63A053] dark:bg-[#4a7a3d] relative shrink-0">
               <h2 className="text-white text-base font-bold">
                 Modifier la tâche

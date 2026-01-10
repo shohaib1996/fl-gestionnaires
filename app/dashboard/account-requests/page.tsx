@@ -51,7 +51,7 @@ export default async function AccountRequestsPage() {
           </button>
         </Link>
       </div>
-      <div className="h-[72vh] border border-[#000000]/15 flex flex-col">
+      <div className="h-[72vh] border border-[#000000]/15 flex flex-col relative">
         {/* Header - Fixed */}
         <div className="bg-[#E6E6E6] dark:bg-neutral-700 dark:border-neutral-600 py-[13px] px-5 shrink-0">
           <h1 className="text-2xl font-bold text-foreground dark:text-white">
@@ -60,23 +60,23 @@ export default async function AccountRequestsPage() {
         </div>
 
         {/* List - Scrollable */}
-        <div className="bg-card border border-border overflow-hidden flex-1 overflow-y-auto hide-scrollbar px-10 pb-8">
+        <div className="bg-card border border-border overflow-hidden flex-1 overflow-y-auto hide-scrollbar px-10 pb-20">
           <table className="w-full text-sm">
             <thead className="sticky top-0 bg-white dark:bg-neutral-800 z-10 border-b border-gray-200 dark:border-neutral-700">
-              <tr className="text-left">
-                <th className="px-6 py-3 font-normal text-gray-900 dark:text-gray-200">
+              <tr className="text-left font-bold">
+                <th className="px-6 py-3 text-gray-900 dark:text-gray-200">
                   Nom
                 </th>
-                <th className="px-6 py-3 font-normal text-gray-900 dark:text-gray-200">
+                <th className="px-6 py-3 text-gray-900 dark:text-gray-200">
                   Profession
                 </th>
-                <th className="px-6 py-3 font-normal text-gray-900 dark:text-gray-200">
+                <th className="px-6 py-3 text-gray-900 dark:text-gray-200">
                   Email
                 </th>
-                <th className="px-6 py-3 font-normal text-gray-900 dark:text-gray-200">
+                <th className="px-6 py-3 text-gray-900 dark:text-gray-200">
                   Téléphone
                 </th>
-                <th className="px-6 py-3 font-normal text-gray-900 dark:text-gray-200 text-center">
+                <th className="px-6 py-3 text-gray-900 dark:text-gray-200 text-center">
                   Statut
                 </th>
               </tr>
@@ -100,6 +100,9 @@ export default async function AccountRequestsPage() {
             </tbody>
           </table>
         </div>
+
+        {/* Bottom Bezel */}
+        <div className="absolute bottom-0 left-0 right-0 h-8 bg-white dark:bg-neutral-800 z-20" />
       </div>
     </div>
   );
