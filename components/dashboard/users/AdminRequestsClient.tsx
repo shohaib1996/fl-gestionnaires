@@ -356,7 +356,7 @@ export function AdminRequestsClient({
                             );
                           }}
                           disabled={isUpdating}
-                          className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 flex items-center gap-2 disabled:opacity-50"
+                          className="text-[#343E47] hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 flex items-center gap-2 disabled:opacity-50"
                         >
                           <svg
                             className="w-4 h-4"
