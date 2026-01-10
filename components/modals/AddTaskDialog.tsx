@@ -149,9 +149,9 @@ export default function AddTaskDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-lg p-0 rounded-none border-none">
+      <DialogContent className="max-w-lg p-0 rounded-none border-none dark:bg-gray-900">
         <DialogHeader>
-          <DialogTitle className="text-sm font-semibold bg-[#63A053] text-white py-5 text-center">
+          <DialogTitle className="text-sm font-semibold bg-[#63A053] dark:bg-[#4a7a3d] text-white py-5 text-center">
             Ajouter une tâche ou un rendez-vous
           </DialogTitle>
         </DialogHeader>
@@ -159,23 +159,23 @@ export default function AddTaskDialog({
         <div className="space-y-4 py-3 px-16">
           {/* Title */}
           <div>
-            <label className="text-sm font-medium">Titre</label>
+            <label className="text-sm font-medium dark:text-gray-300">Titre</label>
             <Input
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Titre de la tâche"
-              className="mt-1 bg-gray-100 rounded-xs"
+              className="mt-1 bg-gray-100 dark:bg-gray-800 dark:text-white dark:placeholder:text-gray-500 rounded-xs"
             />
           </div>
 
           {/* Description */}
           <div>
-            <label className="text-sm font-medium">Brève description</label>
+            <label className="text-sm font-medium dark:text-gray-300">Brève description</label>
             <Textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Brève description"
-              className="mt-1 bg-gray-100 h-[150px] max-h-[150px] resize-none overflow-y-auto rounded-xs"
+              className="mt-1 bg-gray-100 dark:bg-gray-800 dark:text-white dark:placeholder:text-gray-500 h-[150px] max-h-[150px] resize-none overflow-y-auto rounded-xs"
             />
           </div>
 
@@ -183,15 +183,15 @@ export default function AddTaskDialog({
           <div className="grid grid-cols-2 gap-4">
             {/* Start date */}
             <div>
-              <label className="text-sm font-medium">Date de début</label>
+              <label className="text-sm font-medium dark:text-gray-300">Date de début</label>
               <Popover>
                 <PopoverTrigger asChild>
-                  <button className="w-full flex items-center justify-between bg-gray-100 py-3 px-3 rounded text-sm text-gray-600">
+                  <button className="w-full flex items-center justify-between bg-gray-100 dark:bg-gray-800 py-3 px-3 rounded text-sm text-gray-600 dark:text-gray-300">
                     <div className="flex items-center gap-3">
-                      <Calendar1 className="w-4 h-4 text-gray-500" />
+                      <Calendar1 className="w-4 h-4 text-gray-500 dark:text-gray-400" />
                       <span>{startDate ? fmt(startDate) : "JJ/MM/AAAA"}</span>
                     </div>
-                    <ChevronDown className="w-4 h-4 text-gray-500" />
+                    <ChevronDown className="w-4 h-4 text-gray-500 dark:text-gray-400" />
                   </button>
                 </PopoverTrigger>
 
@@ -207,15 +207,15 @@ export default function AddTaskDialog({
 
             {/* End date with dynamic icon */}
             <div>
-              <label className="text-sm font-medium">Date de fin</label>
+              <label className="text-sm font-medium dark:text-gray-300">Date de fin</label>
 
               <Popover>
                 <PopoverTrigger asChild>
                   <button
                     className={`w-full flex items-center justify-between py-3 px-3 rounded text-sm transition ${
                       endDateEnabled
-                        ? "bg-gray-100 text-gray-700"
-                        : "bg-gray-200 text-gray-400"
+                        ? "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300"
+                        : "bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500"
                     }`}
                   >
                     <div className="flex items-center gap-3">
@@ -279,23 +279,23 @@ export default function AddTaskDialog({
           {/* Time pickers */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-sm font-medium">Heure de début</label>
+              <label className="text-sm font-medium dark:text-gray-300">Heure de début</label>
               <TimePicker24 value={startTime} onChange={setStartTime} />
             </div>
 
             <div>
-              <label className="text-sm font-medium">Heure de fin</label>
+              <label className="text-sm font-medium dark:text-gray-300">Heure de fin</label>
               <TimePicker24 value={endTime} onChange={setEndTime} />
             </div>
           </div>
 
           {/* Location */}
           <div>
-            <label className="text-sm font-medium mb-2 block">Lieu</label>
+            <label className="text-sm font-medium mb-2 block dark:text-gray-300">Lieu</label>
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="w-full flex items-center justify-between bg-gray-100 py-3 px-3 rounded text-sm text-gray-600">
+                <button className="w-full flex items-center justify-between bg-gray-100 dark:bg-gray-800 py-3 px-3 rounded text-sm text-gray-600 dark:text-gray-300">
                   <div className="flex items-center gap-3">
                     <MapPin className="w-4 h-4" />
                     <span>{location}</span>
@@ -320,7 +320,7 @@ export default function AddTaskDialog({
 
           {/* Participants Multi-select */}
           <div>
-            <label className="text-sm font-medium mb-2 block">
+            <label className="text-sm font-medium mb-2 block dark:text-gray-300">
               Participants
             </label>
 
@@ -329,12 +329,12 @@ export default function AddTaskDialog({
               {selectedParticipants.slice(0, 2).map((p) => (
                 <div
                   key={p.email}
-                  className="flex items-center gap-1 bg-gray-200 text-sm px-2 py-1 rounded"
+                  className="flex items-center gap-1 bg-gray-200 dark:bg-gray-700 dark:text-white text-sm px-2 py-1 rounded"
                 >
                   {p.name}
                   <button
                     onClick={() => removeParticipant(p.email)}
-                    className="text-gray-600 hover:text-black"
+                    className="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white"
                   >
                     <X className="w-4 h-4" />
                   </button>
@@ -342,7 +342,7 @@ export default function AddTaskDialog({
               ))}
 
               {selectedParticipants.length > 2 && (
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-gray-500 dark:text-gray-400">
                   +{selectedParticipants.length - 2} more
                 </span>
               )}
@@ -350,7 +350,7 @@ export default function AddTaskDialog({
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="w-full flex items-center justify-between bg-gray-100 py-3 px-3 rounded text-sm text-gray-600">
+                <button className="w-full flex items-center justify-between bg-gray-100 dark:bg-gray-800 py-3 px-3 rounded text-sm text-gray-600 dark:text-gray-300">
                   <div className="flex items-center gap-3">
                     <User2 className="w-4 h-4" />
                     <span>Ajouter</span>
@@ -366,6 +366,7 @@ export default function AddTaskDialog({
                     value={participantQuery}
                     onChange={(e) => setParticipantQuery(e.target.value)}
                     placeholder="Chercher"
+                    className="dark:bg-gray-800 dark:text-white dark:placeholder:text-gray-500"
                   />
                 </div>
 
@@ -385,8 +386,8 @@ export default function AddTaskDialog({
                           selected ? "opacity-50" : ""
                         }`}
                       >
-                        <span>{p.name}</span>
-                        <span className="text-xs text-gray-500">{p.email}</span>
+                        <span className="dark:text-white">{p.name}</span>
+                        <span className="text-xs text-gray-500 dark:text-gray-400">{p.email}</span>
                       </DropdownMenuItem>
                     );
                   })}
@@ -398,16 +399,15 @@ export default function AddTaskDialog({
           {/* Buttons */}
           <div className="flex justify-center gap-3 pt-4 pb-8">
             <Button
-              variant="outline"
               onClick={() => onOpenChange(false)}
-              className="px-6 h-11 bg-[#63a053] hover:bg-[#528a45] text-white rounded-none"
+              className="px-6 h-11 bg-[#63a053] hover:bg-[#528a45] text-white hover:text-white rounded-none"
             >
               Annuler
             </Button>
 
             <Button
               onClick={handleSave}
-              className="bg-[#63a053] hover:bg-[#528a45] px-6 h-11 rounded-none"
+              className="bg-[#63a053] hover:bg-[#528a45] px-6 h-11 text-white hover:text-white rounded-none"
             >
               Sauvegarder
             </Button>

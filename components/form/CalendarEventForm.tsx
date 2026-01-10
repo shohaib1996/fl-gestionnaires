@@ -162,23 +162,25 @@ export default function CalendarEventForm({
     <div className="space-y-4 py-3 px-16">
       {/* Title */}
       <div>
-        <label className="text-sm font-medium">Titre</label>
+        <label className="text-sm font-medium dark:text-gray-300">Titre</label>
         <Input
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Titre de la tâche"
-          className="mt-1 bg-gray-100 rounded-xs"
+          className="mt-1 bg-gray-100 dark:bg-gray-800 dark:text-white dark:placeholder:text-gray-500 rounded-xs"
         />
       </div>
 
       {/* Description */}
       <div>
-        <label className="text-sm font-medium">Brève description</label>
+        <label className="text-sm font-medium dark:text-gray-300">
+          Brève description
+        </label>
         <Textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Brève description"
-          className="mt-1 bg-gray-100 h-[150px] min-h-[150px] rounded-xs"
+          className="mt-1 bg-gray-100 dark:bg-gray-800 dark:text-white dark:placeholder:text-gray-500 h-[150px] min-h-[150px] rounded-xs"
         />
       </div>
 
@@ -186,10 +188,12 @@ export default function CalendarEventForm({
       <div className="grid grid-cols-2 gap-4">
         {/* Start date */}
         <div>
-          <label className="text-sm font-medium">Date de début</label>
+          <label className="text-sm font-medium dark:text-gray-300">
+            Date de début
+          </label>
           <Popover>
             <PopoverTrigger asChild>
-              <button className="w-full flex items-center justify-between bg-gray-100 py-3 px-3 rounded text-sm text-gray-600">
+              <button className="w-full flex items-center justify-between bg-gray-100 dark:bg-gray-800 py-3 px-3 rounded text-sm text-gray-600 dark:text-gray-300">
                 <div className="flex items-center gap-3">
                   <Calendar1 className="w-4 h-4" />
                   <span>{startDate ? fmt(startDate) : "JJ/MM/AAAA"}</span>
@@ -209,12 +213,16 @@ export default function CalendarEventForm({
 
         {/* End date */}
         <div>
-          <label className="text-sm font-medium">Date de fin</label>
+          <label className="text-sm font-medium dark:text-gray-300">
+            Date de fin
+          </label>
           <Popover>
             <PopoverTrigger asChild>
               <button
                 className={`w-full flex items-center justify-between py-3 px-3 rounded text-sm ${
-                  endDateEnabled ? "bg-gray-100" : "bg-gray-200 text-gray-400"
+                  endDateEnabled
+                    ? "bg-gray-100 dark:bg-gray-800 dark:text-gray-300"
+                    : "bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500"
                 }`}
                 onClick={(e) => {
                   if (!endDateEnabled) {
@@ -255,20 +263,20 @@ export default function CalendarEventForm({
           type="time"
           value={startTime}
           onChange={(e) => setStartTime(e.target.value)}
-          className="bg-gray-100"
+          className="bg-gray-100 dark:bg-gray-800 dark:text-white"
         />
         <Input
           type="time"
           value={endTime}
           onChange={(e) => setEndTime(e.target.value)}
-          className="bg-gray-100"
+          className="bg-gray-100 dark:bg-gray-800 dark:text-white"
         />
       </div>
 
       {/* Location */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <button className="w-full flex items-center justify-between bg-gray-100 py-3 px-3 rounded text-sm">
+          <button className="w-full flex items-center justify-between bg-gray-100 dark:bg-gray-800 py-3 px-3 rounded text-sm dark:text-gray-300">
             <MapPin className="w-4 h-4" />
             <span>{location}</span>
             <ChevronDown className="w-4 h-4" />
@@ -285,13 +293,15 @@ export default function CalendarEventForm({
 
       {/* Participants */}
       <div>
-        <label className="text-sm font-medium mb-2 block">Participants</label>
+        <label className="text-sm font-medium mb-2 block dark:text-gray-300">
+          Participants
+        </label>
 
         <div className="flex flex-wrap gap-2 mb-2">
           {selectedParticipants.map((p) => (
             <div
               key={p.id}
-              className="flex items-center gap-1 bg-gray-200 text-sm px-2 py-1 rounded"
+              className="flex items-center gap-1 bg-gray-200 dark:bg-gray-700 dark:text-white text-sm px-2 py-1 rounded"
             >
               {p.name}
               <button onClick={() => removeParticipant(p.id)}>
@@ -303,7 +313,7 @@ export default function CalendarEventForm({
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="w-full flex items-center justify-between bg-gray-100 py-3 px-3 rounded text-sm">
+            <button className="w-full flex items-center justify-between bg-gray-100 dark:bg-gray-800 py-3 px-3 rounded text-sm dark:text-gray-300">
               <User2 className="w-4 h-4" />
               <span>Ajouter</span>
               <ChevronDown className="w-4 h-4" />
@@ -314,6 +324,7 @@ export default function CalendarEventForm({
               value={participantQuery}
               onChange={(e) => setParticipantQuery(e.target.value)}
               placeholder="Chercher"
+              className="dark:bg-gray-800 dark:text-white dark:placeholder:text-gray-500"
             />
             <div className="max-h-44 overflow-auto">
               {filteredParticipants.map((p) => {
@@ -329,8 +340,10 @@ export default function CalendarEventForm({
                     className={selected ? "opacity-50" : ""}
                   >
                     <div>
-                      <div>{p.name}</div>
-                      <div className="text-xs text-gray-500">{p.email}</div>
+                      <div className="dark:text-white">{p.name}</div>
+                      <div className="text-xs text-gray-500 dark:text-gray-400">
+                        {p.email}
+                      </div>
                     </div>
                   </DropdownMenuItem>
                 );
@@ -343,16 +356,15 @@ export default function CalendarEventForm({
       {/* Actions */}
       <div className="flex justify-center gap-3 pt-4 pb-8">
         <Button
-          variant="outline"
           onClick={onCancel}
-          className="px-6 h-11 bg-red-600 text-white rounded-none"
+          className="px-6 h-11 bg-[#63a053] text-white rounded-none dark:hover:bg-[#63a053]/80"
         >
           Annuler
         </Button>
 
         <Button
           onClick={handleSubmit}
-          className="bg-[#63a053] px-6 h-11 rounded-none"
+          className="bg-[#63a053] px-6 h-11 rounded-none text-white dark:hover:bg-[#63a053]/80"
           disabled={loading}
         >
           {loading && <Spinner className="mr-2 h-4 w-4 animate-spin" />}
