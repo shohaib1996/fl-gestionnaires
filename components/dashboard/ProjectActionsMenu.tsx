@@ -199,7 +199,7 @@ export default function ProjectActionsMenu({
             </Button>
             <Button
               onClick={handleConfirm}
-              className="bg-[#63a053] text-white"
+              className="bg-[#63a053] hover:bg-[#528a45] text-white"
               disabled={dialog === "assign" && !selectedAdminId}
             >
               Confirmer

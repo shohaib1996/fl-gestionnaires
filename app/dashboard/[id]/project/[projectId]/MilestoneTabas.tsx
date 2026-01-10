@@ -29,9 +29,9 @@ export function MilestoneTabs({
     return (
       <div
         key={m.id}
-        className={`rounded-xs text-sm font-medium cursor-pointer flex ${
+        className={`rounded-xs text-sm font-medium cursor-pointer flex transition-colors ${
           active
-            ? "bg-[#63A053] text-white"
+            ? "bg-[#63A053] hover:bg-[#528a45] text-white"
             : "bg-[#A2CF96] text-gray-800 dark:text-gray-200"
         }`}
         onMouseEnter={() => {

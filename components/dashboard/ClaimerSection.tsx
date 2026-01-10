@@ -56,7 +56,7 @@ export default function ClaimerSection({
           </DialogHeader>
           <DialogFooter>
             <Button
-              className="rounded-xs bg-[#63A053] text-white"
+              className="rounded-xs bg-[#63A053] hover:bg-[#528a45] text-white"
               variant="default"
               onClick={() => setShowDialog(false)}
               disabled={isPending}
@@ -67,7 +67,7 @@ export default function ClaimerSection({
               variant="default"
               onClick={handleReject}
               disabled={isPending}
-              className="rounded-xs bg-[#63A053] text-white"
+              className="rounded-xs bg-[#63A053] hover:bg-[#528a45] text-white"
             >
               {isPending ? "En cours..." : "Approuver"}
             </Button>
@@ -113,7 +113,7 @@ export default function ClaimerSection({
           {/* RIGHT SIDE: Actions */}
           <div className="flex items-center gap-3">
             <Button
-              className="rounded-xs bg-[#63A053] text-white hover:bg-[#63A053]/80"
+              className="rounded-xs bg-[#63A053] text-white hover:bg-[#528a45]"
               variant="default"
               size="lg"
               onClick={() => setShowDialog(true)}

@@ -170,7 +170,7 @@ const UserLoginPage = () => {
             <Button
               type="submit"
               disabled={loading}
-              className="w-full h-12 bg-[#63A053] hover:bg-[#528644] text-white text-lg font-medium rounded-xs"
+              className="w-full h-12 bg-[#63A053] hover:bg-[#528a45] text-white text-lg font-medium rounded-xs"
             >
               {loading ? "Connexion..." : "Se connecter"}
             </Button>

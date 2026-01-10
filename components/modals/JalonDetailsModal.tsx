@@ -145,7 +145,9 @@ export default function JalonDetailsModal({
     } catch (error) {
       console.error("Failed to update milestone:", error);
       toast.error(
-        error instanceof Error ? error.message : "Échec de la mise à jour du jalon"
+        error instanceof Error
+          ? error.message
+          : "Échec de la mise à jour du jalon"
       );
     } finally {
       setIsSubmitting(false);
@@ -254,7 +256,7 @@ export default function JalonDetailsModal({
                 <div className="flex justify-center pt-4">
                   <button
                     onClick={() => setMode("edit")}
-                    className="px-6 py-2 bg-[#63A053] text-white rounded-xs"
+                    className="px-6 py-2 bg-[#63A053] hover:bg-[#528a45] text-white rounded-xs"
                   >
                     Modifier
                   </button>

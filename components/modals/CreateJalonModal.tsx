@@ -404,7 +404,7 @@ export default function CreateJalonModal({
               <button
                 type="button"
                 onClick={() => setAddDocumentModalOpen(true)}
-                className="px-3 py-1.5 bg-[#63A053] text-white rounded-xs flex items-center gap-2"
+                className="px-3 py-1.5 bg-[#63A053] hover:bg-[#528a45] text-white rounded-xs flex items-center gap-2"
               >
                 <Plus className="w-4 h-4" />
               </button>
@@ -436,7 +436,7 @@ export default function CreateJalonModal({
             <button
               type="submit"
               disabled={isPending}
-              className="px-6 py-2 bg-[#63A053] text-white rounded"
+              className="px-6 py-2 bg-[#63A053] hover:bg-[#528a45] text-white rounded"
             >
               {isPending ? "Création..." : "Sauvegarder"}
             </button>

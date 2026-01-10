@@ -177,7 +177,7 @@ export const EvolutionDetail = ({ onBack, project }: EvolutionDetailProps) => {
               }}
               className={`flex items-center px-6 py-4 rounded-xs shadow-sm cursor-pointer transition-all ${
                 step.completed
-                  ? "bg-[#63a053] text-white"
+                  ? "bg-[#63a053] hover:bg-[#528a45] text-white"
                   : "bg-white dark:bg-[#1e1e1e] text-[#2d3748] dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-[#2d2d2d]"
               }`}
             >

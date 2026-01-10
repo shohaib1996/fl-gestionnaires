@@ -67,10 +67,7 @@ export default function GridView({
               </DropdownMenuItem>
 
               <DropdownMenuItem asChild>
-                <a
-                  href={`mailto:${person.email}`}
-                  className="cursor-pointer"
-                >
+                <a href={`mailto:${person.email}`} className="cursor-pointer">
                   Envoyer un message
                 </a>
               </DropdownMenuItem>
@@ -116,7 +113,7 @@ export default function GridView({
           <div className="flex justify-center mt-5">
             <div className="flex rounded-full overflow-hidden">
               <Link href={`/contact/${person.id}`}>
-                <button className="px-6 cursor-pointer py-1.5 text-sm font-medium dark:bg-[#326EA6] bg-[#63A053] text-white rounded-l-full">
+                <button className="px-6 cursor-pointer py-1.5 text-sm font-medium dark:bg-[#326EA6] bg-[#63A053] hover:bg-[#528a45] text-white rounded-l-full">
                   Profil
                 </button>
               </Link>

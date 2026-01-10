@@ -55,7 +55,7 @@ export default function DashboardTabs({
           onClick={() => onChange(key)}
           className={`text-white font-medium h-7 rounded-none w-24 transition-all ${
             activeTab === key
-              ? "bg-[#63a053]"
+              ? "bg-[#63a053] hover:bg-[#528a45]"
               : "bg-[#326EA6] hover:bg-[#528a45]"
           }`}
         >

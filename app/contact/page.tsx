@@ -99,7 +99,7 @@ const Contact = () => {
                 {/* Filter */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <button className="flex items-center gap-2 bg-black dark:bg-[#63A053] text-white border rounded px-4 py-1.5 text-sm shadow-sm">
+                    <button className="flex items-center gap-2 bg-black dark:bg-[#63A053] dark:hover:bg-[#528a45] text-white border rounded px-4 py-1.5 text-sm shadow-sm">
                       {titleFilter || "Afficher par"}
                       <ChevronDown className="w-4 h-4" />
                     </button>
@@ -135,7 +135,10 @@ const Contact = () => {
                         </DropdownMenuItem>
                       </>
                     ) : (
-                      <div className="p-2 space-y-2" onClick={(e) => e.stopPropagation()}>
+                      <div
+                        className="p-2 space-y-2"
+                        onClick={(e) => e.stopPropagation()}
+                      >
                         <p className="text-sm font-medium px-2">
                           Entrez un nouveau titre:
                         </p>
@@ -159,7 +162,7 @@ const Contact = () => {
                         <div className="flex gap-2">
                           <button
                             onClick={handleOtherTitleSubmit}
-                            className="flex-1 px-3 py-1.5 bg-[#63A053] text-white rounded-xs text-sm flex items-center justify-center gap-1 hover:bg-[#4e8742] transition-colors"
+                            className="flex-1 px-3 py-1.5 bg-[#63A053] text-white rounded-xs text-sm flex items-center justify-center gap-1 hover:bg-[#528a45] transition-colors"
                           >
                             <Send className="w-3 h-3" />
                             Envoyer
@@ -211,7 +214,7 @@ const Contact = () => {
                 {/* Add contact */}
                 <button
                   onClick={() => setOpenAddContact(true)}
-                  className="flex items-center cursor-pointer gap-2 bg-black dark:bg-[#63A053] text-white rounded px-4 py-1.5 text-sm shadow ml-3"
+                  className="flex items-center cursor-pointer gap-2 bg-black dark:bg-[#63A053] dark:hover:bg-[#528a45] text-white rounded px-4 py-1.5 text-sm shadow ml-3"
                 >
                   <Plus className="w-4 h-4" />
                   Ajouter un contact
@@ -221,7 +224,7 @@ const Contact = () => {
 
             <button
               className={`mes-contacts-css ${
-                onlyMine ? "bg-[#63A053] text-white" : ""
+                onlyMine ? "bg-[#63A053] hover:bg-[#528a45] text-white" : ""
               }`}
               onClick={() => setOnlyMine((prev) => !prev)}
             >

@@ -193,7 +193,7 @@ export default function CalendarScreen({
 
       {/* Fixed Bottom Button */}
       <div
-        className="fixed bottom-0 left-0 right-0 bg-[#63a053] hover:bg-[#528a43] z-50"
+        className="fixed bottom-0 left-0 right-0 bg-[#63a053] hover:bg-[#528a45] z-50"
         style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
       >
         <button

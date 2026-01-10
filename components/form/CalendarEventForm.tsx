@@ -357,14 +357,14 @@ export default function CalendarEventForm({
       <div className="flex justify-center gap-3 pt-4 pb-8">
         <Button
           onClick={onCancel}
-          className="px-6 h-11 bg-[#63a053] text-white rounded-none dark:hover:bg-[#63a053]/80"
+          className="px-6 h-11 bg-[#63a053] text-white rounded-none hover:bg-[#528a45]"
         >
           Annuler
         </Button>
 
         <Button
           onClick={handleSubmit}
-          className="bg-[#63a053] px-6 h-11 rounded-none text-white dark:hover:bg-[#63a053]/80"
+          className="bg-[#63a053] px-6 h-11 rounded-none text-white hover:bg-[#528a45]"
           disabled={loading}
         >
           {loading && <Spinner className="mr-2 h-4 w-4 animate-spin" />}

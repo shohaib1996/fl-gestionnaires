@@ -290,9 +290,7 @@ export function MilestoneForm({
                   field.onChange(adminId);
                   setValue("managerId", adminId);
                 }}
-                placeholder={
-                  loadingAdmins ? "Loading..." : "Select admin..."
-                }
+                placeholder={loadingAdmins ? "Loading..." : "Select admin..."}
               />
             )}
           />
@@ -308,7 +306,7 @@ export function MilestoneForm({
           <button
             type="button"
             onClick={() => setAddDocOpen(true)}
-            className="px-3 py-1.5 bg-[#63A053] text-white rounded-xs flex items-center gap-2"
+            className="px-3 py-1.5 bg-[#63A053] hover:bg-[#528a45] text-white rounded-xs flex items-center gap-2"
           >
             <Plus className="w-4 h-4" />
           </button>
@@ -342,7 +340,7 @@ export function MilestoneForm({
         <button
           type="submit"
           disabled={loading}
-          className="px-6 py-2 bg-[#63A053] text-white rounded"
+          className="px-6 py-2 bg-[#63A053] hover:bg-[#528a45] text-white rounded"
         >
           {loading ? "En cours..." : submitLabel}
         </button>

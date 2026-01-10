@@ -231,7 +231,7 @@ export default function TaskDetailsModal({
               {/* Floating Edit Button */}
               <button
                 onClick={() => setMode("edit")}
-                className="absolute bottom-6 right-8 w-10 h-10 rounded-full bg-[#63A053] text-white border-none flex items-center justify-center cursor-pointer hover:bg-[#57904a] transition-colors text-xl shadow-lg"
+                className="absolute bottom-6 right-8 w-10 h-10 rounded-full bg-[#63A053] text-white border-none flex items-center justify-center cursor-pointer hover:bg-[#528a45] transition-colors text-xl shadow-lg"
                 style={{
                   boxShadow: "0 0.375rem 0.875rem rgba(0,0,0,0.12)",
                 }}

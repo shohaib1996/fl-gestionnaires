@@ -169,7 +169,7 @@ export function AdminRequestsClient({
           {/* Add Button */}
           <Button
             onClick={() => setIsAddUserDialogOpen(true)}
-            className="bg-[#63A053] hover:bg-[#63A053]/80 text-white whitespace-nowrap rounded-xs"
+            className="bg-[#63A053] hover:bg-[#528a45] text-white whitespace-nowrap rounded-xs"
           >
             Ajouter un utilisateur
           </Button>

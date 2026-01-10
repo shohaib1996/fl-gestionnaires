@@ -75,8 +75,8 @@ export default function DashboardPage() {
                 onClick={() => setActiveTab(key as any)}
                 className={` text-white font-medium h-7 rounded-none w-24 transition-all ${
                   activeTab === key
-                    ? "bg-[#63a053] scale-105 shadow-sm"
-                    : "bg-[#326EA6] hover:bg-[#63a053]"
+                    ? "bg-[#63a053] hover:bg-[#528a45] scale-105 shadow-sm"
+                    : "bg-[#326EA6] hover:bg-[#528a45]"
                 }`}
               >
                 {label}

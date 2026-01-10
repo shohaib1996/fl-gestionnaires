@@ -328,7 +328,7 @@ const ProjectDetails = () => {
           </div>
           <button
             onClick={() => setJalonModalOpen(true)}
-            className="ml-auto bg-[#63A053] text-white px-3 py-1 text-sm font-medium rounded-xs cursor-pointer"
+            className="ml-auto bg-[#63A053] hover:bg-[#528a45] text-white px-3 py-1 text-sm font-medium rounded-xs cursor-pointer transition-colors"
           >
             + Jalon
           </button>
@@ -394,7 +394,7 @@ const ProjectDetails = () => {
             <div className="py-4 shrink-0">
               <button
                 onClick={() => setOpenAddDoc(true)}
-                className="bg-[#63A053] text-white px-2.5 rounded-xs text-xl cursor-pointer"
+                className="bg-[#63A053] hover:bg-[#528a45] text-white px-2.5 rounded-xs text-xl cursor-pointer transition-colors"
               >
                 +
               </button>
