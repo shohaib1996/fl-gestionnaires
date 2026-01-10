@@ -186,16 +186,18 @@ export default function JalonDetailsModal({
                     <p className="font-semibold text-sm mb-2">
                       Brève description
                     </p>
-                    <p className="text-gray-700 dark:text-gray-300">
-                      {milestone.description || "—"}
+                    <p className="text-gray-700 dark:text-gray-300 min-h-[20px]">
+                      {milestone.description}
                     </p>
                   </div>
 
                   {/* Date Start */}
                   <div className="col-span-2 space-y-1">
                     <p className="font-semibold text-sm">Date de début</p>
-                    <p>{milestone.start_date || "—"}</p>
-                    <p className="text-sm">{milestone.start_time || "—"}</p>
+                    <p className="min-h-[24px]">{milestone.start_date}</p>
+                    <p className="text-sm min-h-[20px]">
+                      {milestone.start_time}
+                    </p>
 
                     <div className="mt-5">
                       <p className="font-semibold text-sm">
@@ -217,8 +219,8 @@ export default function JalonDetailsModal({
                   {/* Date End */}
                   <div className="col-span-2 space-y-1">
                     <p className="font-semibold text-sm">Date butoir</p>
-                    <p>{milestone.end_date || "—"}</p>
-                    <p className="text-sm">{milestone.end_time || "—"}</p>
+                    <p className="min-h-[24px]">{milestone.end_date}</p>
+                    <p className="text-sm min-h-[20px]">{milestone.end_time}</p>
                   </div>
 
                   {/* Priority */}
@@ -232,22 +234,27 @@ export default function JalonDetailsModal({
                 <div>
                   <p className="text-sm italic mb-4">Livrables de ce jalon</p>
 
-                  <div className="grid grid-cols-3 gap-10">
-                    {tasks.length === 0 ? (
-                      <p className="text-sm text-gray-500">Aucun livrable</p>
-                    ) : (
-                      tasks.map((task) => (
-                        <div key={task.id}>
-                          <hr className="mb-1" />
-                          <div className="flex gap-4">
-                            <FileText className="w-6 h-6 text-[#326EA6]" />
-                            <div>
-                              <p className="font-medium">{task.title}</p>
-                              <p className="text-xs">{task.category}</p>
-                            </div>
+                  <div className="grid grid-cols-3 gap-x-10 gap-y-6">
+                    {Array.from({ length: Math.max(tasks.length, 9) }).map(
+                      (_, index) => {
+                        const task = tasks[index];
+                        return (
+                          <div key={index}>
+                            <hr className="mb-2 border-gray-200 dark:border-gray-700" />
+                            {task ? (
+                              <div className="flex gap-4">
+                                <FileText className="w-6 h-6 text-[#326EA6]" />
+                                <div>
+                                  <p className="font-medium">{task.title}</p>
+                                  <p className="text-xs">{task.category}</p>
+                                </div>
+                              </div>
+                            ) : (
+                              <div className="h-[44px]"></div>
+                            )}
                           </div>
-                        </div>
-                      ))
+                        );
+                      }
                     )}
                   </div>
                 </div>
