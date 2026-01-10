@@ -31,6 +31,7 @@ interface Props {
   milestoneId: string | null;
   setAddDocumentModalOpen: (open: boolean) => void;
   projectId?: string;
+  projectTitle?: string;
 }
 
 export default function JalonDetailsModal({
@@ -39,6 +40,7 @@ export default function JalonDetailsModal({
   milestoneId,
   setAddDocumentModalOpen,
   projectId,
+  projectTitle,
 }: Props) {
   const [mode, setMode] = useState<"view" | "edit">("view");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -158,8 +160,8 @@ export default function JalonDetailsModal({
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="p-0 bg-white dark:bg-neutral-900 min-w-[70vw] max-h-[90vh] overflow-auto border-none rounded-none text-gray-800 dark:text-gray-200">
         {/* HEADER */}
-        <DialogHeader className="px-8 py-4 bg-[#63A053] dark:bg-[#4e8742] text-white">
-          <DialogTitle className="text-lg font-semibold">
+        <DialogHeader className="px-8 py-4 bg-[#63A053] dark:bg-[#4e8742] text-white flex-row! items-center justify-between gap-4">
+          <DialogTitle className="text-lg font-semibold shrink-0">
             {isLoading || !data ? (
               <Skeleton className="h-5 w-64 bg-white/30" />
             ) : (
@@ -168,6 +170,11 @@ export default function JalonDetailsModal({
               </>
             )}
           </DialogTitle>
+          {projectTitle && (
+            <div className="text-sm font-medium opacity-90 pr-8 shrink-0">
+              {projectTitle}
+            </div>
+          )}
         </DialogHeader>
 
         {/* BODY */}

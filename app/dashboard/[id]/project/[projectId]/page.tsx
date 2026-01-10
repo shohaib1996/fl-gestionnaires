@@ -458,6 +458,7 @@ const ProjectDetails = () => {
           milestoneId={selectedPhase.id}
           setAddDocumentModalOpen={setOpenAddDoc}
           projectId={projectId}
+          projectTitle={project.name}
         />
       )}
       <AddDocumentModal
