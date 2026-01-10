@@ -259,17 +259,17 @@ export function AdminRequestsClient({
         <div className="bg-card overflow-hidden flex-1 overflow-y-auto hide-scrollbar px-8">
           <table className="w-full text-sm">
             <thead className="sticky top-0 bg-white dark:bg-neutral-800 z-10 border-b border-gray-200 dark:border-neutral-700">
-              <tr className="text-left">
-                <th className="px-6 py-3 font-normal text-gray-900 dark:text-gray-200">
+              <tr className="text-left font-bold">
+                <th className="px-6 py-3 text-gray-900 dark:text-gray-200">
                   Nom
                 </th>
-                <th className="px-6 py-3 font-normal text-gray-900 dark:text-gray-200">
+                <th className="px-6 py-3 text-gray-900 dark:text-gray-200">
                   Rôle
                 </th>
-                <th className="px-6 py-3 font-normal text-gray-900 dark:text-gray-200">
+                <th className="px-6 py-3 text-gray-900 dark:text-gray-200">
                   Email
                 </th>
-                <th className="px-6 py-3 font-normal text-gray-900 dark:text-gray-200">
+                <th className="px-6 py-3 text-gray-900 dark:text-gray-200">
                   Action
                 </th>
               </tr>
