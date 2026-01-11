@@ -1,6 +1,6 @@
 "use client";
 
-import { sendProjectNotification } from "@/app/actions/emails/sendNotification";
+import { sendSupabaseInvitation } from "@/lib/supabase/sendInvitation";
 import { assignProjectToAdmin } from "@/app/actions/projects/assignProjectToAdmin";
 import {
   Claimer,
@@ -273,17 +273,17 @@ const ProjectDetails = () => {
 
   const handleSendEmail = async () => {
     if (!project.email) {
-      toast.error("Project has no email address associated.");
+      toast.error("Aucune adresse e-mail associée au projet.");
       return;
     }
 
-    toast.info("Sending notification...");
-    const result = await sendProjectNotification(project.id, project.email);
+    toast.info("Envoi de l'invitation...");
+    const result = await sendSupabaseInvitation(project.email, project.id);
 
     if (result.success) {
-      toast.success("Email sent successfully");
+      toast.success(result.message || "Invitation envoyée avec succès");
     } else {
-      toast.error(result.message || "Failed to send email");
+      toast.error(result.message || "Échec de l'envoi de l'invitation");
     }
   };
 
@@ -359,7 +359,7 @@ const ProjectDetails = () => {
                         className="flex gap-2 cursor-pointer focus:bg-[#E0EFFF] focus:text-[#2085F4] group rounded-xs"
                       >
                         <Mail className="h-4 w-4 group-focus:text-[#2085F4]" />
-                        Prendre
+                        Envoyer invitation
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>

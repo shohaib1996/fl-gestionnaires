@@ -105,11 +105,22 @@ export function AdminRequestsClient({
       return;
     }
 
-    // TODO: Implement the server action to send invitation email
-    toast.success("Invitation envoyée avec succès!");
-    setIsAddUserDialogOpen(false);
-    setNewUserName("");
-    setNewUserEmail("");
+    toast.info("Envoi de l'invitation...");
+
+    // Import the function at the top of the file
+    const { sendAdminInvitation } = await import(
+      "@/lib/supabase/sendAdminInvitation"
+    );
+    const result = await sendAdminInvitation(newUserEmail, newUserName);
+
+    if (result.success) {
+      toast.success("Invitation envoyée avec succès!");
+      setIsAddUserDialogOpen(false);
+      setNewUserName("");
+      setNewUserEmail("");
+    } else {
+      toast.error(result.message || "Échec de l'envoi de l'invitation");
+    }
   };
 
   const handleRowClick = (request: AdminAccountRequest) => {

@@ -206,21 +206,27 @@ export default function JalonDetailsModal({
                       {milestone.start_time}
                     </p>
 
-                    <div className="mt-5">
-                      <p className="font-semibold text-sm">
-                        Responsable du jalon
-                      </p>
-                      <div className="flex gap-3 mt-2">
-                        <img
-                          src="/images/profile.jpeg"
-                          className="w-12 h-12 rounded-full"
-                        />
-                        <div>
-                          <p className="font-medium">{manager?.email || "—"}</p>
-                          <p className="text-sm text-gray-500">Manager</p>
+                    {(milestone.description ||
+                      milestone.start_date ||
+                      milestone.end_date) && (
+                      <div className="mt-5">
+                        <p className="font-semibold text-sm">
+                          Responsable du jalon
+                        </p>
+                        <div className="flex gap-3 mt-2">
+                          <img
+                            src="/images/profile.jpeg"
+                            className="w-12 h-12 rounded-full"
+                          />
+                          <div>
+                            <p className="font-medium">
+                              {manager?.email || "—"}
+                            </p>
+                            <p className="text-sm text-gray-500">Manager</p>
+                          </div>
                         </div>
                       </div>
-                    </div>
+                    )}
                   </div>
 
                   {/* Date End */}
@@ -247,7 +253,7 @@ export default function JalonDetailsModal({
                         const task = tasks[index];
                         return (
                           <div key={index}>
-                            <hr className="mb-2 border-gray-200 dark:border-gray-700" />
+                            <hr className="mb-2 border-t border-black/70 dark:border-gray-600" />
                             {task ? (
                               <div className="flex gap-4">
                                 <FileText className="w-6 h-6 text-[#326EA6]" />
@@ -257,7 +263,7 @@ export default function JalonDetailsModal({
                                 </div>
                               </div>
                             ) : (
-                              <div className="h-[44px]"></div>
+                              <div className="h-[20px]"></div>
                             )}
                           </div>
                         );
