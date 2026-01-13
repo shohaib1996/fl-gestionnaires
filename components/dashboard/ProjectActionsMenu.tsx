@@ -129,7 +129,7 @@ export default function ProjectActionsMenu({
               className="flex gap-2 group focus:bg-[#E0EFFF] focus:text-[#2085F4] rounded-xs"
             >
               <XCircle className="h-4 w-4 group-focus:text-[#2085F4]" />
-              Retourner
+              Supprimer
             </DropdownMenuItem>
           )}
 
