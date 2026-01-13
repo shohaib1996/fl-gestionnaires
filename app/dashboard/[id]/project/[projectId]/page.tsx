@@ -308,8 +308,8 @@ const ProjectDetails = () => {
         </div>
 
         {/* Phases */}
-        <div className="flex flex-wrap gap-2 mb-4 px-3">
-          <div className="flex gap-3 ">
+        <div className="flex items-center gap-3 mb-4 px-3">
+          <div className="flex-1 min-w-0">
             {project.milestones && project.milestones.length > 0 && (
               <MilestoneTabs
                 activeMilestoneId={activeMilestoneId}
@@ -328,7 +328,7 @@ const ProjectDetails = () => {
           </div>
           <button
             onClick={() => setJalonModalOpen(true)}
-            className="ml-auto bg-[#63A053] hover:bg-[#528a45] text-white px-3 py-0 text-sm font-medium rounded-xs cursor-pointer transition-colors"
+            className="shrink-0 bg-[#63A053] hover:bg-[#528a45] text-white px-4 py-2 text-sm font-medium rounded-xs cursor-pointer transition-colors"
           >
             + Jalon
           </button>
