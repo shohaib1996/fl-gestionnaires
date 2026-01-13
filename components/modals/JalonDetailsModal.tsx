@@ -2,6 +2,7 @@
 
 import { updateMilestone } from "@/app/actions/milestones/actions";
 import { createTask } from "@/app/actions/tasks/createTask";
+import { iconMap } from "@/components/common/FileIconMap";
 import {
   Dialog,
   DialogContent,
@@ -12,12 +13,17 @@ import { useMilestoneDetails } from "@/hooks/useMilestoneDetails";
 import { taskKeys } from "@/hooks/useTasksByMilestone";
 import { assignedProjectKeys } from "@/lib/queryKeys";
 import { useQueryClient } from "@tanstack/react-query";
-import { FileText } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import JalonDetailsBodySkeleton from "../common/skeletons/MileStoneDetailsSkeleton";
 import { MilestoneForm } from "../form/MilestoneForm";
 import { Skeleton } from "../ui/skeleton";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface Phase {
   step: number;
@@ -247,23 +253,58 @@ export default function JalonDetailsModal({
                 <div>
                   <p className="text-sm italic mb-4">Livrables de ce jalon</p>
 
-                  <div className="grid grid-cols-3 gap-x-10 gap-y-6">
+                  <div className="grid grid-cols-3 gap-x-10 gap-y-4">
                     {Array.from({ length: Math.max(tasks.length, 9) }).map(
                       (_, index) => {
                         const task = tasks[index];
                         return (
                           <div key={index}>
-                            <hr className="mb-2 border-t border-black/70 dark:border-gray-600" />
                             {task ? (
-                              <div className="flex gap-4">
-                                <FileText className="w-6 h-6 text-[#326EA6]" />
-                                <div>
-                                  <p className="font-medium">{task.title}</p>
-                                  <p className="text-xs">{task.category}</p>
-                                </div>
-                              </div>
+                              (() => {
+                                const Icon =
+                                  iconMap[task.file_format] || iconMap.file;
+                                return (
+                                  <div
+                                    className="flex items-center gap-3 pt-2"
+                                    style={{
+                                      borderTop:
+                                        "1px solid rgba(152, 152, 152, 0.5)",
+                                    }}
+                                  >
+                                    <Icon className="w-7 h-7 text-[#326EA6]" />
+                                    {task.title.length > 40 ? (
+                                      <TooltipProvider>
+                                        <Tooltip>
+                                          <TooltipTrigger asChild>
+                                            <p className="font-medium cursor-pointer">
+                                              {task.title.slice(0, 40) + "..."}
+                                            </p>
+                                          </TooltipTrigger>
+                                          <TooltipContent>
+                                            <p className="max-w-xs">
+                                              {task.title}
+                                            </p>
+                                          </TooltipContent>
+                                        </Tooltip>
+                                      </TooltipProvider>
+                                    ) : (
+                                      <p className="font-medium">
+                                        {task.title}
+                                      </p>
+                                    )}
+                                  </div>
+                                );
+                              })()
                             ) : (
-                              <div className="h-[20px]"></div>
+                              <div
+                                className="pt-2 flex items-center gap-3"
+                                style={{
+                                  borderTop:
+                                    "1px solid rgba(152, 152, 152, 0.5)",
+                                }}
+                              >
+                                <div className="h-[28px]"></div>
+                              </div>
                             )}
                           </div>
                         );
@@ -273,7 +314,7 @@ export default function JalonDetailsModal({
                 </div>
 
                 {/* FOOTER */}
-                <div className="flex justify-center pt-4">
+                <div className="flex justify-center">
                   <button
                     onClick={() => setMode("edit")}
                     className="px-6 py-2 bg-[#63A053] hover:bg-[#528a45] text-white rounded-xs"

@@ -282,7 +282,7 @@ const ProjectDetails = () => {
       {/* Project Section */}
       <div className="bg-white dark:bg-neutral-800 rounded-xs shadow-sm border border-gray-200 dark:border-neutral-700 max-h-[72vh] min-h-[72vh] flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between border-b pb-3 mb-4 bg-[#63a053]/25 p-4">
+        <div className="flex items-center justify-between border-b pb-3 mb-3 bg-[#63a053]/25 px-10 py-4">
           <h1 className="text-2xl font-bold text-gray-700 dark:text-white">
             {project.name}
           </h1>
@@ -328,7 +328,7 @@ const ProjectDetails = () => {
           </div>
           <button
             onClick={() => setJalonModalOpen(true)}
-            className="ml-auto bg-[#63A053] hover:bg-[#528a45] text-white px-3 py-1 text-sm font-medium rounded-xs cursor-pointer transition-colors"
+            className="ml-auto bg-[#63A053] hover:bg-[#528a45] text-white px-3 py-0 text-sm font-medium rounded-xs cursor-pointer transition-colors"
           >
             + Jalon
           </button>
@@ -336,9 +336,9 @@ const ProjectDetails = () => {
 
         {/* Goal + Lead */}
         {activeMilestone && (
-          <div className="flex justify-between items-start mb-6 px-6">
+          <div className="flex justify-between items-start mb-6 px-6 max-w-286">
             <div>
-              <p className="text-[0.875rem] text-gray-700 dark:text-gray-300">
+              <p className="text-[0.875rem] text-gray-700 dark:text-gray-300 pl-5">
                 <span className="inline-block w-2 h-2 rounded-full bg-[#a2cf96] mr-2"></span>
                 {activeMilestone?.description ? "Goal:" : ""}
                 {activeMilestone?.description
@@ -372,7 +372,7 @@ const ProjectDetails = () => {
           {/* Documents Table */}
           {/* Table */}
           <div className="lg:col-span-2 flex flex-col min-h-0">
-            <div className="flex-1 overflow-y-auto hide-scrollbar">
+            <div className="flex-1 overflow-y-auto hide-scrollbar pl-5">
               {tasksLoading ? (
                 <p className="p-6 text-gray-500">Loading tasks…</p>
               ) : !tasksLoading && tasks?.length === 0 ? (

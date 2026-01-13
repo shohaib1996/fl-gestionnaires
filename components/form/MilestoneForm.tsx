@@ -14,6 +14,12 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
@@ -312,13 +318,32 @@ export function MilestoneForm({
           </button>
         </div>
 
-        <div className="grid grid-cols-3 gap-8">
+        <div className="grid grid-cols-3 gap-4">
           {tasks.map((task, idx) => {
-            const Icon = iconMap[task.file_format];
+            const Icon = iconMap[task.file_format] || iconMap.file;
             return (
-              <div key={idx} className="flex items-center gap-3">
+              <div
+                key={idx}
+                className="flex items-center gap-3 pt-2"
+                style={{ borderTop: "1px solid rgba(152, 152, 152, 0.5)" }}
+              >
                 <Icon className="w-7 h-7 text-[#326EA6]" />
-                <p className="text-sm">{task.name}</p>
+                {task.name.length > 50 ? (
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <p className="text-sm cursor-pointer">
+                          {task.name.slice(0, 50) + "..."}
+                        </p>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p className="max-w-xs">{task.name}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                ) : (
+                  <p className="text-sm">{task.name}</p>
+                )}
               </div>
             );
           })}
