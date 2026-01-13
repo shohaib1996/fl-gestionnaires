@@ -121,7 +121,7 @@ export function MilestoneTabs({
       {/* Scrollable Container */}
       <div
         ref={scrollContainerRef}
-        className="flex gap-3 overflow-x-auto hide-scrollbar scroll-smooth"
+        className="flex gap-2 overflow-x-auto hide-scrollbar scroll-smooth"
         style={{
           scrollbarWidth: "none",
           msOverflowStyle: "none",
