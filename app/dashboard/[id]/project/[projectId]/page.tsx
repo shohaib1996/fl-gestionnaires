@@ -282,7 +282,7 @@ const ProjectDetails = () => {
       {/* Project Section */}
       <div className="bg-white dark:bg-neutral-800 rounded-xs shadow-sm border border-gray-200 dark:border-neutral-700 max-h-[72vh] min-h-[72vh] flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between border-b pb-3 mb-3 bg-[#63a053]/25 px-10 py-4">
+        <div className="flex items-center justify-between border-b pb-3 mb-2 bg-[#63a053]/25 px-10 py-4">
           <h1 className="text-2xl font-bold text-gray-700 dark:text-white">
             {project.name}
           </h1>
@@ -308,7 +308,7 @@ const ProjectDetails = () => {
         </div>
 
         {/* Phases */}
-        <div className="flex items-center gap-3 mb-4 px-3">
+        <div className="flex items-center gap-3 mb-4 px-2">
           <div className="flex-1 min-w-0">
             {project.milestones && project.milestones.length > 0 && (
               <MilestoneTabs
