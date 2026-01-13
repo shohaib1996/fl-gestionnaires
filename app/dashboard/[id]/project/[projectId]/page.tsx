@@ -242,8 +242,8 @@ const ProjectDetails = () => {
   // Helper function to truncate description
   const truncateDescription = (text: string | null | undefined) => {
     if (!text) return "";
-    if (text.length <= 140) return text;
-    return `${text.slice(0, 140)}...`;
+    if (text.length <= 120) return text;
+    return `${text.slice(0, 120)}...`;
   };
 
   return (
