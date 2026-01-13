@@ -33,7 +33,8 @@ export function MilestoneTabs({
 
   const checkScroll = () => {
     if (scrollContainerRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
+      const { scrollLeft, scrollWidth, clientWidth } =
+        scrollContainerRef.current;
       const hasOverflow = scrollWidth > clientWidth;
 
       // Only show arrows if there's actual overflow
@@ -132,7 +133,7 @@ export function MilestoneTabs({
           return (
             <div
               key={m.id}
-              className={`rounded-sm text-sm font-medium cursor-pointer flex transition-colors shrink-0 ${
+              className={`rounded-[3px] text-sm font-medium cursor-pointer flex transition-colors shrink-0 ${
                 active
                   ? "bg-[#63A053] hover:bg-[#528a45] text-white"
                   : "bg-[#A2CF96] text-gray-800 dark:text-gray-200"
@@ -150,7 +151,7 @@ export function MilestoneTabs({
             >
               <span
                 onClick={() => onChange(m)}
-                className="bg-[#A2CF96] px-3 rounded-l-sm py-1.75 text-white cursor-pointer"
+                className="bg-[#A2CF96] px-3 rounded-l-[3px] py-1.75 text-white cursor-pointer"
               >
                 {ind + 1}.
               </span>
