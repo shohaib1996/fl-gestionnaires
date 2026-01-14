@@ -15,7 +15,7 @@ export default function ProjectSidebar({ projectId }: { projectId: string }) {
 
   return (
     <aside className="max-h-64 flex flex-col h-full bg-white dark:bg-neutral-800 shadow-sm border rounded-xs pt-4 overflow-auto hide-scrollbar">
-      <h3 className="text-lg px-4 border-b pb-3 font-semibold text-[#7F7E83] dark:text-gray-100">
+      <h3 className="text-[1rem] px-4 border-b pb-3 font-semibold text-[#7F7E83] dark:text-gray-100">
         {data.projectName}
       </h3>
 
@@ -33,7 +33,7 @@ export default function ProjectSidebar({ projectId }: { projectId: string }) {
 function Item({ name, count }: { name: string; count: number }) {
   return (
     <li className="py-3 cursor-pointer hover:bg-blue-50 dark:hover:bg-[#326EA6] transition px-2 rounded">
-      <span className="font-medium text-[#343E47] dark:text-gray-100 px-4">
+      <span className="font-medium text-[#343E47] dark:text-gray-100 px-4 text-[0.875rem]">
         {name} ({count})
       </span>
     </li>
