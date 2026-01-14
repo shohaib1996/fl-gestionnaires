@@ -33,7 +33,7 @@ export function DesktopTaskTable({
 }: TaskListsProps) {
   return (
     <table className="w-full text-sm">
-      <thead className="bg-background dark:bg-neutral-700 text-gray-700 dark:text-gray-200 sticky top-0 border-none">
+      <thead className="bg-white dark:bg-neutral-700 text-gray-700 dark:text-gray-200 sticky top-0 border-none z-20">
         <tr className="border-b border-gray-200 dark:border-neutral-700">
           <th className="text-left px-5 py-4">Date</th>
           <th className="text-left px-5 py-4"></th>
