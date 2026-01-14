@@ -55,7 +55,7 @@ export function DesktopTaskTable({
               } h-[7vh] cursor-pointer`}
             >
               <td className="pl-5 text-gray-600 dark:text-gray-300">
-                {new Date(task.created_at).toLocaleString("en-US", {
+                {new Date(task.created_at).toLocaleString("fr-FR", {
                   month: "short",
                   day: "2-digit",
                 })}
@@ -77,7 +77,13 @@ export function DesktopTaskTable({
               </td>
 
               <td className="px-4 py-2 text-gray-600 dark:text-gray-300">
-                {task.category}
+                {(
+                  {
+                    legal: "Légal",
+                    finance: "Finance",
+                    operations: "Opérations",
+                  } as Record<string, string>
+                )[task.category] || task.category}
               </td>
 
               <td className="px-4 py-2 text-gray-700 dark:text-gray-100 capitalize">

@@ -391,12 +391,23 @@ const ProjectDetails = () => {
             </div>
 
             {/* Action Bar */}
-            <div className="py-4 shrink-0">
+            <div className="py-4 shrink-0 -ml-4">
               <button
                 onClick={() => setOpenAddDoc(true)}
-                className="bg-[#63A053] hover:bg-[#528a45] text-white px-2.5 rounded-xs text-xl cursor-pointer transition-colors"
+                className="bg-[#63A053] hover:bg-[#528a45] text-white px-2.5 rounded-xs text-xl cursor-pointer transition-colors py-1.5"
               >
-                +
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="14"
+                  height="13"
+                  viewBox="0 0 10 9"
+                  fill="none"
+                >
+                  <path
+                    d="M4.00148 9V0H5.99112V9H4.00148ZM0 5.39201V3.60133H10V5.39201H0Z"
+                    fill="white"
+                  />
+                </svg>
               </button>
             </div>
           </div>
