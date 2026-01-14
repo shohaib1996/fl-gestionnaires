@@ -2,6 +2,12 @@ import { TasksByMilestone } from "@/app/actions/tasks/getTasksByMilestone";
 import { iconMap } from "../common/FileIconMap";
 import { TaskStatusCell } from "./TaskStatusCell";
 import { FileText } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 import { EditTaskInput } from "@/types/task";
 
@@ -73,7 +79,20 @@ export function DesktopTaskTable({
                 </button>
               </td>
               <td className="px-4 py-2 gap-2 text-gray-700 dark:text-gray-200">
-                {task.description}
+                {task.description && task.description.length > 90 ? (
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <span>{task.description.slice(0, 90) + "..."}</span>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p className="max-w-xs">{task.description}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                ) : (
+                  task.description
+                )}
               </td>
 
               <td className="px-4 py-2 text-gray-600 dark:text-gray-300">
