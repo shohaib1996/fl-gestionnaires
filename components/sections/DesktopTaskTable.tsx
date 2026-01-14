@@ -33,13 +33,13 @@ export function DesktopTaskTable({
 }: TaskListsProps) {
   return (
     <table className="w-full text-sm">
-      <thead className=" dark:bg-neutral-700 text-gray-700 dark:text-gray-200 sticky top-0">
-        <tr>
-          <th className="text-left px-4 py-2">Date</th>
-          <th className="text-left px-4 py-2"></th>
-          <th className="text-left px-4 py-2">Description</th>
-          <th className="text-left px-4 py-2">Catégorie</th>
-          <th className="text-left px-4 py-2">Progression</th>
+      <thead className="bg-background dark:bg-neutral-700 text-gray-700 dark:text-gray-200 sticky top-0 border-none">
+        <tr className="border-b border-gray-200 dark:border-neutral-700">
+          <th className="text-left px-5 py-4">Date</th>
+          <th className="text-left px-5 py-4"></th>
+          <th className="text-left px-5 py-4">Description</th>
+          <th className="text-left px-5 py-4">Catégorie</th>
+          <th className="text-left px-5 py-4">Progression</th>
         </tr>
       </thead>
 
@@ -54,7 +54,7 @@ export function DesktopTaskTable({
                 i === activeIndex ? "bg-blue-50 dark:bg-neutral-700/50" : ""
               } h-[7vh] cursor-pointer`}
             >
-              <td className="px-4 py-2 text-gray-600 dark:text-gray-300">
+              <td className="pl-5 text-gray-600 dark:text-gray-300">
                 {new Date(task.created_at).toLocaleString("en-US", {
                   month: "short",
                   day: "2-digit",

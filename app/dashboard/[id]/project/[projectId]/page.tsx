@@ -368,17 +368,17 @@ const ProjectDetails = () => {
 
         {/* Table + Preview */}
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 px-6 flex-1 min-h-0">
+        <div className="grid grid-cols-1 lg:grid-cols-3 flex-1 min-h-0 border-t max-w-290 ml-8">
           {/* Documents Table */}
           {/* Table */}
           <div className="lg:col-span-2 flex flex-col min-h-0">
-            <div className="flex-1 overflow-y-auto hide-scrollbar pl-5">
+            <div className="flex-1 overflow-y-auto hide-scrollbar">
               {tasksLoading ? (
                 <p className="p-6 text-gray-500">Loading tasks…</p>
               ) : !tasksLoading && tasks?.length === 0 ? (
                 <p className="p-6 text-gray-500"></p>
               ) : !tasksLoading && tasks?.length ? (
-                <div className="border-t">
+                <div className="pr-8">
                   <TaskLists
                     tasks={tasks}
                     setSelectedTask={setSelectedTask}

@@ -18,7 +18,7 @@ export default function PreviewCard({
   fileFormat,
 }: Props) {
   return (
-    <div className="border border-gray-200 dark:border-neutral-700 rounded-md flex flex-col items-center min-h-0 h-full">
+    <div className="rounded-xs flex flex-col items-center min-h-0 h-full">
       {previewURL ? (
         <>
           <div className="flex-1 w-full overflow-hidden min-h-0 p-3">

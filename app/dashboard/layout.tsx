@@ -21,14 +21,14 @@ export default function DashboardLayout({
         </div>
 
         {/* Middle Section (Main Content) */}
-        <main className="flex-1 flex flex-col lg:max-w-[71vw] overflow-hidden ps-5 pe-4">
+        <main className="flex-1 flex flex-col lg:max-w-[72.5vw] overflow-hidden ps-5 pe-4">
           <div className="flex-1 overflow-y-auto hide-scrollbar">
             {children}
           </div>
         </main>
 
         {/* Right Sidebar */}
-        <div className="hidden lg:block flex-none min-w-[11vw] mt-19 mr-10 max-h-[30vh]">
+        <div className="hidden lg:block flex-none min-w-[9.5vw] mt-19 mr-10 max-h-[30vh]">
           <RightSidebar />
         </div>
       </main>
