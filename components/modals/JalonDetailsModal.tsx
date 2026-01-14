@@ -243,10 +243,12 @@ export default function JalonDetailsModal({
                   </div>
 
                   {/* Priority */}
-                  <div className="col-span-2">
-                    <p className="font-semibold text-sm">Priorités</p>
-                    <p className="capitalize">{milestone.priority}</p>
-                  </div>
+                  {(milestone.description || tasks.length > 0) && (
+                    <div className="col-span-2">
+                      <p className="font-semibold text-sm">Priorités</p>
+                      <p className="capitalize">{milestone.priority}</p>
+                    </div>
+                  )}
                 </div>
 
                 {/* DELIVERABLES */}
