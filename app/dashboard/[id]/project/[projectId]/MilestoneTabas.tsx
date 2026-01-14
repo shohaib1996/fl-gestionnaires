@@ -102,7 +102,7 @@ export function MilestoneTabs({
 
   return (
     <div
-      className="relative flex items-center w-full"
+      className="relative flex items-center max-w-278"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >

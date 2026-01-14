@@ -336,7 +336,7 @@ const ProjectDetails = () => {
 
         {/* Goal + Lead */}
         {activeMilestone && (
-          <div className="flex justify-between items-start mb-6 px-6 max-w-286">
+          <div className="flex justify-between items-start mb-6 px-6 max-w-282">
             <div>
               <p className="text-[0.875rem] text-gray-700 dark:text-gray-300 pl-5">
                 <span className="inline-block w-2 h-2 rounded-full bg-[#a2cf96] mr-2"></span>
