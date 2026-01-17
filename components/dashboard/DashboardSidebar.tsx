@@ -15,7 +15,7 @@ export default function DashboardSidebar() {
 
   return (
     <aside className="flex flex-col h-full bg-white dark:bg-neutral-800 shadow-sm border border-black/10 rounded-xs p-6 overflow-auto min-h-[30vh]">
-      <h3 className="text-[1.125rem] font-sans font-bold mb-4 text-[#343E47] dark:text-gray-100">
+      <h3 className="text-[0.875rem] font-sans font-bold mb-4 text-[#343E47] dark:text-gray-100">
         Aperçu des projets
       </h3>
 
@@ -56,10 +56,10 @@ function Item({
 }) {
   return (
     <li className="flex flex-col">
-      <span className="font-medium text-[1.05rem] font-sans">
+      <span className="font-medium text-[0.875rem] font-sans">
         {total} {label}
       </span>
-      <span className="text-[#326EA6] hover:underline text-[1.05rem] font-regular">
+      <span className="text-[#326EA6] hover:underline text-[0.875rem] font-regular">
         {periodLabel}
       </span>
     </li>
