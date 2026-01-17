@@ -53,7 +53,7 @@ export default function DashboardTabs({
         <Button
           key={key}
           onClick={() => onChange(key)}
-          className={`text-white font-medium h-7 rounded w-24 transition-all ${
+          className={`text-white font-medium h-7 rounded-none w-24 transition-all ${
             activeTab === key
               ? "bg-[#63a053] hover:bg-[#528a45]"
               : "bg-[#326EA6] hover:bg-[#528a45]"

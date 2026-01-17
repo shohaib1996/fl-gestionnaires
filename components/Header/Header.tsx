@@ -77,7 +77,7 @@ const Header = () => {
               style={{
                 padding: "10px",
               }}
-              className="bg-[#63a053] hover:bg-[#528a45] rounded-xs cursor-pointer text-white text-sm  w-10 h-8 flex items-center gap-1"
+              className="bg-[#63a053] hover:bg-[#528a45] rounded cursor-pointer text-white text-sm  w-10 h-8 flex items-center gap-1"
             >
               <svg
                 className="w-full h-full"
