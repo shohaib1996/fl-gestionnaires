@@ -24,6 +24,9 @@ export interface ProjectFilters {
 
 /* -------------------------------------------------
  * RECEIVED PROJECTS
+ * Shows both "submitted" and "claimed" projects.
+ * - submitted: available for anyone to claim
+ * - claimed: visible to others but cannot be re-claimed
  * ------------------------------------------------- */
 export async function fetchReceivedProjects(filters: ProjectFilters) {
   const supabase = createClient();
@@ -31,7 +34,7 @@ export async function fetchReceivedProjects(filters: ProjectFilters) {
   let query = supabase
     .from("projects")
     .select("*", { count: "exact" })
-    .eq("status", "submitted")
+    .in("status", ["submitted", "claimed"])
     .order("created_at", { ascending: false });
 
   query = applyProjectFilters(query, filters);
