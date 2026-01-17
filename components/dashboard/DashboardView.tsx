@@ -81,17 +81,8 @@ export default function DashboardView({
                               {project.title ?? "Untitled Project"}
                             </h4>
 
-                            {/* Show "Pris" badge in Reçus tab for claimed projects */}
-                            {activeTab === "recu" &&
-                              project.status === "claimed" && (
-                                <span className="text-[0.75rem] bg-[#326EA6] text-white px-2 py-0.5 rounded">
-                                  Pris
-                                </span>
-                              )}
-
-                            {/* Show claim count in Mes projets tab */}
-                            {activeTab === "mes-projets" &&
-                              project.status === "claimed" &&
+                            {/* Show claim count for claimed projects */}
+                            {project.status === "claimed" &&
                               project.claim_count > 0 && (
                                 <span className="text-[0.875rem] text-gray-500 dark:text-gray-400">
                                   {project.claim_count}
