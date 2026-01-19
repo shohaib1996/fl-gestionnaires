@@ -13,7 +13,7 @@ export default function AdminLoginPage() {
   const router = useRouter();
   const supabase = createClient();
 
-  const [email, setEmail] = useState("admin@gmail.com");
+  const [email, setEmail] = useState("admin@flgestionnaires.com");
   const [password, setPassword] = useState("admin123");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
