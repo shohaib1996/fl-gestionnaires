@@ -1,6 +1,12 @@
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { useUser } from "@/providers/UserProvider";
 import DashboardFilters from "./DashboardFilters";
 import DashboardPagination from "./DashboardPagination";
@@ -77,9 +83,18 @@ export default function DashboardView({
                                 : ""
                             }`}
                           >
-                            <h4 className="font-semibold text-[#454B53] dark:text-gray-100 text-[1.25rem] font-sans">
-                              {project.title ?? "Untitled Project"}
-                            </h4>
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <h4 className="font-semibold text-[#454B53] dark:text-gray-100 text-[1.25rem] font-sans truncate max-w-[200px]">
+                                    {project.title ?? "Untitled Project"}
+                                  </h4>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p>{project.title ?? "Untitled Project"}</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
 
                             {/* Show claim count for claimed projects */}
                             {project.status === "claimed" &&
