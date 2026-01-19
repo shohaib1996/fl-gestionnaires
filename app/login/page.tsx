@@ -8,6 +8,7 @@ import { ModeToggle } from "@/components/ModeToggle/ModeToggle";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { createClient } from "@/lib/supabase/client";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -15,6 +16,7 @@ export default function AdminLoginPage() {
 
   const [email, setEmail] = useState("admin@flgestionnaires.com");
   const [password, setPassword] = useState("admin123");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -249,14 +251,25 @@ export default function AdminLoginPage() {
               </div>
             </div>
             <Input
-              type="password"
+              type={showPassword ? "text" : "password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Mot de passe"
-              className="border-0 bg-transparent text-gray-800 placeholder:text-gray-400 dark:text-gray-100 dark:placeholder:text-gray-500 focus-visible:ring-0"
+              className="border-0 bg-transparent text-gray-800 placeholder:text-gray-400 dark:text-gray-100 dark:placeholder:text-gray-500 focus-visible:ring-0 flex-1"
               style={{ height: "3.25rem", fontSize: "1.25rem" }}
               required
             />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="pr-3 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+            >
+              {showPassword ? (
+                <EyeOff className="h-5 w-5" />
+              ) : (
+                <Eye className="h-5 w-5" />
+              )}
+            </button>
           </div>
 
           {error && (
