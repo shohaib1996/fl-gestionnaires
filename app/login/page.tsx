@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { ModeToggle } from "@/components/ModeToggle/ModeToggle";
@@ -11,7 +10,6 @@ import { createClient } from "@/lib/supabase/client";
 import { Eye, EyeOff } from "lucide-react";
 
 export default function AdminLoginPage() {
-  const router = useRouter();
   const supabase = createClient();
 
   const [email, setEmail] = useState("admin@flgestionnaires.com");
@@ -48,7 +46,8 @@ export default function AdminLoginPage() {
       return;
     }
 
-    router.push("/dashboard");
+    // Force a hard refresh to ensure session is properly set
+    window.location.href = "/dashboard";
   };
 
   return (
