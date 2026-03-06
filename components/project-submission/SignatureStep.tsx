@@ -53,7 +53,7 @@ export const SignatureStep: React.FC<SignatureStepProps> = ({
           <h3 className="text-sm font-medium text-gray-500 uppercase">
             16. AVIS IMPORTANT
           </h3>
-          <div className="text-base md:text-sm text-black space-y-4 leading-relaxed">
+          <div className="text-lg md:text-sm text-black space-y-4 leading-relaxed">
             <p>
               En soumettant cette candidature, vous confirmez que vous avez lu
               et acceptez les termes ci-dessous, les Conditions d'utilisation de
@@ -99,10 +99,10 @@ export const SignatureStep: React.FC<SignatureStepProps> = ({
         </div>
 
         <div className="space-y-2">
-          <label className="text-base md:text-sm text-gray-500">
+          <label className="text-lg md:text-sm text-gray-500">
             17. Signature numérique requise pour que la soumission soit complète
           </label>
-          <p className="text-sm md:text-xs text-gray-400">
+          <p className="text-base md:text-xs text-gray-400">
             Si le candidat est un mineur, le parent ou le tuteur légal doit
             signer
           </p>
@@ -132,13 +132,13 @@ export const SignatureStep: React.FC<SignatureStepProps> = ({
               </Button>
             </div>
           </div>
-          <p className="text-sm md:text-xs text-gray-400 text-center pt-1">
+          <p className="text-base md:text-xs text-gray-400 text-center pt-1">
             Utilisez votre souris ou votre doigt pour signer ci-dessous
           </p>
         </div>
 
         <div className="space-y-2">
-          <label className="text-base md:text-sm text-gray-500">
+          <label className="text-lg md:text-sm text-gray-500">
             18. Entrez votre nom complet
           </label>
           <Input

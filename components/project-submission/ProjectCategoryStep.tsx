@@ -87,7 +87,7 @@ export const ProjectCategoryStep: React.FC<ProjectCategoryStepProps> = ({
 
       <div className="space-y-8">
         <div className="space-y-2">
-          <label className="text-base md:text-sm text-gray-600">
+          <label className="text-lg md:text-sm text-gray-600">
             9. Quel est le nom de votre projet ou produit ?{" "}
             <span className="text-red-500">*</span>
           </label>
@@ -100,7 +100,7 @@ export const ProjectCategoryStep: React.FC<ProjectCategoryStepProps> = ({
         </div>
 
         <div className="space-y-4">
-          <label className="text-base md:text-sm text-gray-600">
+          <label className="text-lg md:text-sm text-gray-600">
             10. Quelle catégorie décrit le mieux votre projet ou produit ?
             (Cochez toutes celles qui s'appliquent){" "}
             <span className="text-red-500">*</span>
@@ -131,14 +131,14 @@ export const ProjectCategoryStep: React.FC<ProjectCategoryStepProps> = ({
                     <polyline points="20 6 9 17 4 12"></polyline>
                   </svg>
                 </div>
-                <span className="text-base md:text-sm text-gray-600">{category}</span>
+                <span className="text-lg md:text-sm text-gray-600">{category}</span>
               </label>
             ))}
           </div>
         </div>
 
         <div className="space-y-4 pt-4">
-          <label className="text-base md:text-sm text-gray-600">
+          <label className="text-lg md:text-sm text-gray-600">
             11. Quelle est la phase actuelle de votre projet ou produit ?{" "}
             <span className="text-red-500">*</span>
           </label>
@@ -158,7 +158,7 @@ export const ProjectCategoryStep: React.FC<ProjectCategoryStepProps> = ({
                   />
                   <div className="absolute w-2.5 h-2.5 rounded-full bg-[#5F9E50] opacity-0 peer-checked:opacity-100 transition-opacity" />
                 </div>
-                <span className="text-base md:text-sm text-gray-600">{phase}</span>
+                <span className="text-lg md:text-sm text-gray-600">{phase}</span>
               </label>
             ))}
           </div>

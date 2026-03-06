@@ -33,19 +33,19 @@ export const VerificationStep: React.FC<VerificationStepProps> = ({
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-12">
             <div>
-              <p className="text-base md:text-sm text-gray-500 mb-1">
+              <p className="text-lg md:text-sm text-gray-500 mb-1">
                 1. Prénom <span className="text-red-500">*</span>
               </p>
               <p className="text-base font-medium">{formData.firstName}</p>
             </div>
             <div>
-              <p className="text-base md:text-sm text-gray-500 mb-1">
+              <p className="text-lg md:text-sm text-gray-500 mb-1">
                 2. Nom <span className="text-red-500">*</span>
               </p>
               <p className="text-base font-medium">{formData.lastName}</p>
             </div>
             <div className="md:col-span-2">
-              <p className="text-base md:text-sm text-gray-500 mb-1">
+              <p className="text-lg md:text-sm text-gray-500 mb-1">
                 3. Si le candidat est un mineur, nom du parent ou autre tuteur
                 légal soumettant la candidature au nom du candidat
               </p>
@@ -54,39 +54,39 @@ export const VerificationStep: React.FC<VerificationStepProps> = ({
               </p>
             </div>
             <div>
-              <p className="text-base md:text-sm text-gray-500 mb-1">
+              <p className="text-lg md:text-sm text-gray-500 mb-1">
                 4. Numéro de téléphone <span className="text-red-500">*</span>
               </p>
               <p className="text-base font-medium">{formData.phone}</p>
             </div>
             <div>
-              <p className="text-base md:text-sm text-gray-500 mb-1">
+              <p className="text-lg md:text-sm text-gray-500 mb-1">
                 5. Email <span className="text-red-500">*</span>
               </p>
               <p className="text-base font-medium">{formData.email}</p>
             </div>
             <div>
-              <p className="text-base md:text-sm text-gray-500 mb-1">
+              <p className="text-lg md:text-sm text-gray-500 mb-1">
                 6. Ville ou village où se situe ou commence votre projet{" "}
                 <span className="text-red-500">*</span>
               </p>
               <p className="text-base font-medium">{formData.projectCity}</p>
             </div>
             <div>
-              <p className="text-base md:text-sm text-gray-500 mb-1">
+              <p className="text-lg md:text-sm text-gray-500 mb-1">
                 7. Ville ou village de résidence{" "}
                 <span className="text-red-500">*</span>
               </p>
               <p className="text-base font-medium">{formData.residenceCity}</p>
             </div>
             <div>
-              <p className="text-base md:text-sm text-gray-500 mb-1">
+              <p className="text-lg md:text-sm text-gray-500 mb-1">
                 8. Province <span className="text-red-500">*</span>
               </p>
               <p className="text-base font-medium">{formData.province}</p>
             </div>
             <div className="md:col-span-2">
-              <p className="text-base md:text-sm text-gray-500 mb-1">
+              <p className="text-lg md:text-sm text-gray-500 mb-1">
                 12. Postulez-vous avec des collaborateurs ?{" "}
                 <span className="text-red-500">*</span>
               </p>
@@ -113,14 +113,14 @@ export const VerificationStep: React.FC<VerificationStepProps> = ({
           </h3>
           <div className="space-y-6">
             <div>
-              <p className="text-base md:text-sm text-gray-500 mb-1">
+              <p className="text-lg md:text-sm text-gray-500 mb-1">
                 9. Quel est le nom de votre projet ou produit ?{" "}
                 <span className="text-red-500">*</span>
               </p>
               <p className="text-base font-medium">{formData.projectName}</p>
             </div>
             <div>
-              <p className="text-base md:text-sm text-gray-500 mb-1">
+              <p className="text-lg md:text-sm text-gray-500 mb-1">
                 10. Quelle catégorie décrit le mieux votre projet ou produit ?{" "}
                 <span className="text-red-500">*</span>
               </p>
@@ -136,7 +136,7 @@ export const VerificationStep: React.FC<VerificationStepProps> = ({
               </div>
             </div>
             <div>
-              <p className="text-base md:text-sm text-gray-500 mb-1">
+              <p className="text-lg md:text-sm text-gray-500 mb-1">
                 11. Quelle est la phase actuelle de votre projet ou produit ?{" "}
                 <span className="text-red-500">*</span>
               </p>
@@ -151,7 +151,7 @@ export const VerificationStep: React.FC<VerificationStepProps> = ({
           </h3>
           <div className="space-y-6">
             <div>
-              <p className="text-base md:text-sm text-gray-500 mb-1">
+              <p className="text-lg md:text-sm text-gray-500 mb-1">
                 13. Veuillez fournir une description non confidentielle de votre
                 projet ou produit
               </p>
@@ -160,7 +160,7 @@ export const VerificationStep: React.FC<VerificationStepProps> = ({
               </p>
             </div>
             <div>
-              <p className="text-base md:text-sm text-gray-500 mb-1">
+              <p className="text-lg md:text-sm text-gray-500 mb-1">
                 14. Logos ou images du produit
               </p>
               {formData.logos && formData.logos.length > 0 ? (
@@ -195,7 +195,7 @@ export const VerificationStep: React.FC<VerificationStepProps> = ({
               )}
             </div>
             <div>
-              <p className="text-base md:text-sm text-gray-500 mb-1">15. Liens partagés</p>
+              <p className="text-lg md:text-sm text-gray-500 mb-1">15. Liens partagés</p>
               {formData.links.some((link) => link.trim() !== "") ? (
                 <ul className="list-disc pl-5 space-y-1">
                   {formData.links
@@ -228,7 +228,7 @@ export const VerificationStep: React.FC<VerificationStepProps> = ({
           </h3>
           <div className="space-y-6">
             <div>
-              <p className="text-base md:text-sm text-gray-500 mb-1">
+              <p className="text-lg md:text-sm text-gray-500 mb-1">
                 17. Signature numérique
               </p>
               {formData.signature ? (
@@ -244,7 +244,7 @@ export const VerificationStep: React.FC<VerificationStepProps> = ({
               )}
             </div>
             <div>
-              <p className="text-base md:text-sm text-gray-500 mb-1">
+              <p className="text-lg md:text-sm text-gray-500 mb-1">
                 18. Nom complet du signataire
               </p>
               <p className="text-base font-medium">{formData.signerName}</p>

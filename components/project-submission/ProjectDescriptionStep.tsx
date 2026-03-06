@@ -68,7 +68,7 @@ export const ProjectDescriptionStep: React.FC<ProjectDescriptionStepProps> = ({
 
       <div className="space-y-8">
         <div className="space-y-2">
-          <label className="text-base md:text-sm text-gray-600">
+          <label className="text-lg md:text-sm text-gray-600">
             13. Veuillez fournir une description non confidentielle de votre
             projet ou produit
           </label>
@@ -81,7 +81,7 @@ export const ProjectDescriptionStep: React.FC<ProjectDescriptionStepProps> = ({
         </div>
 
         <div className="space-y-2">
-          <label className="text-base md:text-sm text-gray-600">
+          <label className="text-lg md:text-sm text-gray-600">
             14. Si vous en avez, vous pouvez télécharger des images de votre
             logo, produit ou entreprise (Maximum {MAX_IMAGES} images)
           </label>
@@ -122,7 +122,7 @@ export const ProjectDescriptionStep: React.FC<ProjectDescriptionStepProps> = ({
                 <CloudUpload className="h-10 w-10 text-white" />
               </div>
 
-              <p className="text-base md:text-sm text-gray-600 mb-2">
+              <p className="text-lg md:text-sm text-gray-600 mb-2">
                 {formData.logos.length} / {MAX_IMAGES} images téléchargées
               </p>
 
@@ -160,7 +160,7 @@ export const ProjectDescriptionStep: React.FC<ProjectDescriptionStepProps> = ({
         </div>
 
         <div className="space-y-4">
-          <label className="text-base md:text-sm text-gray-600">
+          <label className="text-lg md:text-sm text-gray-600">
             15. Avez-vous un lien à partager concernant votre projet ? (Exemple
             : site web, réseaux sociaux, vidéos, documents en ligne...)
           </label>
