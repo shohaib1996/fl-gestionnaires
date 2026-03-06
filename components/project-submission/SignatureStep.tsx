@@ -53,7 +53,7 @@ export const SignatureStep: React.FC<SignatureStepProps> = ({
           <h3 className="text-sm font-medium text-gray-500 uppercase">
             16. AVIS IMPORTANT
           </h3>
-          <div className="text-lg md:text-sm text-black space-y-4 leading-relaxed">
+          <div className="text-2xl md:text-sm text-black space-y-4 leading-relaxed">
             <p>
               En soumettant cette candidature, vous confirmez que vous avez lu
               et acceptez les termes ci-dessous, les Conditions d'utilisation de
@@ -99,7 +99,7 @@ export const SignatureStep: React.FC<SignatureStepProps> = ({
         </div>
 
         <div className="space-y-2">
-          <label className="text-lg md:text-sm text-gray-500">
+          <label className="text-2xl md:text-sm text-gray-500">
             17. Signature numérique requise pour que la soumission soit complète
           </label>
           <p className="text-base md:text-xs text-gray-400">
@@ -138,14 +138,14 @@ export const SignatureStep: React.FC<SignatureStepProps> = ({
         </div>
 
         <div className="space-y-2">
-          <label className="text-lg md:text-sm text-gray-500">
+          <label className="text-2xl md:text-sm text-gray-500">
             18. Entrez votre nom complet
           </label>
           <Input
             value={formData.signerName}
             onChange={(e) => updateFormData({ signerName: e.target.value })}
             placeholder="Nom complet"
-            className="bg-[#F0F4F4] border-none h-12 rounded-xs text-base placeholder:text-gray-400"
+            className="bg-[#F0F4F4] border-none h-12 rounded-xs text-xl md:text-base placeholder:text-gray-400"
           />
         </div>
 

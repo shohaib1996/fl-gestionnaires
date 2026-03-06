@@ -65,33 +65,33 @@ export const PersonalInformationStep: React.FC<
       <div className="space-y-8">
         {/* 1 First Name */}
         <div className="space-y-2">
-          <label className="text-lg md:text-sm text-gray-600">
+          <label className="text-2xl md:text-sm text-gray-600">
             1. Prénom <span className="text-red-500">*</span>
           </label>
           <Input
             value={formData.firstName}
             onChange={(e) => updateFormData({ firstName: e.target.value })}
             placeholder="Entrez votre prénom"
-            className="bg-[#F0F6F4] border-b border-black/60 rounded-none border-t-0 border-x-0 h-12 text-base placeholder:text-gray-400 focus-visible:ring-0 focus-visible:border-black"
+            className="bg-[#F0F6F4] border-b border-black/60 rounded-none border-t-0 border-x-0 h-12 text-xl md:text-base placeholder:text-gray-400 focus-visible:ring-0 focus-visible:border-black"
           />
         </div>
 
         {/* 2 Last Name */}
         <div className="space-y-2">
-          <label className="text-lg md:text-sm text-gray-600">
+          <label className="text-2xl md:text-sm text-gray-600">
             2. Nom <span className="text-red-500">*</span>
           </label>
           <Input
             value={formData.lastName}
             onChange={(e) => updateFormData({ lastName: e.target.value })}
             placeholder="Entrez votre nom"
-            className="bg-[#F0F6F4] border-b border-black/60 rounded-none border-t-0 border-x-0 h-12 text-base placeholder:text-gray-400 focus-visible:ring-0 focus-visible:border-black"
+            className="bg-[#F0F6F4] border-b border-black/60 rounded-none border-t-0 border-x-0 h-12 text-xl md:text-base placeholder:text-gray-400 focus-visible:ring-0 focus-visible:border-black"
           />
         </div>
 
         {/* 3 Parent name (optional) */}
         <div className="space-y-2">
-          <label className="text-lg md:text-sm text-gray-600">
+          <label className="text-2xl md:text-sm text-gray-600">
             3. Si le candidat est un mineur, nom du parent ou autre tuteur légal
             soumettant la candidature au nom du candidat
           </label>
@@ -99,13 +99,13 @@ export const PersonalInformationStep: React.FC<
             value={formData.parentName}
             onChange={(e) => updateFormData({ parentName: e.target.value })}
             placeholder="Entrez les noms"
-            className="bg-[#F0F6F4] border-b border-black/60 rounded-none border-t-0 border-x-0 h-12 text-base placeholder:text-gray-400 focus-visible:ring-0 focus-visible:border-black"
+            className="bg-[#F0F6F4] border-b border-black/60 rounded-none border-t-0 border-x-0 h-12 text-xl md:text-base placeholder:text-gray-400 focus-visible:ring-0 focus-visible:border-black"
           />
         </div>
 
         {/* 4 Phone */}
         <div className="space-y-2">
-          <label className="text-lg md:text-sm text-gray-600">
+          <label className="text-2xl md:text-sm text-gray-600">
             4. Numéro de téléphone <span className="text-red-500">*</span>
           </label>
           <PhoneInput
@@ -113,26 +113,26 @@ export const PersonalInformationStep: React.FC<
             onChange={(value) => updateFormData({ phone: value || "" })}
             placeholder="Entrez votre numéro de téléphone"
             defaultCountry="CD"
-            className="bg-[#F0F6F4] border-b border-black/60 rounded-none border-t-0 border-x-0 h-12 text-base placeholder:text-gray-400 focus-visible:ring-0 focus-visible:border-black"
+            className="bg-[#F0F6F4] border-b border-black/60 rounded-none border-t-0 border-x-0 h-12 text-xl md:text-base placeholder:text-gray-400 focus-visible:ring-0 focus-visible:border-black"
           />
         </div>
 
         {/* 5 Email */}
         <div className="space-y-2">
-          <label className="text-lg md:text-sm text-gray-600">
+          <label className="text-2xl md:text-sm text-gray-600">
             5. Email <span className="text-red-500">*</span>
           </label>
           <Input
             value={formData.email}
             onChange={(e) => updateFormData({ email: e.target.value })}
             placeholder="Entrez votre email"
-            className="bg-[#F0F6F4] border-b border-black/60 rounded-none border-t-0 border-x-0 h-12 text-base placeholder:text-gray-400 focus-visible:ring-0 focus-visible:border-black"
+            className="bg-[#F0F6F4] border-b border-black/60 rounded-none border-t-0 border-x-0 h-12 text-xl md:text-base placeholder:text-gray-400 focus-visible:ring-0 focus-visible:border-black"
           />
         </div>
 
         {/* 6 Project City (autosuggest) */}
         <div className="space-y-2">
-          <label className="text-lg md:text-sm text-gray-600">
+          <label className="text-2xl md:text-sm text-gray-600">
             6. Ville ou village où se situe ou commence votre projet{" "}
             <span className="text-red-500">*</span>
           </label>
@@ -150,7 +150,7 @@ export const PersonalInformationStep: React.FC<
 
         {/* 7 Residence City (autosuggest) */}
         <div className="space-y-2">
-          <label className="text-lg md:text-sm text-gray-600">
+          <label className="text-2xl md:text-sm text-gray-600">
             7. Ville ou village de résidence{" "}
             <span className="text-red-500">*</span>
           </label>
@@ -167,7 +167,7 @@ export const PersonalInformationStep: React.FC<
 
         {/* 8 Province (autosuggest) */}
         <div className="space-y-2">
-          <label className="text-lg md:text-sm text-gray-600">
+          <label className="text-2xl md:text-sm text-gray-600">
             8. Province <span className="text-red-500">*</span>
           </label>
 
@@ -185,7 +185,7 @@ export const PersonalInformationStep: React.FC<
         <div className="py-4 border-t border-dashed border-gray-300 my-8" />
 
         <div className="space-y-4">
-          <label className="text-lg md:text-sm text-gray-500">
+          <label className="text-2xl md:text-sm text-gray-500">
             12. Postulez-vous avec des collaborateurs ?{" "}
             <span className="text-red-500">*</span>
           </label>
@@ -201,7 +201,7 @@ export const PersonalInformationStep: React.FC<
                 />
                 <div className="absolute w-2.5 h-2.5 rounded-full bg-[#5F9E50] opacity-0 peer-checked:opacity-100 transition-opacity" />
               </div>
-              <span className="text-lg md:text-sm text-gray-600">Non</span>
+              <span className="text-2xl md:text-sm text-gray-600">Non</span>
             </label>
             <label className="flex items-center gap-2 cursor-pointer group">
               <div className="relative flex items-center justify-center">
@@ -214,7 +214,7 @@ export const PersonalInformationStep: React.FC<
                 />
                 <div className="absolute w-2.5 h-2.5 rounded-full bg-[#5F9E50] opacity-0 peer-checked:opacity-100 transition-opacity" />
               </div>
-              <span className="text-lg md:text-sm text-gray-600">Oui</span>
+              <span className="text-2xl md:text-sm text-gray-600">Oui</span>
             </label>
           </div>
 
@@ -246,7 +246,7 @@ export const PersonalInformationStep: React.FC<
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="space-y-2">
-                        <label className="text-lg md:text-sm text-gray-600">
+                        <label className="text-2xl md:text-sm text-gray-600">
                           Prénom <span className="text-red-500">*</span>
                         </label>
                         <Input
@@ -264,7 +264,7 @@ export const PersonalInformationStep: React.FC<
                       </div>
 
                       <div className="space-y-2">
-                        <label className="text-lg md:text-sm text-gray-600">
+                        <label className="text-2xl md:text-sm text-gray-600">
                           Nom <span className="text-red-500">*</span>
                         </label>
                         <Input
@@ -282,7 +282,7 @@ export const PersonalInformationStep: React.FC<
                       </div>
 
                       <div className="space-y-2">
-                        <label className="text-lg md:text-sm text-gray-600">
+                        <label className="text-2xl md:text-sm text-gray-600">
                           Numéro de téléphone{" "}
                           <span className="text-red-500">*</span>
                         </label>
@@ -298,7 +298,7 @@ export const PersonalInformationStep: React.FC<
                       </div>
 
                       <div className="space-y-2">
-                        <label className="text-lg md:text-sm text-gray-600">
+                        <label className="text-2xl md:text-sm text-gray-600">
                           Email <span className="text-red-500">*</span>
                         </label>
                         <Input
@@ -316,7 +316,7 @@ export const PersonalInformationStep: React.FC<
                       </div>
 
                       <div className="space-y-2">
-                        <label className="text-lg md:text-sm text-gray-600">
+                        <label className="text-2xl md:text-sm text-gray-600">
                           Ville du projet{" "}
                           <span className="text-red-500">*</span>
                         </label>
@@ -332,7 +332,7 @@ export const PersonalInformationStep: React.FC<
                       </div>
 
                       <div className="space-y-2">
-                        <label className="text-lg md:text-sm text-gray-600">
+                        <label className="text-2xl md:text-sm text-gray-600">
                           Ville de résidence{" "}
                           <span className="text-red-500">*</span>
                         </label>
@@ -348,7 +348,7 @@ export const PersonalInformationStep: React.FC<
                       </div>
 
                       <div className="space-y-2 md:col-span-2">
-                        <label className="text-lg md:text-sm text-gray-600">
+                        <label className="text-2xl md:text-sm text-gray-600">
                           Province <span className="text-red-500">*</span>
                         </label>
                         <Autosuggest
