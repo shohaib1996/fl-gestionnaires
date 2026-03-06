@@ -274,7 +274,7 @@ const ProjectSubmission = () => {
             </div>
 
             {/* Text Content */}
-            <div className="space-y-6 text-sm md:text-base leading-relaxed text-foreground">
+            <div className="space-y-6 text-base leading-relaxed text-foreground">
               <p>
                 Bienvenue sur la page de soumission en ligne de Fond Local !
               </p>
