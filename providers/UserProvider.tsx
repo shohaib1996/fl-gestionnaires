@@ -46,9 +46,11 @@ export function UserProvider({ children, initialAuthUser }: UserProviderProps) {
   };
 
   useEffect(() => {
-    // If we already have a user from the server, fetch their profile immediately
-    // instead of waiting for onAuthStateChange to fire
+    let initialFetchDone = false;
+
     if (initialAuthUser) {
+      // Fetch profile immediately — don't wait for onAuthStateChange (slow on bad connections)
+      initialFetchDone = true;
       fetchPublicUser(initialAuthUser.id).finally(() => setLoading(false));
     }
 
@@ -58,6 +60,11 @@ export function UserProvider({ children, initialAuthUser }: UserProviderProps) {
         setAuthUser(nextAuthUser);
 
         if (nextAuthUser) {
+          // Skip duplicate fetch if initialAuthUser already handled this same user
+          if (initialFetchDone && nextAuthUser.id === initialAuthUser?.id) {
+            initialFetchDone = false;
+            return;
+          }
           await fetchPublicUser(nextAuthUser.id);
         } else {
           setUser(null);
