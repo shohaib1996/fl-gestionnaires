@@ -27,7 +27,7 @@ export function UserProvider({ children, initialAuthUser }: UserProviderProps) {
 
   const [authUser, setAuthUser] = useState<User | null>(initialAuthUser);
   const [user, setUser] = useState<AppUser | null>(null);
-  const [loading, setLoading] = useState(() => !initialAuthUser);
+  const [loading, setLoading] = useState(true);
 
   const fetchPublicUser = async (uid: string) => {
     const { data, error } = await supabase
@@ -46,6 +46,12 @@ export function UserProvider({ children, initialAuthUser }: UserProviderProps) {
   };
 
   useEffect(() => {
+    // If we already have a user from the server, fetch their profile immediately
+    // instead of waiting for onAuthStateChange to fire
+    if (initialAuthUser) {
+      fetchPublicUser(initialAuthUser.id).finally(() => setLoading(false));
+    }
+
     const { data: listener } = supabase.auth.onAuthStateChange(
       async (_event, session) => {
         const nextAuthUser = session?.user ?? null;
